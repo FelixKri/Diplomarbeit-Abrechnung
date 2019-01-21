@@ -21,7 +21,7 @@ class Prescribing extends Model
         return $this->belongsToMany(Payments::class);
     }
 
-    public function author(){
+    public function user(){
         return $this->belongsTo(Tos_User::class, 'user_id');
     }
 }
