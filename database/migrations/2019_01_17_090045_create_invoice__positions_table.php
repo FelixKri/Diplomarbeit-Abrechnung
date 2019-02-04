@@ -16,8 +16,10 @@ class CreateInvoicePositionsTable extends Migration
         Schema::create('invoice__positions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('designation');
-            $table->integer('total_amount');
+            $table->float('total_amount', 8, 2);
             $table->integer('invoice_id');
+            $table->boolean('paid_by_teacher');
+            $table->integer('document_number');
             $table->timestamps();
         });
     }

@@ -18,7 +18,7 @@ class CreateUserHasInvoicePositionsTable extends Migration
             $table->integer('user_id');
             $table->integer('invoice_position_id');
             $table->string('comment')->nullable($value = true);
-            $table->integer('amount');
+            $table->float('amount', 8, 2);
             $table->timestamps();
         });
     }
