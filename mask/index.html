@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="side">
+        <a href="/a">zurück</a>
+    </div>
+    <div class="container">
+        <div class="header">
+                <h1>Neue Abrechnung erstellen</h1>
+                <small>Abrechner: Saler Franz</small>
+        </div>
+        <div class="divider"></div>
+
+        <table>
+            <tr>
+                <td><label for="reasons">Grund der Abrechnung:</label></td>
+                <td>
+                    <select name="reasons">
+                        <option value="--AUSWÄHLEN--">--AUSWÄHLEN--</option>
+                        <option value="skikurs">Skikurs</option>
+                        <option value="werkstättenbeitrag">WK Beitrag</option>
+                        <option value="Reisekosten">Reisekosten</option>
+                        <option value="Schulveranstaltungen">Schulveranstaltungen</option>
+                        <option value="new">Neuen Grund eintragen</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td ><label for="amount">Gesamtwert</label></td>
+                <td><input type="number" name="amount" id="amount"></td>
+                <td><input type="button" value="Auf alle Schüler aufteilen"></td>
+            </tr>
+            <tr>
+                <td><label for="s_amount">Betrag jedem Schüler zuweisen</label></td>
+                <td><input type="number" name="s_amount" id="s_amount"></td>
+                <td><input type="button" value="zuweisen"></td>
+            </tr>
+            <tr>
+                <td><label for="check">von Lehrer bezahlt</label></td>
+                <td><input type="checkbox" name="check" id=""></td>
+            </tr>
+        </table>
+        <hr>   
+        <table>
+            <tr>
+                <th>Firstname</th>
+                <th>Lastname</th> 
+                <th>Group</th>
+                <th>Amount</th>
+                <th>Annotation</th>
+            </tr>
+            <tr>
+                <td colspan="5"><button class="add">Person hinzufügen + </button></td>
+            </tr>
+            <tr>
+                <td>Florian</td>
+                <td>Rettenbacher</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Thomas</td>
+                <td>Lienbacher</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Jakob</td>
+                <td>Schlager</td>
+                <td>4AHWIM</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Franz</td>
+                <td>Saler</td>
+                <td>Lehrer</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Hannes</td>
+                <td>Schürer</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Willhelm</td>
+                <td>Hehenwarter</td>
+                <td>Lehrer</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Sebastian</td>
+                <td>Dahlke</td>
+                <td>5AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Florian</td>
+                <td>Rettenbacher</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Thomas</td>
+                <td>Lienbacher</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Jakob</td>
+                <td>Schlager</td>
+                <td>4AHWIM</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Franz</td>
+                <td>Saler</td>
+                <td>Lehrer</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Hannes</td>
+                <td>Schürer</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Willhelm</td>
+                <td>Hehenwarter</td>
+                <td>Lehrer</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Sebastian</td>
+                <td>Dahlke</td>
+                <td>5AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Florian</td>
+                <td>Rettenbacher</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Thomas</td>
+                <td>Lienbacher</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Jakob</td>
+                <td>Schlager</td>
+                <td>4AHWIM</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Franz</td>
+                <td>Saler</td>
+                <td>Lehrer</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Hannes</td>
+                <td>Schürer</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+                <td><input type="button" value="EDIT"></td>
+            </tr>
+            <tr>
+                <td>Willhelm</td>
+                <td>Hehenwarter</td>
+                <td>Lehrer</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+            </tr>
+            <tr>
+                <td>Sebastian</td>
+                <td>Dahlke</td>
+                <td>5AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+            </tr>
+            <tr>
+                <td>Florian</td>
+                <td>Rettenbacher</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+            </tr>
+            <tr>
+                <td>Thomas</td>
+                <td>Lienbacher</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+            </tr>
+            <tr>
+                <td>Jakob</td>
+                <td>Schlager</td>
+                <td>4AHWIM</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+            </tr>
+            <tr>
+                <td>Franz</td>
+                <td>Saler</td>
+                <td>Lehrer</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+            </tr>
+            <tr>
+                <td>Hannes</td>
+                <td>Schürer</td>
+                <td>4AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+            </tr>
+            <tr>
+                <td>Willhelm</td>
+                <td>Hehenwarter</td>
+                <td>Lehrer</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+            </tr>
+            <tr>
+                <td>Sebastian</td>
+                <td>Dahlke</td>
+                <td>5AHWII</td>
+                <td><input type="number"></td>
+                <td><input type="text" name="" id=""></td>
+                <td><input type="button" value="X"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

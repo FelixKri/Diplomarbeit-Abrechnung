@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class tos_user extends Model
 {
-    protected $table = 'tos_user'; 
+    protected $table = 'tos_userss'; 
     public $timestamps = false;
 
     protected $fillable = [
