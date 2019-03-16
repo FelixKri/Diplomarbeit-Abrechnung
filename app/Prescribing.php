@@ -22,6 +22,6 @@ class Prescribing extends Model
     }
 
     public function user(){
-        return $this->belongsTo(Tos_User::class, 'user_id');
+        return $this->belongsTo(Fos_User::class, 'user_id');
     }
 }

@@ -14,5 +14,12 @@ use Illuminate\Support\Facades\Log;
 */
 
 Route::get('/', function () {
-    return dd("hello world");
+    return dd(App\Fos_user::all());
 });
+
+Route::get('/prescribing/new', 'PrescribingController@create');
+Route::post('/prescribing/new', 'PrescribingController@store');
+
+
+Route::get('/class/autocomplete', 'PrescribingController@autocompleteClass');
+Route::get('/user/autocomplete', 'PrescribingController@autocompleteUser');
