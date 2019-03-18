@@ -9,18 +9,19 @@
                 <h4 class="modal-title">Klasse hinzufügen</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="/add/class" method="post">
+                    <ul>
+                        <li v-for="className in data.classes">{{ className }} | <button class="form-control form-control-sm" style="display: inline; width: 100px; cursor: pointer;">entefernen</button></li>
+                    </ul>
                         <table>
                             <tr>
                                 <td><input type="text" name="class[]" id="classes_autocomplete" class="form-control typeahead" placeholder="Klassenname" @focus="autocomplete()"></td>
-                                <td><button type="button" class="btn btn-primary">+</button></td>
+                                <td><button type="button" class="btn btn-primary" @click="addClassToDOM">+</button></td>
                             </tr>
                         </table>
-                        
-                    </form>
                 </div>
                 <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" @click="addStudents">Hinzufügen</button>
                 </div>
             </div>
     
@@ -33,6 +34,11 @@
         mounted() {
             console.log('Component mounted.')
         },
+        data: function () {
+            return {
+                data: this.$parent
+            }
+        },
         methods: {
             autocomplete: function() {
 
@@ -41,7 +47,40 @@
                     source: "http://localhost:8000/class/autocomplete/"
                 });
             },
+
+            addClassToDOM: function(){
+                var input = $("#classes_autocomplete");
+                this.$parent.classes.push(input.val());
+                input.val("");
+            },
+
+            addStudents: function(){
+                var self = this;
+
+                this.$parent.classes.forEach(className => {
+                    axios.get('/api/getStudentsFromClass', {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        params: {
+                            name: className,
+                        } 
+                    })
+                    .then(response => {
+                        console.log(response.data);
+
+                        self.$parent.students = self.$parent.students.concat(response.data);
+
+                        console.log(self.$parent.students);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                });
+                
+            }
         },
+
     }
     
 </script>
