@@ -5,15 +5,37 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Group;
 use App\Fos_user;
+use App\Prescribing_Suggestion;
+use App\User_has_Prescribing_Suggestion;
+use App\Reason;
 
 class PrescribingController extends Controller
 {
     public function create(){
-        return view('prescribing.create');
+        $reasons = Reason::all();
+        return view('prescribing.create', compact("reasons"));
     }
 
     public function store(){
+        $presc = New Prescribing_Suggestion();
+        $presc->due_until = request()->due_until;
+        $presc->reason_id = Reason::where('title', request()->reason)->first()->id;
+        $presc->reason_suggestion = request()->reason_suggestion;
+        $presc->title = request()->title;
+        $presc->description = request()->description;
+        $presc->author_id = Fos_user::where('username', request()->author)->first()->id;
+        $presc->save();
 
+        for ($i=0; $i < sizeof(request()->students); $i++) { 
+            $user_has_presc = new User_has_Prescribing_Suggestion;
+            $user_has_presc->user_id = request()->students[$i];
+            $user_has_presc->amount = (float)request()->amount[$i];
+            $user_has_presc->annotation = request()->annotation[$i];
+            $user_has_presc->prescribing_suggestion_id = $presc->id;
+            $user_has_presc->save();
+        }
+
+        dd($presc);
     }
 
     public function update(){

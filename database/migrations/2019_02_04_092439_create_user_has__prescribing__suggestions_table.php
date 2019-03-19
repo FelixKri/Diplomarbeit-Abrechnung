@@ -17,7 +17,7 @@ class CreateUserHasPrescribingSuggestionsTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('amount');
-            $table->string('annotation');
+            $table->string('annotation')->nullable();
             $table->integer('prescribing_suggestion_id');
             $table->timestamps();
         });

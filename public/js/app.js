@@ -1827,7 +1827,7 @@ __webpack_require__.r(__webpack_exports__);
           }
         }).then(function (response) {
           console.log(response.data);
-          self.$parent.students = self.$parent.students.concat(response.data);
+          self.$parent.students = response.data;
           console.log(self.$parent.students);
         }).catch(function (error) {
           console.log(error);
@@ -1936,6 +1936,29 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -37699,7 +37722,6 @@ var render = function() {
                     staticClass: "form-control typeahead",
                     attrs: {
                       type: "text",
-                      name: "class[]",
                       id: "classes_autocomplete",
                       placeholder: "Klassenname"
                     },
@@ -37953,7 +37975,17 @@ var render = function() {
       "tbody",
       _vm._l(_vm.data.students, function(student) {
         return _c("tr", [
-          _c("th", { attrs: { scope: "row" } }, [_vm._v(_vm._s(student.id))]),
+          _c("th", { attrs: { scope: "row" } }, [
+            _c("input", {
+              attrs: {
+                type: "number",
+                name: "students[]",
+                id: "",
+                readonly: ""
+              },
+              domProps: { value: student.id }
+            })
+          ]),
           _vm._v(" "),
           _c("td", [_vm._v(_vm._s(student.group_id))]),
           _vm._v(" "),
@@ -37965,7 +37997,9 @@ var render = function() {
           _vm._v(" "),
           _vm._m(2, true),
           _vm._v(" "),
-          _vm._m(3, true)
+          _vm._m(3, true),
+          _vm._v(" "),
+          _vm._m(4, true)
         ])
       }),
       0
@@ -37979,6 +38013,33 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
+        _c("td", [
+          _c("input", {
+            staticClass: "form-control",
+            attrs: { type: "number", id: "number", placeholder: "Betrag" }
+          })
+        ]),
+        _vm._v(" "),
+        _c("td", [
+          _c("button", { staticClass: "btn btn-primary btn-sm" }, [
+            _vm._v(" Auf alle Aufteilen ")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("td", [
+          _c("button", { staticClass: "btn btn-primary btn-sm" }, [
+            _vm._v(" Betrag allen zuweisen ")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("td", [
+          _c("button", { staticClass: "btn btn-primary btn-sm" }, [
+            _vm._v(" Betrag ausgewählten zuweisen ")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("tr", [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nr.")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Klasse")]),
@@ -37989,6 +38050,10 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticStyle: { width: "100px" }, attrs: { scope: "col" } }, [
           _vm._v("Betrag")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticStyle: { width: "100px" }, attrs: { scope: "col" } }, [
+          _vm._v("Anmerkung")
         ])
       ])
     ])
@@ -38001,6 +38066,17 @@ var staticRenderFns = [
       _c("input", {
         staticClass: "form-control",
         attrs: { type: "number", name: "amount[]", id: "" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [
+      _c("input", {
+        staticClass: "form-control",
+        attrs: { type: "text", name: "annotation[]", id: "" }
       })
     ])
   },

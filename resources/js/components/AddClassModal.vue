@@ -14,7 +14,7 @@
                     </ul>
                         <table>
                             <tr>
-                                <td><input type="text" name="class[]" id="classes_autocomplete" class="form-control typeahead" placeholder="Klassenname" @focus="autocomplete()"></td>
+                                <td><input type="text" id="classes_autocomplete" class="form-control typeahead" placeholder="Klassenname" @focus="autocomplete()"></td>
                                 <td><button type="button" class="btn btn-primary" @click="addClassToDOM">+</button></td>
                             </tr>
                         </table>
@@ -64,14 +64,14 @@
                         },
                         params: {
                             name: className,
-                        } 
+                        }
                     })
                     .then(response => {
                         console.log(response.data);
 
-                        self.$parent.students = self.$parent.students.concat(response.data);
+                        self.$parent.students = response.data;
 
-                        console.log(self.$parent.students);
+                        console.log(self.$parent.students); 
                     })
                     .catch(error => {
                         console.log(error);
