@@ -14,4 +14,11 @@ class ApiController extends Controller
         $users = Fos_user::where('group_id', $group->id)->get();
         return $users;
     }
+
+    public function getStudent()
+    {
+    	$student = Fos_user::where('id', explode(" ", request()->user))->first();
+    	
+    	return $student;
+    }
 }
