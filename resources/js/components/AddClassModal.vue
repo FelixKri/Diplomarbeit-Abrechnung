@@ -69,8 +69,10 @@
                     .then(response => {
                         console.log(response.data);
 
-                        self.$parent.students = response.data;
-
+                        response.data.forEach(student => {
+                        self.$parent.students.push(student);
+                        });
+                        
                         console.log(self.$parent.students); 
                     })
                     .catch(error => {

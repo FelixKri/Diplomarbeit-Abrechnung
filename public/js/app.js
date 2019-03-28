@@ -1827,7 +1827,9 @@ __webpack_require__.r(__webpack_exports__);
           }
         }).then(function (response) {
           console.log(response.data);
-          self.$parent.students = response.data;
+          response.data.forEach(function (student) {
+            self.$parent.students.push(student);
+          });
           console.log(self.$parent.students);
         }).catch(function (error) {
           console.log(error);
@@ -1887,13 +1889,14 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     addStudent: function addStudent() {
+      var input = $("#user_autocomplete");
       var that = this;
       axios.get('/api/getStudent', {
         headers: {
           'Content-Type': 'application/json'
         },
         params: {
-          user: that.input
+          user: input.val()
         }
       }).then(function (response) {
         console.log(response.data);
@@ -37880,14 +37883,6 @@ var render = function() {
               _c("tr", [
                 _c("td", [
                   _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.input,
-                        expression: "input"
-                      }
-                    ],
                     staticClass: "form-control typeahead",
                     attrs: {
                       type: "text",
@@ -37895,16 +37890,9 @@ var render = function() {
                       id: "user_autocomplete",
                       placeholder: "Name oder ID"
                     },
-                    domProps: { value: _vm.input },
                     on: {
                       focus: function($event) {
                         return _vm.autocomplete()
-                      },
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.input = $event.target.value
                       }
                     }
                   })
@@ -50874,9 +50862,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\sass\main.scss */"./resources/sass/main.scss");
+__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
 
 
 /***/ })

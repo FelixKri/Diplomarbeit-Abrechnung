@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <table>
                     <tr>
-                        <td><input type="text" name="user[]" id="user_autocomplete" class="form-control typeahead" placeholder="Name oder ID" @focus="autocomplete()" v-model="input"></td>
+                        <td><input type="text" name="user[]" id="user_autocomplete" class="form-control typeahead" placeholder="Name oder ID" @focus="autocomplete()"></td>
                         <td><button type="button" class="btn btn-primary" @click="addStudent">+</button></td>
                     </tr>
                 </table>        
@@ -38,20 +38,20 @@
                 });
             },
             addStudent: function(){
+                var input = $("#user_autocomplete");
                 var that = this;
+
                 axios.get('/api/getStudent', {
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     params: {
-                        user: that.input
+                        user: input.val()
                     }})
                     .then(response =>{
                         console.log(response.data);
                         that.$parent.students.push(response.data);
                     });
-
-                    
 
                 
             }
