@@ -1986,7 +1986,10 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    removeStudent: function removeStudent() {},
+    removeStudent: function removeStudent() {
+      console.log("deleting student with id " + this.data.id);
+      this.$emit('removeStudent', this.data.id);
+    },
     editStudent: function editStudent() {}
   }
 });
@@ -2048,7 +2051,10 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     splitEveryone: function splitEveryone() {},
     assignEveryone: function assignEveryone() {},
-    assignSelected: function assignSelected() {}
+    assignSelected: function assignSelected() {},
+    removeStudent: function removeStudent(id) {
+      $("#" + id).remove();
+    }
   }
 });
 
@@ -38094,16 +38100,17 @@ var render = function() {
       })
     ]),
     _vm._v(" "),
-    _c("td", [
-      _c("i", {
-        staticClass: "fas fa-user-minus",
+    _c(
+      "td",
+      {
         on: {
           click: function($event) {
             return _vm.removeStudent()
           }
         }
-      })
-    ])
+      },
+      [_c("i", { staticClass: "fas fa-user-minus" })]
+    )
   ])
 }
 var staticRenderFns = []
@@ -38207,7 +38214,15 @@ var render = function() {
     _c(
       "tbody",
       _vm._l(_vm.data.students, function(student) {
-        return _c("student", { key: student.id, attrs: { data: student } })
+        return _c("student", {
+          key: student.id,
+          attrs: { id: student.id, data: student },
+          on: {
+            removeStudent: function($event) {
+              return _vm.removeStudent($event)
+            }
+          }
+        })
       }),
       1
     )
@@ -50862,9 +50877,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
+__webpack_require__(/*! F:\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! F:\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! F:\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
 
 
 /***/ })

@@ -13,7 +13,7 @@
             <input type="text" name="annotation[]" id="" class="form-control" v-model="annotation">
         </td>
         <td><i class="fas fa-edit" @click="editStudent();"></i></td>
-        <td><i class="fas fa-user-minus" @click="removeStudent();"></i></td>
+        <td @click="removeStudent();" ><i class="fas fa-user-minus" ></i></td>
     </tr>
 </template>
 
@@ -31,7 +31,8 @@
         },
         methods:{
             removeStudent: function(){
-
+                console.log("deleting student with id " + this.data.id);
+                this.$emit('removeStudent', this.data.id);
             },
             editStudent: function(){
 

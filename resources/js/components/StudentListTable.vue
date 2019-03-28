@@ -26,7 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            <student :data="student" v-for="student in data.students" v-bind:key="student.id"></student>
+            <student v-bind:id="student.id" :data="student" v-for="student in data.students" v-bind:key="student.id" v-on:removeStudent="removeStudent($event);"></student>
         </tbody>
     </table>
 </template>
@@ -51,12 +51,11 @@
             },
             assignSelected: function(){
 
+            },
+            removeStudent: function(id){
+                $("#"+id).remove();
             }
         }
     }
     
 </script>
-
-<style>
-
-</style>
