@@ -4,16 +4,16 @@
         <thead>
             <tr>
                 <td>
-                    <input type="number" id="number" placeholder="Betrag" class="form-control">
+                    <input type="number" id="number" placeholder="Betrag" class="form-control" v-model="amount_st">
                 </td>
                 <td>
-                    <button class="btn btn-primary btn-sm"> Auf alle Aufteilen </button> 
+                    <button class="btn btn-primary btn-sm" @click="splitEveryone();"> Auf alle Aufteilen </button> 
                 </td>
                 <td>
-                    <button class="btn btn-primary btn-sm"> Betrag allen zuweisen </button>
+                    <button class="btn btn-primary btn-sm" @click="assignEveryone();"> Betrag allen zuweisen </button>
                 </td>
                 <td>
-                    <button class="btn btn-primary btn-sm"> Betrag ausgewählten zuweisen </button>
+                    <button class="btn btn-primary btn-sm" @click="assignSelected();"> Betrag ausgewählten zuweisen </button>
                 </td>
             </tr>
             <tr>
@@ -38,10 +38,21 @@
         },
         data: function () {
             return {
-                data: this.$parent
+                data: this.$parent,
+                amount_st: 0
             }
         },
+        methods: {
+            splitEveryone: function(){
 
+            },
+            assignEveryone: function(){
+
+            },
+            assignSelected: function(){
+
+            }
+        }
     }
     
 </script>

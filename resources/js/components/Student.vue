@@ -7,10 +7,10 @@
         <td>{{ data.last_name }}</td>
         <td>{{ data.first_name }}</td>
         <td>
-            <input type="number" name="amount[]" id="" class="form-control">
+            <input type="number" name="amount[]" id="" class="form-control" v-model="amount">
         </td>
         <td>
-            <input type="text" name="annotation[]" id="" class="form-control">
+            <input type="text" name="annotation[]" id="" class="form-control" v-model="annotation">
         </td>
         <td><i class="fas fa-edit" @click="editStudent();"></i></td>
         <td><i class="fas fa-user-minus" @click="removeStudent();"></i></td>
@@ -23,5 +23,19 @@
             console.log('Component mounted.')
         },
         props: ["data"],
+        data: function () {
+            return {
+                amount: 0,
+                annotation: "",
+            }
+        },
+        methods:{
+            removeStudent: function(){
+
+            },
+            editStudent: function(){
+
+            },
+        }
     }
 </script>

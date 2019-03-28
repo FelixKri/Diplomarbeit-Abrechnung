@@ -1887,20 +1887,24 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     addStudent: function addStudent() {
-      var input = $("#user_autocomplete");
-      var self = this;
+      var that = this;
       axios.get('/api/getStudent', {
         headers: {
           'Content-Type': 'application/json'
         },
         params: {
-          user: input.val()
+          user: that.input
         }
       }).then(function (response) {
         console.log(response.data);
-        self.$parent.students.push(response.data);
+        that.$parent.students.push(response.data);
       });
     }
+  },
+  data: function data() {
+    return {
+      input: ""
+    };
   }
 });
 
@@ -1971,7 +1975,17 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     console.log('Component mounted.');
   },
-  props: ["data"]
+  props: ["data"],
+  data: function data() {
+    return {
+      amount: 0,
+      annotation: ""
+    };
+  },
+  methods: {
+    removeStudent: function removeStudent() {},
+    editStudent: function editStudent() {}
+  }
 });
 
 /***/ }),
@@ -2024,8 +2038,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      data: this.$parent
+      data: this.$parent,
+      amount_st: 0
     };
+  },
+  methods: {
+    splitEveryone: function splitEveryone() {},
+    assignEveryone: function assignEveryone() {},
+    assignSelected: function assignSelected() {}
   }
 });
 
@@ -37860,6 +37880,14 @@ var render = function() {
               _c("tr", [
                 _c("td", [
                   _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.input,
+                        expression: "input"
+                      }
+                    ],
                     staticClass: "form-control typeahead",
                     attrs: {
                       type: "text",
@@ -37867,9 +37895,16 @@ var render = function() {
                       id: "user_autocomplete",
                       placeholder: "Name oder ID"
                     },
+                    domProps: { value: _vm.input },
                     on: {
                       focus: function($event) {
                         return _vm.autocomplete()
+                      },
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.input = $event.target.value
                       }
                     }
                   })
@@ -38012,9 +38047,53 @@ var render = function() {
     _vm._v(" "),
     _c("td", [_vm._v(_vm._s(_vm.data.first_name))]),
     _vm._v(" "),
-    _vm._m(0),
+    _c("td", [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.amount,
+            expression: "amount"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: { type: "number", name: "amount[]", id: "" },
+        domProps: { value: _vm.amount },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.amount = $event.target.value
+          }
+        }
+      })
+    ]),
     _vm._v(" "),
-    _vm._m(1),
+    _c("td", [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.annotation,
+            expression: "annotation"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: { type: "text", name: "annotation[]", id: "" },
+        domProps: { value: _vm.annotation },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.annotation = $event.target.value
+          }
+        }
+      })
+    ]),
     _vm._v(" "),
     _c("td", [
       _c("i", {
@@ -38039,30 +38118,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("input", {
-        staticClass: "form-control",
-        attrs: { type: "number", name: "amount[]", id: "" }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("input", {
-        staticClass: "form-control",
-        attrs: { type: "text", name: "annotation[]", id: "" }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -38085,7 +38141,80 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("table", { staticClass: "table" }, [
-    _vm._m(0),
+    _c("thead", [
+      _c("tr", [
+        _c("td", [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.amount_st,
+                expression: "amount_st"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "number", id: "number", placeholder: "Betrag" },
+            domProps: { value: _vm.amount_st },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.amount_st = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("td", [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-sm",
+              on: {
+                click: function($event) {
+                  return _vm.splitEveryone()
+                }
+              }
+            },
+            [_vm._v(" Auf alle Aufteilen ")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("td", [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-sm",
+              on: {
+                click: function($event) {
+                  return _vm.assignEveryone()
+                }
+              }
+            },
+            [_vm._v(" Betrag allen zuweisen ")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("td", [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-sm",
+              on: {
+                click: function($event) {
+                  return _vm.assignSelected()
+                }
+              }
+            },
+            [_vm._v(" Betrag ausgewählten zuweisen ")]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._m(0)
+    ]),
     _vm._v(" "),
     _c(
       "tbody",
@@ -38101,50 +38230,21 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("td", [
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "number", id: "number", placeholder: "Betrag" }
-          })
-        ]),
-        _vm._v(" "),
-        _c("td", [
-          _c("button", { staticClass: "btn btn-primary btn-sm" }, [
-            _vm._v(" Auf alle Aufteilen ")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("td", [
-          _c("button", { staticClass: "btn btn-primary btn-sm" }, [
-            _vm._v(" Betrag allen zuweisen ")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("td", [
-          _c("button", { staticClass: "btn btn-primary btn-sm" }, [
-            _vm._v(" Betrag ausgewählten zuweisen ")
-          ])
-        ])
+    return _c("tr", [
+      _c("th", { attrs: { scope: "col" } }, [_vm._v("Nr.")]),
+      _vm._v(" "),
+      _c("th", { attrs: { scope: "col" } }, [_vm._v("Klasse")]),
+      _vm._v(" "),
+      _c("th", { attrs: { scope: "col" } }, [_vm._v("Nachname")]),
+      _vm._v(" "),
+      _c("th", { attrs: { scope: "col" } }, [_vm._v("Vorname")]),
+      _vm._v(" "),
+      _c("th", { staticStyle: { width: "100px" }, attrs: { scope: "col" } }, [
+        _vm._v("Betrag")
       ]),
       _vm._v(" "),
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nr.")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Klasse")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nachname")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Vorname")]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { width: "100px" }, attrs: { scope: "col" } }, [
-          _vm._v("Betrag")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { width: "100px" }, attrs: { scope: "col" } }, [
-          _vm._v("Anmerkung")
-        ])
+      _c("th", { staticStyle: { width: "100px" }, attrs: { scope: "col" } }, [
+        _vm._v("Anmerkung")
       ])
     ])
   }
