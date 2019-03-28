@@ -2053,7 +2053,12 @@ __webpack_require__.r(__webpack_exports__);
     assignEveryone: function assignEveryone() {},
     assignSelected: function assignSelected() {},
     removeStudent: function removeStudent(id) {
-      $("#" + id).remove();
+      //remove from DOM
+      $("#" + id).remove(); //remove from Data
+
+      this.data.students = this.data.students.filter(function (el) {
+        return el.id !== id;
+      });
     }
   }
 });

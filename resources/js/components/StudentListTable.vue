@@ -53,7 +53,11 @@
 
             },
             removeStudent: function(id){
+                //remove from DOM
                 $("#"+id).remove();
+
+                //remove from Data
+                this.data.students = this.data.students.filter(el => el.id !== id);
             }
         }
     }
