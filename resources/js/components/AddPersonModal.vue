@@ -9,15 +9,13 @@
                 <h4 class="modal-title">Person hinzufügen</h4>
             </div>
             <div class="modal-body">
-                <form action="/add/class" method="post">
                     <table>
                         <tr>
                             <td><input type="text" name="user[]" id="user_autocomplete" class="form-control typeahead" placeholder="Name oder ID" @focus="autocomplete()"></td>
-                            <td><button type="button" class="btn btn-primary">+</button></td>
+                            <td><button type="button" class="btn btn-primary" @click="addStudent">+</button></td>
                         </tr>
                     </table>
                         
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -41,6 +39,25 @@
                     source: "http://localhost:8000/user/autocomplete/"
                 });
             },
+            addStudent: function(){
+                var input = $("#user_autocomplete");
+                var self = this;
+                axios.get('/api/getStudent', {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        params: {
+                            user: input.val()
+                        }
+                    }).then(response =>{
+                        console.log(response.data);
+                        self.$parent.students.push(response.data);
+                    });
+
+                    
+
+                
+            }
         },
     }
 </script>

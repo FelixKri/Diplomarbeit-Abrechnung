@@ -1876,8 +1876,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
@@ -1887,6 +1885,21 @@ __webpack_require__.r(__webpack_exports__);
       console.log("autocomplete function launched");
       $("#user_autocomplete").autocomplete({
         source: "http://localhost:8000/user/autocomplete/"
+      });
+    },
+    addStudent: function addStudent() {
+      var input = $("#user_autocomplete");
+      var self = this;
+      axios.get('/api/getStudent', {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        params: {
+          user: input.val()
+        }
+      }).then(function (response) {
+        console.log(response.data);
+        self.$parent.students.push(response.data);
       });
     }
   }
@@ -37822,33 +37835,41 @@ var render = function() {
           _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
-            _c("form", { attrs: { action: "/add/class", method: "post" } }, [
-              _c("table", [
-                _c("tr", [
-                  _c("td", [
-                    _c("input", {
-                      staticClass: "form-control typeahead",
-                      attrs: {
-                        type: "text",
-                        name: "user[]",
-                        id: "user_autocomplete",
-                        placeholder: "Name oder ID"
-                      },
-                      on: {
-                        focus: function($event) {
-                          return _vm.autocomplete()
-                        }
+            _c("table", [
+              _c("tr", [
+                _c("td", [
+                  _c("input", {
+                    staticClass: "form-control typeahead",
+                    attrs: {
+                      type: "text",
+                      name: "user[]",
+                      id: "user_autocomplete",
+                      placeholder: "Name oder ID"
+                    },
+                    on: {
+                      focus: function($event) {
+                        return _vm.autocomplete()
                       }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(1)
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "button" },
+                      on: { click: _vm.addStudent }
+                    },
+                    [_vm._v("+")]
+                  )
                 ])
               ])
             ])
           ]),
           _vm._v(" "),
-          _vm._m(2)
+          _vm._m(1)
         ])
       ])
     ]
@@ -37870,18 +37891,6 @@ var staticRenderFns = [
       ),
       _vm._v(" "),
       _c("h4", { staticClass: "modal-title" }, [_vm._v("Person hinzufügen")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "button" } },
-        [_vm._v("+")]
-      )
     ])
   },
   function() {
@@ -50648,9 +50657,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\sass\main.scss */"./resources/sass/main.scss");
+__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
 
 
 /***/ })
