@@ -26,22 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="student in data.students">
-                <th scope="row">
-                    <input type="number" name="students[]" id="" readonly v-bind:value="student.id">
-                </th>
-                <td>{{ student.group_id }}</td>
-                <td>{{ student.last_name }}</td>
-                <td>{{ student.first_name }}</td>
-                <td>
-                    <input type="number" name="amount[]" id="" class="form-control">
-                </td>
-                <td>
-                    <input type="text" name="annotation[]" id="" class="form-control">
-                </td>
-                <td><i class="fas fa-edit"></i></td>
-                <td><i class="fas fa-user-minus"></i></td>
-            </tr>
+            <student :data="student" v-for="student in data.students" v-bind:key="student.id"></student>
         </tbody>
     </table>
 </template>

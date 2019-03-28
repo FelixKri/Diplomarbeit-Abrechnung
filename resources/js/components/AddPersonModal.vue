@@ -9,13 +9,12 @@
                 <h4 class="modal-title">Person hinzufügen</h4>
             </div>
             <div class="modal-body">
-                    <table>
-                        <tr>
-                            <td><input type="text" name="user[]" id="user_autocomplete" class="form-control typeahead" placeholder="Name oder ID" @focus="autocomplete()"></td>
-                            <td><button type="button" class="btn btn-primary" @click="addStudent">+</button></td>
-                        </tr>
-                    </table>
-                        
+                <table>
+                    <tr>
+                        <td><input type="text" name="user[]" id="user_autocomplete" class="form-control typeahead" placeholder="Name oder ID" @focus="autocomplete()"></td>
+                        <td><button type="button" class="btn btn-primary" @click="addStudent">+</button></td>
+                    </tr>
+                </table>        
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

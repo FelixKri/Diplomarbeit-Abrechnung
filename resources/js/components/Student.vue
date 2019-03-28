@@ -1,0 +1,27 @@
+<template>
+    <tr>
+        <th scope="row">
+            <input type="number" name="students[]" id="" readonly v-bind:value="data.id">
+        </th>
+        <td>{{ data.group_id }}</td>
+        <td>{{ data.last_name }}</td>
+        <td>{{ data.first_name }}</td>
+        <td>
+            <input type="number" name="amount[]" id="" class="form-control">
+        </td>
+        <td>
+            <input type="text" name="annotation[]" id="" class="form-control">
+        </td>
+        <td><i class="fas fa-edit" @click="editStudent();"></i></td>
+        <td><i class="fas fa-user-minus" @click="removeStudent();"></i></td>
+    </tr>
+</template>
+
+<script>
+    export default {
+        mounted() {
+            console.log('Component mounted.')
+        },
+        props: ["data"],
+    }
+</script>
