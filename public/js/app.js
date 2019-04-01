@@ -1835,6 +1835,11 @@ __webpack_require__.r(__webpack_exports__);
           console.log(error);
         });
       });
+    },
+    removeClass: function removeClass(cl) {
+      this.data.classes = this.data.classes.filter(function (el) {
+        return el !== cl;
+      });
     }
   }
 });
@@ -37764,16 +37769,22 @@ var render = function() {
             _c(
               "ul",
               _vm._l(_vm.data.classes, function(className) {
-                return _c("li", [
-                  _vm._v(_vm._s(className) + " | "),
+                return _c("li", { key: className }, [
+                  _vm._v(_vm._s(className) + " "),
                   _c(
                     "button",
                     {
-                      staticClass: "form-control form-control-sm",
+                      staticClass: "btn btn-danger btn-sm",
                       staticStyle: {
                         display: "inline",
                         width: "100px",
                         cursor: "pointer"
+                      },
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.removeClass(className)
+                        }
                       }
                     },
                     [_vm._v("entefernen")]
@@ -50882,9 +50893,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! F:\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! F:\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! F:\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
+__webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\sass\main.scss */"./resources/sass/main.scss");
 
 
 /***/ })

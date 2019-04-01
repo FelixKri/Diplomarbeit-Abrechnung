@@ -10,7 +10,7 @@
                 </div>
                 <div class="modal-body">
                     <ul>
-                        <li v-for="className in data.classes">{{ className }} | <button class="form-control form-control-sm" style="display: inline; width: 100px; cursor: pointer;">entefernen</button></li>
+                        <li v-bind:key="className" v-for="className in data.classes">{{ className }} <button type="button" class="btn btn-danger btn-sm" style="display: inline; width: 100px; cursor: pointer;" @click="removeClass(className);">entefernen</button></li>
                     </ul>
                         <table>
                             <tr>
@@ -80,6 +80,9 @@
                     });
                 });
                 
+            },
+            removeClass: function(cl){
+                this.data.classes = this.data.classes.filter(el => el !== cl);
             }
         },
 
