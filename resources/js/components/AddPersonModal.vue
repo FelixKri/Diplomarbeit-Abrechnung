@@ -9,15 +9,19 @@
                 <h4 class="modal-title">Person hinzufügen</h4>
             </div>
             <div class="modal-body">
-                <table>
-                    <tr>
-                        <td><input type="text" name="user[]" id="user_autocomplete" class="form-control typeahead" placeholder="Name oder ID" @focus="autocomplete()"></td>
-                        <td><button type="button" class="btn btn-primary" @click="addStudent">+</button></td>
-                    </tr>
-                </table>        
+            <ul>
+                <li v-bind:key="student['id']" v-for="student in data.studentsDom">{{ student["first_name"] + " " + student["last_name"] }} <button type="button" class="btn btn-danger btn-sm" style="display: inline; width: 100px; cursor: pointer;" @click="removeStudent(studentName);">entfernen</button></li>
+            </ul>
+            <table>
+                <tr>
+                    <td><input type="text" name="user[]" id="user_autocomplete" class="form-control typeahead" placeholder="Name oder ID" @focus="autocomplete()"></td>
+                   <td><button type="button" class="btn btn-primary" @click="addStudentToDom">+</button></td>
+                </tr>
+            </table> 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" @click="addStudents">Hinzufügen</button>
             </div>
         </div>
   
@@ -30,6 +34,11 @@
         mounted() {
             console.log('Component mounted.')
         },
+        data: function () {
+                return {
+                    data: this.$parent
+                }
+            },
         methods: {
             autocomplete: function() {
                 console.log("autocomplete function launched");
@@ -37,7 +46,15 @@
                     source: "http://localhost:8000/user/autocomplete/"
                 });
             },
-            addStudent: function(){
+            addStudents: function(){
+                
+                this.$parent.studentsDom.forEach(student => {
+                    console.log("Adding student: " + student);
+                    this.$parent.students.push(student);
+                });
+
+            },
+            addStudentToDom: function(){
                 var input = $("#user_autocomplete");
                 var that = this;
 
@@ -49,17 +66,15 @@
                         user: input.val()
                     }})
                     .then(response =>{
-                        console.log(response.data);
-                        that.$parent.students.push(response.data);
+                        console.log("Adding student to DOM: " + response.data);
+                        that.$parent.studentsDom.push(response.data);
                     });
 
-                
+                    input.val("");
+            },
+            removeStudent: function(st){
+                    this.$parent.studentsDom = this.$parent.studentsDom.filter(s => s["id"] !== st["id"]);
             }
-        },
-        data: function () {
-            return {
-                input: ""
-            }
-        },
+        }
     }
 </script>

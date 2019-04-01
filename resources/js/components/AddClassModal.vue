@@ -5,12 +5,12 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Klasse hinzufügen</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Klasse hinzufügen</h4>
                 </div>
                 <div class="modal-body">
                     <ul>
-                        <li v-bind:key="className" v-for="className in data.classes">{{ className }} <button type="button" class="btn btn-danger btn-sm" style="display: inline; width: 100px; cursor: pointer;" @click="removeClass(className);">entefernen</button></li>
+                        <li v-bind:key="className" v-for="className in data.classes">{{ className }} <button type="button" class="btn btn-danger btn-sm" style="display: inline; width: 100px; cursor: pointer;" @click="removeClass(className);">entfernen</button></li>
                     </ul>
                         <table>
                             <tr>

@@ -1882,9 +1882,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
+  },
+  data: function data() {
+    return {
+      data: this.$parent
+    };
   },
   methods: {
     autocomplete: function autocomplete() {
@@ -1893,7 +1902,16 @@ __webpack_require__.r(__webpack_exports__);
         source: "http://localhost:8000/user/autocomplete/"
       });
     },
-    addStudent: function addStudent() {
+    addStudents: function addStudents() {
+      var _this = this;
+
+      this.$parent.studentsDom.forEach(function (student) {
+        console.log("Adding student: " + student);
+
+        _this.$parent.students.push(student);
+      });
+    },
+    addStudentToDom: function addStudentToDom() {
       var input = $("#user_autocomplete");
       var that = this;
       axios.get('/api/getStudent', {
@@ -1904,15 +1922,16 @@ __webpack_require__.r(__webpack_exports__);
           user: input.val()
         }
       }).then(function (response) {
-        console.log(response.data);
-        that.$parent.students.push(response.data);
+        console.log("Adding student to DOM: " + response.data);
+        that.$parent.studentsDom.push(response.data);
+      });
+      input.val("");
+    },
+    removeStudent: function removeStudent(st) {
+      this.$parent.studentsDom = this.$parent.studentsDom.filter(function (s) {
+        return s["id"] !== st["id"];
       });
     }
-  },
-  data: function data() {
-    return {
-      input: ""
-    };
   }
 });
 
@@ -37932,7 +37951,7 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v("entefernen")]
+                    [_vm._v("entfernen")]
                   )
                 ])
               }),
@@ -38046,6 +38065,37 @@ var render = function() {
           _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
+            _c(
+              "ul",
+              _vm._l(_vm.data.studentsDom, function(student) {
+                return _c("li", { key: student["id"] }, [
+                  _vm._v(
+                    _vm._s(student["first_name"] + " " + student["last_name"]) +
+                      " "
+                  ),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger btn-sm",
+                      staticStyle: {
+                        display: "inline",
+                        width: "100px",
+                        cursor: "pointer"
+                      },
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.removeStudent(_vm.studentName)
+                        }
+                      }
+                    },
+                    [_vm._v("entfernen")]
+                  )
+                ])
+              }),
+              0
+            ),
+            _vm._v(" "),
             _c("table", [
               _c("tr", [
                 _c("td", [
@@ -38071,7 +38121,7 @@ var render = function() {
                     {
                       staticClass: "btn btn-primary",
                       attrs: { type: "button" },
-                      on: { click: _vm.addStudent }
+                      on: { click: _vm.addStudentToDom }
                     },
                     [_vm._v("+")]
                   )
@@ -38080,7 +38130,26 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _vm._m(1)
+          _c("div", { staticClass: "modal-footer" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-default",
+                attrs: { type: "button", "data-dismiss": "modal" }
+              },
+              [_vm._v("Close")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success",
+                attrs: { type: "button", "data-dismiss": "modal" },
+                on: { click: _vm.addStudents }
+              },
+              [_vm._v("Hinzufügen")]
+            )
+          ])
         ])
       ])
     ]
@@ -38102,21 +38171,6 @@ var staticRenderFns = [
       ),
       _vm._v(" "),
       _c("h4", { staticClass: "modal-title" }, [_vm._v("Person hinzufügen")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-default",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Close")]
-      )
     ])
   }
 ]
@@ -50853,7 +50907,8 @@ Vue.component('position-tab', __webpack_require__(/*! ./components/PositionTab.v
 
 var data = {
   classes: [],
-  students: []
+  students: [],
+  studentsDom: []
 };
 var app = new Vue({
   el: '#app',
@@ -51523,9 +51578,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
+__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
 
 
 /***/ })

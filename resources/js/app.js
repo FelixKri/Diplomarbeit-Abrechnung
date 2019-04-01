@@ -36,6 +36,7 @@ Vue.component('position-tab', require('./components/PositionTab.vue').default);
 var data = {
     classes: [],
     students: [],
+    studentsDom: [],
 };
 
 const app = new Vue({
