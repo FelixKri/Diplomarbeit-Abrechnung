@@ -1969,7 +1969,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
-  }
+  },
+  props: ["name"]
 });
 
 /***/ }),
@@ -1996,9 +1997,78 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
+  },
+  methods: {
+    addPos: function addPos() {
+      var name = prompt("Namen der Rechnungspos eingeben", "");
+      this.id = this.id + 1;
+      var id = this.id;
+      var position = {
+        id: id,
+        name: name
+      };
+      this.invoicePositions.push(position);
+    }
+  },
+  data: function data() {
+    return {
+      invoicePositions: [],
+      id: 0
+    };
   }
 });
 
@@ -2020,7 +2090,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
-  }
+  },
+  props: ["name"]
 });
 
 /***/ }),
@@ -38117,33 +38188,26 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    {
+      staticClass: "tab-pane fade",
+      attrs: {
+        id: "nav-" + _vm.name,
+        role: "tabpanel",
+        "aria-labelledby": "nav-" + _vm.name + "-tab"
+      }
+    },
+    [
+      _c("p", [
+        _vm._v(
+          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatum quam quas totam possimus laudantium natus, ab hic beatae rem ducimus qui consectetur impedit quod quo recusandae, fugiat placeat temporibus ad."
+        )
+      ])
+    ]
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "tab-pane fade",
-        attrs: {
-          id: "nav-home",
-          role: "tabpanel",
-          "aria-labelledby": "nav-home-tab"
-        }
-      },
-      [
-        _c("p", [
-          _vm._v(
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatum quam quas totam possimus laudantium natus, ab hic beatae rem ducimus qui consectetur impedit quod quo recusandae, fugiat placeat temporibus ad."
-          )
-        ])
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -38173,20 +38237,173 @@ var render = function() {
           staticClass: "nav nav-tabs",
           attrs: { id: "nav-tab", role: "tablist" }
         },
-        [_c("position-tab")],
-        1
+        [
+          _vm._l(_vm.invoicePositions, function(position) {
+            return _c(
+              "a",
+              {
+                key: position.id,
+                staticClass: "nav-item nav-link",
+                attrs: {
+                  id: "nav-" + position.name + "-tab",
+                  "data-toggle": "tab",
+                  href: "#nav-" + position.name,
+                  role: "tab",
+                  "aria-controls": "nav-" + position.name,
+                  "aria-selected": "true"
+                }
+              },
+              [
+                _vm._v(
+                  "\n                " +
+                    _vm._s(position.name) +
+                    "\n            "
+                )
+              ]
+            )
+          }),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "nav-item nav-link",
+              attrs: {
+                id: "nav-add-tab",
+                "data-toggle": "tab",
+                href: "#nav-add",
+                role: "tab",
+                "aria-controls": "nav-add",
+                "aria-selected": "false"
+              },
+              on: {
+                click: function($event) {
+                  return _vm.addPos()
+                }
+              }
+            },
+            [_vm._v("+")]
+          )
+        ],
+        2
       )
     ]),
     _vm._v(" "),
     _c(
       "div",
       { staticClass: "tab-content", attrs: { id: "nav-tabContent" } },
-      [_c("invoice-position")],
-      1
+      _vm._l(_vm.invoicePositions, function(position) {
+        return _c(
+          "div",
+          {
+            key: position.id,
+            staticClass: "tab-pane fade show",
+            attrs: {
+              id: "nav-" + position.name,
+              role: "tabpanel",
+              "aria-labelledby": "nav-" + position.name + "-tab"
+            }
+          },
+          [
+            _c("h2", [
+              _vm._v(
+                "ID: " +
+                  _vm._s(position.id) +
+                  " | NAME: " +
+                  _vm._s(position.name)
+              )
+            ]),
+            _vm._v(" "),
+            _vm._m(0, true),
+            _vm._v(" "),
+            _c("table", { staticClass: "table" }, [
+              _vm._m(1, true),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(position.students, function(student) {
+                  return _c("tr", [
+                    _c("th", { attrs: { scope: "row" } }, [
+                      _vm._v(_vm._s(student.id))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(student.lastname))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(student.firstname))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(student.group))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(student.amount))])
+                  ])
+                }),
+                0
+              )
+            ])
+          ]
+        )
+      }),
+      0
     )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm" }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "amount" } }, [_vm._v("Betrag")]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control",
+            attrs: { type: "number", placeholder: "Betrag" }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "billnumber" } }, [_vm._v("BelegNr")]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control",
+            attrs: { type: "number", placeholder: "Belegnummer" }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm" }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "annotation" } }, [
+            _vm._v("Anmerkungen")
+          ]),
+          _vm._v(" "),
+          _c("textarea", {
+            staticClass: "form-control",
+            attrs: { id: "annotation", rows: "5" }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nachname")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Vorname")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Klasse")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Betrag")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -38213,15 +38430,15 @@ var render = function() {
     {
       staticClass: "nav-item nav-link active",
       attrs: {
-        id: "nav-home-tab",
+        id: "nav-" + _vm.home + "-tab",
         "data-toggle": "tab",
-        href: "#nav-home",
+        href: "#nav-" + _vm.home,
         role: "tab",
-        "aria-controls": "nav-home",
+        "aria-controls": "nav-" + _vm.home,
         "aria-selected": "true"
       }
     },
-    [_vm._v("Home")]
+    [_vm._v(_vm._s(_vm.name))]
   )
 }
 var staticRenderFns = []
@@ -51306,9 +51523,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! C:\Users\Felix\OneDrive - HTL Hallein\Schule\Diplomarbeit\resources\sass\main.scss */"./resources/sass/main.scss");
+__webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
 
 
 /***/ })
