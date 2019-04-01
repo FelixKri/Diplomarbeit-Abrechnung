@@ -24,6 +24,9 @@ Vue.component('add-class-modal', require('./components/AddClassModal.vue').defau
 Vue.component('add-person-modal', require('./components/AddPersonModal.vue').default);
 Vue.component('student-list-table', require('./components/StudentListTable.vue').default);
 Vue.component('student', require('./components/Student.vue').default);
+Vue.component('invoice-positions', require('./components/InvoicePositions.vue').default);
+Vue.component('invoice-position', require('./components/InvoicePosition.vue').default);
+Vue.component('position-tab', require('./components/PositionTab.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
