@@ -1795,8 +1795,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('Component mounted.');
+  mounted: function mounted() {//
   },
   data: function data() {
     return {
@@ -1805,7 +1804,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     autocomplete: function autocomplete() {
-      console.log("autocomplete function launched");
       $("#classes_autocomplete").autocomplete({
         source: "http://localhost:8000/class/autocomplete/"
       });
@@ -1826,11 +1824,9 @@ __webpack_require__.r(__webpack_exports__);
             name: className
           }
         }).then(function (response) {
-          console.log(response.data);
           response.data.forEach(function (student) {
             self.$parent.students.push(student);
           });
-          console.log(self.$parent.students);
         }).catch(function (error) {
           console.log(error);
         });
@@ -2067,12 +2063,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
   },
   methods: {
     addPos: function addPos() {
+      /*
+          Aufbau einer invoicePosition:
+           {
+              id: 1,
+              name: "Skikurs",
+              students: [
+                  {object} <- id, lastname, firstname, group, amount, annotation
+                  {object}
+                  {object}
+                  ...
+              ]
+          }
+           Feature Ideen:
+              global schüler hinzufügen button: Schüler werden allen Rechnungspos hinzugefügt
+              wenn neue Rechnungspos geöffnet wird: Prompt ob neu oder aus prescribing
+      */
       var name = prompt("Namen der Rechnungspos eingeben", "");
       this.id = this.id + 1;
       var id = this.id;
@@ -38369,6 +38387,36 @@ var render = function() {
             _vm._v(" "),
             _vm._m(0, true),
             _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-sm",
+                attrs: {
+                  "data-toggle": "modal",
+                  "data-target": "#addClass",
+                  type: "button"
+                }
+              },
+              [_vm._v("Klasse(n) hinzufügen")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-sm",
+                attrs: {
+                  "data-toggle": "modal",
+                  "data-target": "#addUser",
+                  type: "button"
+                }
+              },
+              [_vm._v("Person(n) hinzufügen")]
+            ),
+            _vm._v(" "),
+            _c("add-class-modal"),
+            _vm._v(" "),
+            _c("add-person-modal"),
+            _vm._v(" "),
             _c("table", { staticClass: "table" }, [
               _vm._m(1, true),
               _vm._v(" "),
@@ -38392,7 +38440,8 @@ var render = function() {
                 0
               )
             ])
-          ]
+          ],
+          1
         )
       }),
       0
@@ -51578,9 +51627,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
+__webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
 
 
 /***/ })

@@ -32,7 +32,7 @@
 <script>
     export default {
         mounted() {
-            console.log('Component mounted.')
+            //
         },
         data: function () {
             return {
@@ -41,8 +41,6 @@
         },
         methods: {
             autocomplete: function() {
-
-                console.log("autocomplete function launched");
                 $( "#classes_autocomplete" ).autocomplete({
                     source: "http://localhost:8000/class/autocomplete/"
                 });
@@ -67,13 +65,9 @@
                         }
                     })
                     .then(response => {
-                        console.log(response.data);
-
                         response.data.forEach(student => {
-                        self.$parent.students.push(student);
+                            self.$parent.students.push(student);
                         });
-                        
-                        console.log(self.$parent.students); 
                     })
                     .catch(error => {
                         console.log(error);

@@ -35,6 +35,12 @@
                     </div>
                 </div>
 
+                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addClass" type=button>Klasse(n) hinzufügen</button> 
+                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUser" type=button>Person(n) hinzufügen</button>
+            
+                <add-class-modal></add-class-modal>
+                <add-person-modal></add-person-modal>
+
                 <table class="table">
                     <thead>
                         <tr>
@@ -69,6 +75,25 @@
         },
         methods: {
             addPos: function(){
+
+                /*
+                    Aufbau einer invoicePosition:
+
+                    {
+                        id: 1,
+                        name: "Skikurs",
+                        students: [
+                            {object} <- id, lastname, firstname, group, amount, annotation
+                            {object}
+                            {object}
+                            ...
+                        ]
+                    }
+
+                    Feature Ideen:
+                        global schüler hinzufügen button: Schüler werden allen Rechnungspos hinzugefügt
+                        wenn neue Rechnungspos geöffnet wird: Prompt ob neu oder aus prescribing
+                */
                 var name = prompt("Namen der Rechnungspos eingeben", "");
                 
                 this.id = this.id + 1;
