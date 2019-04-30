@@ -1809,8 +1809,24 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     addClassToDOM: function addClassToDOM() {
-      var input = $("#classes_autocomplete");
-      this.$parent.classes.push(input.val());
+      var input = $("#classes_autocomplete"); //Check if already added this class
+
+      var contains = false;
+
+      for (var i = 0; i < this.$parent.classes.length; i++) {
+        if (this.$parent.classes[i] == input.val()) {
+          contains = true;
+          break;
+        }
+      }
+
+      if (!contains) {
+        this.$parent.classes.push(input.val());
+      } else {
+        //Todo show user
+        console.log("Class already added: " + input.val());
+      }
+
       input.val("");
     },
     addStudents: function addStudents() {
@@ -1825,7 +1841,24 @@ __webpack_require__.r(__webpack_exports__);
           }
         }).then(function (response) {
           response.data.forEach(function (student) {
-            self.$parent.students.push(student);
+            //Check for users to not be added if they are already contained
+            //E.g. if you add a user per add person, then add his class
+            //If this is too much to calculate, think of another solution to this problem
+            var contains = false;
+
+            for (var i = 0; i < self.$parent.students.length; i++) {
+              if (self.$parent.students[i]["id"] == student["id"]) {
+                contains = true;
+                break;
+              }
+            }
+
+            if (!contains) {
+              self.$parent.students.push(student);
+            } else {
+              //Do not show user error, because can happen multiple times on one click
+              console.log("Student id already added: " + response.data["id"]);
+            }
           });
         }).catch(function (error) {
           console.log(error);
@@ -1899,12 +1932,25 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     addStudents: function addStudents() {
-      var _this = this;
-
+      var self = this;
       this.$parent.studentsDom.forEach(function (student) {
-        console.log("Adding student: " + student);
+        //Also check for duplication here, because student can be in students but not twice in DOM
+        //Would still be duplication
+        console.log("Adding student: " + student["id"]);
+        var contains = false;
 
-        _this.$parent.students.push(student);
+        for (var i = 0; i < self.$parent.students.length; i++) {
+          if (self.$parent.students[i]["id"] == student["id"]) {
+            contains = true;
+            break;
+          }
+        }
+
+        if (!contains) {
+          self.$parent.students.push(student);
+        } else {
+          console.log("Student id already added: " + student["id"]);
+        }
       });
     },
     addStudentToDom: function addStudentToDom() {
@@ -1919,7 +1965,21 @@ __webpack_require__.r(__webpack_exports__);
         }
       }).then(function (response) {
         console.log("Adding student to DOM: " + response.data);
-        that.$parent.studentsDom.push(response.data);
+        var contains = false;
+
+        for (var i = 0; i < that.$parent.students.length; i++) {
+          if (that.$parent.students[i]["id"] == response.data["id"]) {
+            contains = true;
+            break;
+          }
+        }
+
+        if (!contains) {
+          that.$parent.studentsDom.push(response.data);
+        } else {
+          //Todo show user this kinda error
+          console.log("Student id already added: " + response.data["id"]);
+        }
       });
       input.val("");
     },
@@ -51627,9 +51687,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
+__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
 
 
 /***/ })

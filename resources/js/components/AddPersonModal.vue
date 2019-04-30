@@ -47,10 +47,31 @@
                 });
             },
             addStudents: function(){
-                
+                var self = this;
+
                 this.$parent.studentsDom.forEach(student => {
-                    console.log("Adding student: " + student);
-                    this.$parent.students.push(student);
+                    //Also check for duplication here, because student can be in students but not twice in DOM
+                    //Would still be duplication
+                    console.log("Adding student: " + student["id"]);
+
+                    var contains = false;
+                    for(var i = 0;i < self.$parent.students.length;i++)
+                    {
+                        if(self.$parent.students[i]["id"] == student["id"])
+                        {
+                            contains = true;
+                            break;
+                        }
+                    }
+
+                    if(!contains)
+                    {
+                        self.$parent.students.push(student);
+                    }
+                    else
+                    {
+                        console.log("Student id already added: " + student["id"]);
+                    }
                 });
 
             },
@@ -67,7 +88,25 @@
                     }})
                     .then(response =>{
                         console.log("Adding student to DOM: " + response.data);
-                        that.$parent.studentsDom.push(response.data);
+                        var contains = false;
+                        for(var i = 0;i < that.$parent.students.length;i++)
+                        {
+                            if(that.$parent.students[i]["id"] == response.data["id"])
+                            {
+                            contains = true;
+                            break;
+                            }
+                        }
+
+                        if(!contains)
+                        {
+                            that.$parent.studentsDom.push(response.data);
+                        }
+                        else
+                            {
+                                //Todo show user this kinda error
+                                console.log("Student id already added: " + response.data["id"]);
+                            }
                     });
 
                     input.val("");

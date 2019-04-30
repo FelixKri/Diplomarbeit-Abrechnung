@@ -48,7 +48,28 @@
 
             addClassToDOM: function(){
                 var input = $("#classes_autocomplete");
-                this.$parent.classes.push(input.val());
+
+                //Check if already added this class
+                var contains = false;
+                    for(var i = 0;i < this.$parent.classes.length;i++)
+                    {
+                        if(this.$parent.classes[i] == input.val())
+                        {
+                            contains = true;
+                            break;
+                        }
+                     }
+
+                if(!contains)
+                {
+                    this.$parent.classes.push(input.val());
+                }
+                else
+                {
+                    //Todo show user
+                    console.log("Class already added: " + input.val());
+                }
+
                 input.val("");
             },
 
@@ -66,7 +87,28 @@
                     })
                     .then(response => {
                         response.data.forEach(student => {
-                            self.$parent.students.push(student);
+                        //Check for users to not be added if they are already contained
+                        //E.g. if you add a user per add person, then add his class
+                        //If this is too much to calculate, think of another solution to this problem
+                            var contains = false;
+                            for(var i = 0;i < self.$parent.students.length;i++)
+                            {
+                                if(self.$parent.students[i]["id"] == student["id"])
+                                {
+                                contains = true;
+                                break;
+                                }
+                            }
+
+                            if(!contains)
+                            {
+                                self.$parent.students.push(student);
+                            }
+                            else
+                            {
+                                //Do not show user error, because can happen multiple times on one click
+                                console.log("Student id already added: " + response.data["id"]);
+                            }
                         });
                     })
                     .catch(error => {

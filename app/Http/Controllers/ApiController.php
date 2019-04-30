@@ -17,6 +17,7 @@ class ApiController extends Controller
 
     public function getStudent()
     {
+        //Maybe make safer / not only with autocomplete used
     	$student = Fos_user::where('id', explode(" ", request()->user)[0])->first();
     	
     	return $student;
