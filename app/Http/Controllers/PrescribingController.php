@@ -75,4 +75,6 @@ class PrescribingController extends Controller
         }
         return $searchResult;
     }
+
+    
 }

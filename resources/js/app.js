@@ -20,7 +20,7 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('add-class-modal', require('./components/AddClassModal.vue').default);
+//Vue.component('add-class-modal', require('./components/AddClassModal.vue').default);
 Vue.component('add-person-modal', require('./components/AddPersonModal.vue').default);
 Vue.component('student-list-table', require('./components/StudentListTable.vue').default);
 Vue.component('student', require('./components/Student.vue').default);
@@ -33,11 +33,11 @@ Vue.component('position-tab', require('./components/PositionTab.vue').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-var data = {
-    classes: [],
+ var data = {
     students: [],
-    studentsDom: [],
+    studentsDom: []
 };
+
 
 const app = new Vue({
     el: '#app',

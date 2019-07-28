@@ -24,6 +24,6 @@ Route::get('/prescribing/show', 'PrescribingController@show');
 Route::get('/invoice/new', 'InvoiceController@create');
 Route::post('/invoice/new', 'InvoiceController@store');
 
-
-Route::get('/class/autocomplete', 'PrescribingController@autocompleteClass');
-Route::get('/user/autocomplete', 'PrescribingController@autocompleteUser');
+Route::post('/getUsers','AjaxController@getUsers');
+//Route::get('/class/autocomplete', 'PrescribingController@autocompleteClass');
+//Route::get('/user/autocomplete', 'PrescribingController@autocompleteUser');

@@ -5,23 +5,29 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
+                <h4 class="modal-title">Hinzufügen</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Person hinzufügen</h4>
             </div>
             <div class="modal-body">
-            <ul>
-                <li v-bind:key="student['id']" v-for="student in data.studentsDom">{{ student["first_name"] + " " + student["last_name"] }} <button type="button" class="btn btn-danger btn-sm" style="display: inline; width: 100px; cursor: pointer;" @click="removeStudent(studentName);">entfernen</button></li>
-            </ul>
             <table>
                 <tr>
-                    <td><input type="text" name="user[]" id="user_autocomplete" class="form-control typeahead" placeholder="Name oder ID" @focus="autocomplete()"></td>
-                   <td><button type="button" class="btn btn-primary" @click="addStudentToDom">+</button></td>
+                    <td><input type="text" name="nameFilter" id="nameFilter" class="form-control typeahead" placeholder="Name" v-on:keyup="getStudentsList()"></td>
+                    <td><input type="text" name="classFilter" id="classFilter" class="form-control typeahead" placeholder="Klasse" v-on:keyup="getStudentsList()"></td>
+                    <td><button type="button" class="btn btn-primary" @click="resetFilter">Filter löschen</button></td>
                 </tr>
             </table> 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success" data-dismiss="modal" @click="addStudents">Hinzufügen</button>
+                    <button type="button" class="btn btn-success" @click="addStudents">Hinzufügen</button>
+            </div>
+
+            <div class="modal-body">
+                <input type="checkbox" >
+                <label>Select all</label>
+            </div>
+            <div class="modal-body" v-bind:key="student['id']" v-for="student in data.studentsDom" >
+                <input type="checkbox">{{ student["first_name"] + " " + student["last_name"] }}
             </div>
         </div>
   
@@ -40,79 +46,47 @@
                 }
             },
         methods: {
-            autocomplete: function() {
-                console.log("autocomplete function launched");
-                $( "#user_autocomplete" ).autocomplete({
-                    source: "http://localhost:8000/user/autocomplete/"
+            getStudentsList: function(){
+
+            var that = this;
+                $.ajax(
+                {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: "POST",
+                    url: '/getUsers',
+                    dataType: 'json',
+                    data: {
+                            nameFilter: $( "#nameFilter" )[0]["value"],
+                            classFilter: $( "#classFilter" )[0]["value"]
+                        },
+
+                    success: function (response) {
+                        console.log(response);
+                        that.$parent.studentsDom = response;
+                    }
                 });
             },
             addStudents: function(){
-                var self = this;
+            
+                this.$emit('AddStudents', this.$parent.studentsDom);
 
-                this.$parent.studentsDom.forEach(student => {
-                    //Also check for duplication here, because student can be in students but not twice in DOM
-                    //Would still be duplication
-                    console.log("Adding student: " + student["id"]);
-
-                    var contains = false;
-                    for(var i = 0;i < self.$parent.students.length;i++)
-                    {
-                        if(self.$parent.students[i]["id"] == student["id"])
-                        {
-                            contains = true;
-                            break;
-                        }
-                    }
-
-                    if(!contains)
-                    {
-                        self.$parent.students.push(student);
-                    }
-                    else
-                    {
-                        console.log("Student id already added: " + student["id"]);
-                    }
-                });
-
+                //Reset filters and clear everything else
+                $( "#nameFilter" )[0]["value"] = "";
+                $( "#classFilter" )[0]["value"] = "";
+                this.getStudentsList();
             },
             addStudentToDom: function(){
-                var input = $("#user_autocomplete");
-                var that = this;
-
-                axios.get('/api/getStudent', {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    params: {
-                        user: input.val()
-                    }})
-                    .then(response =>{
-                        console.log("Adding student to DOM: " + response.data);
-                        var contains = false;
-                        for(var i = 0;i < that.$parent.students.length;i++)
-                        {
-                            if(that.$parent.students[i]["id"] == response.data["id"])
-                            {
-                            contains = true;
-                            break;
-                            }
-                        }
-
-                        if(!contains)
-                        {
-                            that.$parent.studentsDom.push(response.data);
-                        }
-                        else
-                            {
-                                //Todo show user this kinda error
-                                console.log("Student id already added: " + response.data["id"]);
-                            }
-                    });
-
-                    input.val("");
+                
             },
             removeStudent: function(st){
-                    this.$parent.studentsDom = this.$parent.studentsDom.filter(s => s["id"] !== st["id"]);
+            
+            },
+            resetFilter: function(){
+                $( "#nameFilter" )[0]["value"] = "";
+                $( "#classFilter" )[0]["value"] = "";
+                this.getStudentsList();
             }
         }
     }

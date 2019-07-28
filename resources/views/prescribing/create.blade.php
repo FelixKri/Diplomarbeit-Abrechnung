@@ -20,10 +20,8 @@
             </select>
             <label for="description">Beschreibung: </label> <input type="text" name="description" id="" class="form-control"> 
             <hr>
-            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addClass" type=button>Klasse(n) hinzufügen</button> 
-            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUser" type=button>Person(n) hinzufügen</button>
+            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUser" type=button>Hinzufügen</button>
         
-            <add-class-modal></add-class-modal>
             <add-person-modal></add-person-modal>
             
             <student-list-table></student-list-table>
@@ -34,3 +32,11 @@
     
     
 @endsection
+
+<script>
+
+function addStudents(students)
+    {
+
+    }
+</script>
