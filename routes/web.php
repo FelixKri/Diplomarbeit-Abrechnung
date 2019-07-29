@@ -25,5 +25,6 @@ Route::get('/invoice/new', 'InvoiceController@create');
 Route::post('/invoice/new', 'InvoiceController@store');
 
 Route::post('/getUsers','AjaxController@getUsers');
+Route::post('/getAllGroups','AjaxController@getAllGroups');
 //Route::get('/class/autocomplete', 'PrescribingController@autocompleteClass');
 //Route::get('/user/autocomplete', 'PrescribingController@autocompleteUser');

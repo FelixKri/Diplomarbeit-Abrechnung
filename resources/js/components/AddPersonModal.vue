@@ -18,16 +18,16 @@
             </table> 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
                     <button type="button" class="btn btn-success" @click="addStudents">Hinzufügen</button>
             </div>
 
             <div class="modal-body">
-                <input type="checkbox" >
-                <label>Select all</label>
+                <button type="button" class="btn btn-primary" @click="selectAll">Alle auswählen</button>
+                <button type="button" class="btn btn-primary" @click="selectNone">Keinen auswählen</button> 
             </div>
             <div class="modal-body" v-bind:key="student['id']" v-for="student in data.studentsDom" >
-                <input type="checkbox">{{ student["first_name"] + " " + student["last_name"] }}
+                <input type="checkbox" :id="student['id']" @change="cbChanged(student['id'])">{{ student["first_name"] + " " + student["last_name"] + " | " + getGroupName(student['group_id']) }}
             </div>
         </div>
   
@@ -46,8 +46,19 @@
                 }
             },
         methods: {
-            getStudentsList: function(){
+            getGroupName: function(groupId)
+            {
 
+                for(var i = 0;i < this.$parent.groupLength;i++)
+                {
+                    if(this.$parent.groups[i]["id"] == groupId)
+                        return this.$parent.groups[i]["name"];
+                }
+                //Should not get here, pretty much an error
+                return "Unbekannt";
+            },
+            getStudentsList: function(){
+                
             var that = this;
                 $.ajax(
                 {
@@ -63,7 +74,7 @@
                         },
 
                     success: function (response) {
-                        console.log(response);
+                        //console.log(response);
                         that.$parent.studentsDom = response;
                     }
                 });
@@ -87,6 +98,18 @@
                 $( "#nameFilter" )[0]["value"] = "";
                 $( "#classFilter" )[0]["value"] = "";
                 this.getStudentsList();
+            },
+            selectAll: function(){
+                this.$parent.studentsDom.forEach(student => {
+                    //console.log(student.id);
+                    $( "#" + student.id)[0]["checked"] = true;
+                });
+            },
+            selectNone: function(){
+                this.$parent.studentsDom.forEach(student => {
+                    //console.log(student.id);
+                    $( "#" + student.id)[0]["checked"] = false;
+                });
             }
         }
     }

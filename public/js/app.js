@@ -1810,6 +1810,14 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    getGroupName: function getGroupName(groupId) {
+      for (var i = 0; i < this.$parent.groupLength; i++) {
+        if (this.$parent.groups[i]["id"] == groupId) return this.$parent.groups[i]["name"];
+      } //Should not get here, pretty much an error
+
+
+      return "Unbekannt";
+    },
     getStudentsList: function getStudentsList() {
       var that = this;
       $.ajax({
@@ -1824,7 +1832,7 @@ __webpack_require__.r(__webpack_exports__);
           classFilter: $("#classFilter")[0]["value"]
         },
         success: function success(response) {
-          console.log(response);
+          //console.log(response);
           that.$parent.studentsDom = response;
         }
       });
@@ -1842,6 +1850,18 @@ __webpack_require__.r(__webpack_exports__);
       $("#nameFilter")[0]["value"] = "";
       $("#classFilter")[0]["value"] = "";
       this.getStudentsList();
+    },
+    selectAll: function selectAll() {
+      this.$parent.studentsDom.forEach(function (student) {
+        //console.log(student.id);
+        $("#" + student.id)[0]["checked"] = true;
+      });
+    },
+    selectNone: function selectNone() {
+      this.$parent.studentsDom.forEach(function (student) {
+        //console.log(student.id);
+        $("#" + student.id)[0]["checked"] = false;
+      });
     }
   }
 });
@@ -37279,7 +37299,7 @@ var render = function() {
                   staticClass: "btn btn-default",
                   attrs: { type: "button", "data-dismiss": "modal" }
                 },
-                [_vm._v("Close")]
+                [_vm._v("Schließen")]
               ),
               _vm._v(" "),
               _c(
@@ -37293,17 +37313,49 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._m(1),
+            _c("div", { staticClass: "modal-body" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button" },
+                  on: { click: _vm.selectAll }
+                },
+                [_vm._v("Alle auswählen")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button" },
+                  on: { click: _vm.selectNone }
+                },
+                [_vm._v("Keinen auswählen")]
+              )
+            ]),
             _vm._v(" "),
             _vm._l(_vm.data.studentsDom, function(student) {
               return _c(
                 "div",
                 { key: student["id"], staticClass: "modal-body" },
                 [
-                  _c("input", { attrs: { type: "checkbox" } }),
+                  _c("input", {
+                    attrs: { type: "checkbox", id: student["id"] },
+                    on: {
+                      change: function($event) {
+                        return _vm.cbChanged(student["id"])
+                      }
+                    }
+                  }),
                   _vm._v(
-                    _vm._s(student["first_name"] + " " + student["last_name"]) +
-                      "\n          "
+                    _vm._s(
+                      student["first_name"] +
+                        " " +
+                        student["last_name"] +
+                        " | " +
+                        _vm.getGroupName(student["group_id"])
+                    ) + "\n          "
                   )
                 ]
               )
@@ -37331,16 +37383,6 @@ var staticRenderFns = [
         },
         [_vm._v("×")]
       )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-body" }, [
-      _c("input", { attrs: { type: "checkbox" } }),
-      _vm._v(" "),
-      _c("label", [_vm._v("Select all")])
     ])
   }
 ]
@@ -50108,8 +50150,35 @@ Vue.component('position-tab', __webpack_require__(/*! ./components/PositionTab.v
 
 var data = {
   students: [],
-  studentsDom: []
-};
+  studentsDom: [],
+  groups: [],
+  groupLength: 0
+}; //Seems really stupid to include groupLength
+//But objects don't have a .length property
+//So to not count this everytime we use it we just include it
+//Get all groups
+
+$.ajax({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  },
+  type: "POST",
+  url: '/getAllGroups',
+  dataType: 'json',
+  data: {},
+  success: function success(response) {
+    //console.log("All groups:");
+    //console.log(response);
+    data.groups = response;
+    var count = 0;
+
+    for (var thing in data.groups) {
+      count++;
+    }
+
+    data.groupLength = count;
+  }
+});
 var app = new Vue({
   el: '#app',
   data: data,

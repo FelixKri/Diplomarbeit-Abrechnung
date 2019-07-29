@@ -35,9 +35,42 @@ Vue.component('position-tab', require('./components/PositionTab.vue').default);
 
  var data = {
     students: [],
-    studentsDom: []
+    studentsDom: [],
+    groups: [],
+    groupLength: 0
 };
 
+//Seems really stupid to include groupLength
+//But objects don't have a .length property
+//So to not count this everytime we use it we just include it
+
+//Get all groups
+$.ajax(
+{
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    type: "POST",
+    url: '/getAllGroups',
+    dataType: 'json',
+    data: {
+    },
+
+    success: function (response) {
+        //console.log("All groups:");
+        //console.log(response);
+        data.groups = response;
+
+        var count = 0;
+
+        for(var thing in data.groups)
+        {
+            count++;
+        }
+
+        data.groupLength = count;
+    }
+});
 
 const app = new Vue({
     el: '#app',
