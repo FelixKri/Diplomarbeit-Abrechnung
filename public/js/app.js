@@ -1810,6 +1810,29 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    getStudentAfterId: function getStudentAfterId(id) {
+      for (var i = 0; i < this.$parent.studentsLoadedLength; i++) {
+        if (this.$parent.studentsLoaded[i]["id"] == id) return this.$parent.studentsLoaded[i];
+      } //Fatal error, id not found
+
+
+      console.log("Error: could not find id: '" + id + "' in getStudentAfterId");
+    },
+    getStudentIndexAfterId: function getStudentIndexAfterId(id) {
+      //No way around it, count studentsDom
+      var count = 0;
+
+      for (var thing in this.$parent.studentsDom) {
+        count++;
+      }
+
+      for (var i = 0; i < count; i++) {
+        if (this.$parent.studentsDom[i]["id"] == id) return i;
+      } //Fatal error, id not found
+
+
+      console.log("Error: could not find id: '" + id + "' in getStudentIndexAfterId");
+    },
     getGroupName: function getGroupName(groupId) {
       for (var i = 0; i < this.$parent.groupLength; i++) {
         if (this.$parent.groups[i]["id"] == groupId) return this.$parent.groups[i]["name"];
@@ -1817,6 +1840,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
       return "Unbekannt";
+    },
+    cbClicked: function cbClicked(id) {
+      if ($("#" + id)[0].checked) {
+        //Checked
+        this.$parent.studentsDom.push(this.getStudentAfterId(id));
+      } else {
+        //unchecked
+        //find out what index to splice
+        this.$parent.studentsDom.splice(this.getStudentIndexAfterId(id));
+      }
     },
     getStudentsList: function getStudentsList() {
       var that = this;
@@ -1833,26 +1866,31 @@ __webpack_require__.r(__webpack_exports__);
         },
         success: function success(response) {
           //console.log(response);
-          that.$parent.studentsDom = response;
+          that.$parent.studentsLoaded = response;
+          var count = 0;
+
+          for (var thing in response) {
+            count++;
+          }
+
+          that.$parent.studentsLoadedLength = count;
         }
       });
     },
     addStudents: function addStudents() {
-      this.$emit('AddStudents', this.$parent.studentsDom); //Reset filters and clear everything else
+      this.$emit('addstudents'); //Reset filters and clear everything else
 
       $("#nameFilter")[0]["value"] = "";
       $("#classFilter")[0]["value"] = "";
-      this.getStudentsList();
+      this.getStudentsList(); //Todo show message like "Users added"
     },
-    addStudentToDom: function addStudentToDom() {},
-    removeStudent: function removeStudent(st) {},
     resetFilter: function resetFilter() {
       $("#nameFilter")[0]["value"] = "";
       $("#classFilter")[0]["value"] = "";
       this.getStudentsList();
     },
     selectAll: function selectAll() {
-      this.$parent.studentsDom.forEach(function (student) {
+      this.$parent.studentsLoaded.forEach(function (student) {
         //console.log(student.id);
         $("#" + student.id)[0]["checked"] = true;
       });
@@ -37335,7 +37373,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._l(_vm.data.studentsDom, function(student) {
+            _vm._l(_vm.data.studentsLoaded, function(student) {
               return _c(
                 "div",
                 { key: student["id"], staticClass: "modal-body" },
@@ -37344,7 +37382,7 @@ var render = function() {
                     attrs: { type: "checkbox", id: student["id"] },
                     on: {
                       change: function($event) {
-                        return _vm.cbChanged(student["id"])
+                        return _vm.cbClicked(student["id"])
                       }
                     }
                   }),
@@ -50151,6 +50189,8 @@ Vue.component('position-tab', __webpack_require__(/*! ./components/PositionTab.v
 var data = {
   students: [],
   studentsDom: [],
+  studentsLoaded: [],
+  studentsLoadedLength: 0,
   groups: [],
   groupLength: 0
 }; //Seems really stupid to include groupLength
@@ -50182,7 +50222,15 @@ $.ajax({
 var app = new Vue({
   el: '#app',
   data: data,
-  methods: {},
+  methods: {
+    addStudents: function addStudents() {
+      console.log("Adding students:");
+      console.log(this.studentsDom); //Todo check for duplicates
+      //Temporary
+
+      this.students.push(this.studentsDom);
+    }
+  },
   mounted: function mounted() {
     console.log('app.js mounted');
   }

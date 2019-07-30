@@ -19,6 +19,9 @@ class AjaxController extends Controller
 
     public function getUsers()
     {
+        //Only show first 50 to not cause lag, more at once would be unwise
+		$limit = 50;
+
     	$users = [];
 
         $nameFilter = request()->nameFilter;
@@ -39,13 +42,13 @@ class AjaxController extends Controller
         	//Filter only after name
             $users = Fos_user::where('last_name', 'LIKE', '%' . $nameFilter . '%')
                 ->orWhere('first_name', 'LIKE', '%' . $nameFilter . '%')
-                ->orWhere('id', 'LIKE', '%' . $nameFilter . '%')->get();
+                ->orWhere('id', 'LIKE', '%' . $nameFilter . '%')->take($limit)->get();
         }
         else if($nameFilter == "")
         {
        	//filter only after class
         //Get all possible matching classes after name
-        $classes = Group::where('name', 'LIKE', '%' . $classFilter . '%')->get();
+        $classes = Group::where('name', 'LIKE', '%' . $classFilter . '%')->take($limit)->get();
 
         if(count($classes) == 0)
         	return [];
@@ -58,7 +61,7 @@ class AjaxController extends Controller
         	$query->orWhere('group_id', $classes[$i]['id']);
         }
 
-        $users = $query->get();
+        $users = $query->take($limit)->get();
         }
         else
         {

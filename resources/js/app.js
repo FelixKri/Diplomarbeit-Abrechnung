@@ -36,6 +36,8 @@ Vue.component('position-tab', require('./components/PositionTab.vue').default);
  var data = {
     students: [],
     studentsDom: [],
+    studentsLoaded: [],
+    studentsLoadedLength: 0,
     groups: [],
     groupLength: 0
 };
@@ -76,7 +78,16 @@ const app = new Vue({
     el: '#app',
     data: data,
     methods: {
+        addStudents: function()
+        {
+            console.log("Adding students:");
+            console.log(this.studentsDom);
 
+            //Todo check for duplicates
+            //Temporary
+            this.students.push(this.studentsDom);
+
+        }
     },
     mounted() {
         console.log('app.js mounted');

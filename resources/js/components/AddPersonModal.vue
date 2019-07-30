@@ -26,8 +26,8 @@
                 <button type="button" class="btn btn-primary" @click="selectAll">Alle auswählen</button>
                 <button type="button" class="btn btn-primary" @click="selectNone">Keinen auswählen</button> 
             </div>
-            <div class="modal-body" v-bind:key="student['id']" v-for="student in data.studentsDom" >
-                <input type="checkbox" :id="student['id']" @change="cbChanged(student['id'])">{{ student["first_name"] + " " + student["last_name"] + " | " + getGroupName(student['group_id']) }}
+            <div class="modal-body" v-bind:key="student['id']" v-for="student in data.studentsLoaded" >
+                <input type="checkbox" :id="student['id']" @change="cbClicked(student['id'])">{{ student["first_name"] + " " + student["last_name"] + " | " + getGroupName(student['group_id']) }}
             </div>
         </div>
   
@@ -46,6 +46,35 @@
                 }
             },
         methods: {
+            getStudentAfterId: function(id)
+            {
+                for(var i = 0;i < this.$parent.studentsLoadedLength;i++)
+                {
+                    if(this.$parent.studentsLoaded[i]["id"] == id)
+                        return this.$parent.studentsLoaded[i];
+                }
+
+                //Fatal error, id not found
+                console.log("Error: could not find id: '"+ id + "' in getStudentAfterId");
+            },
+            getStudentIndexAfterId: function(id)
+            {
+                //No way around it, count studentsDom
+                var count = 0;
+                for(var thing in this.$parent.studentsDom)
+                {
+                    count++;
+                }
+
+                for(var i = 0;i < count;i++)
+                {
+                    if(this.$parent.studentsDom[i]["id"] == id)
+                        return i;
+                }
+
+                //Fatal error, id not found
+                console.log("Error: could not find id: '"+ id + "' in getStudentIndexAfterId");
+            },
             getGroupName: function(groupId)
             {
 
@@ -56,6 +85,22 @@
                 }
                 //Should not get here, pretty much an error
                 return "Unbekannt";
+            },
+            cbClicked: function(id){
+
+
+
+                if($( "#" + id )[0].checked)
+                {
+                    //Checked
+                    this.$parent.studentsDom.push(this.getStudentAfterId(id));
+                }
+                else
+                {
+                    //unchecked
+                    //find out what index to splice
+                    this.$parent.studentsDom.splice(this.getStudentIndexAfterId(id));
+                }
             },
             getStudentsList: function(){
                 
@@ -75,24 +120,25 @@
 
                     success: function (response) {
                         //console.log(response);
-                        that.$parent.studentsDom = response;
+                        that.$parent.studentsLoaded = response;
+
+                        var count = 0;
+                        for(var thing in response)
+                            count++;
+                        that.$parent.studentsLoadedLength = count;
                     }
                 });
             },
             addStudents: function(){
             
-                this.$emit('AddStudents', this.$parent.studentsDom);
+                this.$emit('addstudents');
 
                 //Reset filters and clear everything else
                 $( "#nameFilter" )[0]["value"] = "";
                 $( "#classFilter" )[0]["value"] = "";
                 this.getStudentsList();
-            },
-            addStudentToDom: function(){
-                
-            },
-            removeStudent: function(st){
-            
+
+                //Todo show message like "Users added"
             },
             resetFilter: function(){
                 $( "#nameFilter" )[0]["value"] = "";
@@ -100,7 +146,7 @@
                 this.getStudentsList();
             },
             selectAll: function(){
-                this.$parent.studentsDom.forEach(student => {
+                this.$parent.studentsLoaded.forEach(student => {
                     //console.log(student.id);
                     $( "#" + student.id)[0]["checked"] = true;
                 });

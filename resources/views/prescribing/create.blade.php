@@ -22,7 +22,7 @@
             <hr>
             <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUser" type=button>Hinzufügen</button>
         
-            <add-person-modal></add-person-modal>
+            <add-person-modal v-on:addstudents="addStudents()"></add-person-modal>
             
             <student-list-table></student-list-table>
 
@@ -32,11 +32,3 @@
     
     
 @endsection
-
-<script>
-
-function addStudents(students)
-    {
-
-    }
-</script>
