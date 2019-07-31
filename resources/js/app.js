@@ -84,8 +84,8 @@ const app = new Vue({
             console.log(this.studentsDom);
 
             //Todo check for duplicates
-            //Temporary
-            this.students.push(this.studentsDom);
+            //Add to students
+            this.students = this.studentsDom;
 
         }
     },

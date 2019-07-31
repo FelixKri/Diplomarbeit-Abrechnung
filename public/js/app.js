@@ -1866,10 +1866,29 @@ __webpack_require__.r(__webpack_exports__);
         },
         success: function success(response) {
           //console.log(response);
-          that.$parent.studentsLoaded = response;
+          if (that.$parent.studentsLoadedLength > 0) {
+            //Add all students that are checked because they stay on screen
+            var checkedStudents = []; //DON'T USE FOREACH IT DOESNT WORK
+
+            for (var i = 0; i < that.$parent.studentsLoadedLength; i++) {
+              var student = that.$parent.studentsLoaded[i];
+              if ($("#" + student["id"])[0].checked) checkedStudents.push(student);
+            } //Add search results after that
+
+
+            response.forEach(function (student) {
+              //Check if student is already in it (if cb is checked)
+              var cb = $("#" + student.id)[0];
+              if (cb == null || !cb.checked) checkedStudents.push(student);
+            });
+            that.$parent.studentsLoaded = checkedStudents;
+          } else {
+            that.$parent.studentsLoaded = response;
+          }
+
           var count = 0;
 
-          for (var thing in response) {
+          for (var thing in that.$parent.studentsLoaded) {
             count++;
           }
 
@@ -1890,16 +1909,20 @@ __webpack_require__.r(__webpack_exports__);
       this.getStudentsList();
     },
     selectAll: function selectAll() {
-      this.$parent.studentsLoaded.forEach(function (student) {
-        //console.log(student.id);
-        $("#" + student.id)[0]["checked"] = true;
-      });
+      //DON'T USE FOREACH IT DOESNT WORK
+      for (var i = 0; i < this.$parent.studentsLoadedLength; i++) {
+        var student = this.$parent.studentsLoaded[i];
+        $("#" + student.id)[0].checked = true;
+        this.cbClicked(student.id);
+      }
     },
     selectNone: function selectNone() {
-      this.$parent.studentsDom.forEach(function (student) {
-        //console.log(student.id);
-        $("#" + student.id)[0]["checked"] = false;
-      });
+      //DON'T USE FOREACH IT DOESNT WORK
+      for (var i = 0; i < this.$parent.studentsLoadedLength; i++) {
+        var student = this.$parent.studentsLoaded[i];
+        $("#" + student.id)[0].checked = false;
+        this.cbClicked(student.id);
+      }
     }
   }
 });
@@ -50226,9 +50249,9 @@ var app = new Vue({
     addStudents: function addStudents() {
       console.log("Adding students:");
       console.log(this.studentsDom); //Todo check for duplicates
-      //Temporary
+      //Add to students
 
-      this.students.push(this.studentsDom);
+      this.students = this.studentsDom;
     }
   },
   mounted: function mounted() {
