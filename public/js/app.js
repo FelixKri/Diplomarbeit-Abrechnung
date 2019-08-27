@@ -2161,10 +2161,9 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     console.log('Component mounted.');
   },
-  props: ["data"],
+  props: ["data", "amount"],
   data: function data() {
     return {
-      amount: 0,
       annotation: ""
     };
   },
@@ -2232,7 +2231,13 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    splitEveryone: function splitEveryone() {},
+    splitEveryone: function splitEveryone() {
+      alert("Folgender Betrag wird auf alle Schüler aufgeteilt: " + this.amount_st);
+      var number_of_students = this.data.studentsDom.length;
+      alert("Schülerzahl: " + number_of_students);
+      var value = this.amount_st / number_of_students;
+      alert("Betrag pro Schüler: " + value);
+    },
     assignEveryone: function assignEveryone() {},
     assignSelected: function assignSelected() {},
     removeStudent: function removeStudent(id) {
@@ -37957,48 +37962,39 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("td", [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-sm",
-              on: {
-                click: function($event) {
-                  return _vm.splitEveryone()
-                }
+          _c("input", {
+            staticClass: "btn btn-primary btn-sm",
+            attrs: { type: "button", value: "Auf alle Aufteilen" },
+            on: {
+              click: function($event) {
+                return _vm.splitEveryone()
               }
-            },
-            [_vm._v(" Auf alle Aufteilen ")]
-          )
+            }
+          })
         ]),
         _vm._v(" "),
         _c("td", [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-sm",
-              on: {
-                click: function($event) {
-                  return _vm.assignEveryone()
-                }
+          _c("input", {
+            staticClass: "btn btn-primary btn-sm",
+            attrs: { type: "button", value: "Betrag allen zuweisen" },
+            on: {
+              click: function($event) {
+                return _vm.assignEveryone()
               }
-            },
-            [_vm._v(" Betrag allen zuweisen ")]
-          )
+            }
+          })
         ]),
         _vm._v(" "),
         _c("td", [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-sm",
-              on: {
-                click: function($event) {
-                  return _vm.assignSelected()
-                }
+          _c("input", {
+            staticClass: "btn btn-primary btn-sm",
+            attrs: { type: "button", value: "Betrag ausgewählten zuweisen " },
+            on: {
+              click: function($event) {
+                return _vm.assignSelected()
               }
-            },
-            [_vm._v(" Betrag ausgewählten zuweisen ")]
-          )
+            }
+          })
         ])
       ]),
       _vm._v(" "),
@@ -38010,7 +38006,7 @@ var render = function() {
       _vm._l(_vm.data.students, function(student) {
         return _c("student", {
           key: student.id,
-          attrs: { id: student.id, data: student },
+          attrs: { id: student.id, data: student, amount: 0 },
           on: {
             removeStudent: function($event) {
               return _vm.removeStudent($event)
@@ -50831,9 +50827,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! D:\Users\Tobi\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
+__webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! F:\Desktop\Diplomarbeit-Abrechnung\resources\sass\main.scss */"./resources/sass/main.scss");
 
 
 /***/ })

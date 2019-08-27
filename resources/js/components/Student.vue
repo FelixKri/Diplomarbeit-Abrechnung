@@ -22,10 +22,9 @@
         mounted() {
             console.log('Component mounted.')
         },
-        props: ["data"],
+        props: ["data", "amount"],
         data: function () {
             return {
-                amount: 0,
                 annotation: "",
             }
         },
