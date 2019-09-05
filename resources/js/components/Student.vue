@@ -34,7 +34,7 @@
                 this.$emit('removeStudent', this.data.id);
             },
             editStudent: function(){
-
+                //Unsicher ob man das wirklich braucht 
             },
         }
     }

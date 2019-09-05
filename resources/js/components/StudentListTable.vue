@@ -26,7 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            <student v-bind:id="student.id" :data="student" :amount="0" v-for="student in data.students" v-bind:key="student.id" v-on:removeStudent="removeStudent($event);"></student>
+            <student v-for="student in data.students" v-bind:id="student.id" v-bind:key="student.id" :data="student" :amount="0"  v-on:removeStudent="removeStudent($event);"></student>
         </tbody>
     </table>
 </template>
@@ -46,6 +46,9 @@
         },
         methods: {
             splitEveryone: function(){
+                /**
+                 * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
+                 */
                 alert("Folgender Betrag wird auf alle Schüler aufgeteilt: " + this.amount_st);
 
                 let number_of_students = this.data.studentsDom.length;
@@ -55,14 +58,31 @@
                 let value = this.amount_st / number_of_students;
 
                 alert("Betrag pro Schüler: " + value)
+
+                //TODO: Betrag jedem Schüler (vue objekt) zuweisen.
+            },
+
+            splitSelected: function(){
+                /**
+                 * Teiot den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
+                 */
+
             },
             assignEveryone: function(){
+                /**
+                 * Weist den Betrag aus dem Betrag-Feld allen Schülern zu
+                 */
 
             },
             assignSelected: function(){
-
+                /*
+                * Weist den Betrag aus dem Betrag-Feld allen ausgewählten Schülern zu.
+                */
             },
             removeStudent: function(id){
+                /*
+                 * Wird getriggert von einem Event das von Student.vue gesendet wird, wenn der delete Button geklickt wird.   
+                */
                 //remove from DOM
                 $("#"+id).remove();
 
