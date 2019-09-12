@@ -48,6 +48,9 @@
         methods: {
             getStudentAfterId: function(id)
             {
+                /*
+                 * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet 
+                 */
                 for(var i = 0;i < this.$parent.studentsLoadedLength;i++)
                 {
                     if(this.$parent.studentsLoaded[i]["id"] == id)
@@ -59,6 +62,9 @@
             },
             getStudentIndexAfterId: function(id)
             {
+                /*
+                 * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet 
+                 */
                 //No way around it, count studentsDom
                 var count = 0;
                 for(var thing in this.$parent.studentsDom)
@@ -87,6 +93,10 @@
                 return "Unbekannt";
             },
             cbClicked: function(id){
+                /*
+                *  Wird ausgelöst wenn der Status des Checkmarks neben einem Schüler verändert wird. 
+                *  Fügt hinzu/entfernt den jeweiligen Schüler aus dem StudentsDOM Array
+                */
 
                 if($( "#" + id )[0].checked)
                 {
@@ -101,6 +111,9 @@
                 }
             },
             getStudentsList: function(){
+                /*
+                 * Sendet eine POST Request an /getUsers mit den gesetzten Filtern und erhält die Ausgewählten Schüler zurück. 
+                 */
                 
             var that = this;
                 $.ajax(
@@ -117,7 +130,6 @@
                         },
 
                     success: function (response) {
-                        //console.log(response);
                         if(that.$parent.studentsLoadedLength > 0)
                         {
                             //Add all students that are checked because they stay on screen
@@ -156,7 +168,10 @@
                 });
             },
             addStudents: function(){
-            
+                /*
+                    Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
+                */
+
                 this.$emit('addstudents');
 
                 //Reset filters and clear everything else

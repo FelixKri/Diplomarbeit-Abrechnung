@@ -17,6 +17,22 @@ class PrescribingController extends Controller
     }
 
     public function store(){
+
+        $this->validate(request(), [
+            'due_until' => 'date|after:today|required|date_format:Y-m-d',
+            'reason' => 'required_without:reason_suggestion',
+            'reason_suggestion' => 'required_without:reason',
+            'title' => 'string|required',
+            'description' => 'string|required',
+            'author' => 'required|string',
+            'students' => 'required|array|min:1',
+            'students.*' => 'required|integer|distinct|min:1',
+            'amount' => 'required|array|min:1',
+            'amount.*' => 'required|integer|min:1',
+            'annotation' => 'required|array',
+            'annotation.*' => 'string|nullable'
+        ]);
+
         $presc = New Prescribing_Suggestion();
         $presc->due_until = request()->due_until;
         $presc->reason_id = Reason::where('title', request()->reason)->first()->id;
@@ -45,36 +61,4 @@ class PrescribingController extends Controller
     public function destroy(){
 
     }
-
-    public function autocompleteClass(){
-        $term = request()->term;
-        $group = Group::where('name', 'LIKE', '%' . $term . '%')->get();
-        if (count($group) == 0) {
-            $searchResult = ["Keine Treffer"];
-            return $searchResult;
-        } else {
-            foreach ($group as $key => $value) {
-                $searchResult[] =  $value->name;
-            }
-        }
-        return $searchResult;
-    }
-
-    public function autocompleteUser(){
-        $term = request()->term;
-        $user = Fos_user::where('last_name', 'LIKE', '%' . $term . '%')
-            ->orWhere('first_name', 'LIKE', '%' . $term . '%')
-            ->orWhere('id', 'LIKE', '%' . $term . '%')->get();
-        if (count($user) == 0) {
-            $searchResult = ["Keine Treffer"];
-            return $searchResult;
-        } else {
-            foreach ($user as $key => $value) {
-                $searchResult[] = $value->id . " | " . $value->last_name . " " . $value->first_name . " | " . $value->group->name;
-            }
-        }
-        return $searchResult;
-    }
-
-    
 }

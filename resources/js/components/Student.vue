@@ -22,10 +22,9 @@
         mounted() {
             console.log('Component mounted.')
         },
-        props: ["data"],
+        props: ["data", "amount"],
         data: function () {
             return {
-                amount: 0,
                 annotation: "",
             }
         },
@@ -35,7 +34,7 @@
                 this.$emit('removeStudent', this.data.id);
             },
             editStudent: function(){
-
+                //Unsicher ob man das wirklich braucht 
             },
         }
     }

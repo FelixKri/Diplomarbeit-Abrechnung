@@ -27,6 +27,9 @@
             <student-list-table></student-list-table>
 
             <input type="submit" value="Speichern" class="btn btn-success">
+            @if ($errors->any())
+                {!! implode('', $errors->all('<div>:message</div>')) !!}
+            @endif
         </form>
     </div>
     
