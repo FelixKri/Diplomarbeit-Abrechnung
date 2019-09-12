@@ -27,10 +27,10 @@ class AjaxController extends Controller
         $nameFilter = request()->nameFilter;
         $classFilter = request()->classFilter;
 
-        Log::debug('NameFilter: "' . $nameFilter . '"');
-        Log::debug('ClassFilter: "' . $classFilter . '"');
+        //Log::debug("");
 
-        Log::debug(request());
+        //Log::debug('NameFilter: "' . $nameFilter . '"');
+        //Log::debug('ClassFilter: "' . $classFilter . '"');
 
         if($nameFilter == "" && $classFilter == "")
         {
@@ -46,27 +46,64 @@ class AjaxController extends Controller
         }
         else if($nameFilter == "")
         {
-       	//filter only after class
-        //Get all possible matching classes after name
-        $classes = Group::where('name', 'LIKE', '%' . $classFilter . '%')->take($limit)->get();
+	       	//filter only after class
+	        //Get all possible matching classes after name
+	        $classes = Group::where('name', 'LIKE', '%' . $classFilter . '%')->take($limit)->get();
 
-        if(count($classes) == 0)
-        	return [];
+	        if(count($classes) == 0)
+	        	return [];
 
-        //Do not include searched after raw group id because it's stupid
-        $query = Fos_user::where('group_id', $classes[0]['id']);
+	        //Do not include searched after raw group id because it's stupid
+	        $query = Fos_user::where('group_id', $classes[0]['id']);
 
-        for($i = 1;$i < count($classes);$i++)
-        {
-        	$query->orWhere('group_id', $classes[$i]['id']);
-        }
+	        for($i = 1;$i < count($classes);$i++)
+	        {
+	        	$query->orWhere('group_id', $classes[$i]['id']);
+	        }
 
-        $users = $query->take($limit)->get();
+	        $users = $query->take($limit)->get();
         }
         else
         {
-            //Filter both later
-            $users = [];
+        	//Filter both
+        	//Get classes that are included
+        	$classes = Group::where('name', 'LIKE', '%' . $classFilter . '%')->take($limit)->get();
+
+	        //Do not include searched after raw group id because it's stupid
+	        if(count($classes) > 0)
+	        	$query = Fos_user::where('group_id', $classes[0]['id']);
+
+	        for($i = 1;$i < count($classes);$i++)
+	        {
+	        	$query->orWhere('group_id', $classes[$i]['id']);
+	        }
+
+	        $tempUsers = $query->get();
+			
+			$users = $tempUsers->filter(function ($item) use($nameFilter){
+
+			   if(strpos(strtoupper($item["last_name"]), strtoupper($nameFilter)) !== false ||
+			   			strpos(strtoupper($item["first_name"]), strtoupper($nameFilter)) !== false ||
+			   			strpos(strtoupper (strval($item["id"])), strtoupper($nameFilter)) !== false)
+			   {
+			   	 Log::debug('Returning item');
+			   		return $item;
+			   }
+			   else
+			   {
+			   		return;
+			   }
+			});
+
+            //$users = $tempUsers->where('last_name', 'LIKE', '%' . $nameFilter . '%')
+              //  ->where('first_name', 'LIKE', '%' . $nameFilter . '%')
+              //  ->where('id', 'LIKE', '%' . $nameFilter . '%');
+        }
+
+        foreach($users as $user)
+        {
+        	$user["amount"] = 0;
+        	$user["annotation"] = "";
         }
 
         return $users;
