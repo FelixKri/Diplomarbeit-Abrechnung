@@ -83,6 +83,11 @@
                 /*
                  * Wird getriggert von einem Event das von Student.vue gesendet wird, wenn der delete Button geklickt wird.   
                 */
+
+
+                //TODO: In vue sollte man das nicht seperat machen müssen. 
+
+                
                 //remove from DOM
                 $("#"+id).remove();
 
