@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use Illuminate\Http\Request;
 use App\Group;
 use App\Fos_user;
 use App\Prescribing_Suggestion;
 use App\User_has_Prescribing_Suggestion;
 use App\Reason;
+
+use Illuminate\Support\Facades\Validator;
 
 class PrescribingController extends Controller
 {
@@ -18,7 +21,8 @@ class PrescribingController extends Controller
 
     public function store(){
 
-        $this->validate(request(), [
+
+        $validator = Validator::make(request()->all(), [
             'due_until' => 'date|after:today|required|date_format:Y-m-d',
             'reason' => 'required_without:reason_suggestion',
             'reason_suggestion' => 'required_without:reason',
@@ -32,6 +36,12 @@ class PrescribingController extends Controller
             'annotation' => 'required|array',
             'annotation.*' => 'string|nullable'
         ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', $validator->messages()->first());
+            return redirect()->back()->withInput();
+        }
+        
 
         $presc = New Prescribing_Suggestion();
         $presc->due_until = request()->due_until;
@@ -50,8 +60,7 @@ class PrescribingController extends Controller
             $user_has_presc->prescribing_suggestion_id = $presc->id;
             $user_has_presc->save();
         }
-
-        dd($presc);
+        return redirect()->back()->with('success', 'Vorschreibung gespeichert!'); 
     }
 
     public function update(){

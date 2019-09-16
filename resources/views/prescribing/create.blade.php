@@ -30,6 +30,13 @@
             @if ($errors->any())
                 {!! implode('', $errors->all('<div>:message</div>')) !!}
             @endif
+            @if (\Session::has('success'))
+                <div class="alert alert-success">
+                    <ul>
+                        <li>{!! \Session::get('success') !!}</li>
+                    </ul>
+                </div>
+            @endif
         </form>
     </div>
     

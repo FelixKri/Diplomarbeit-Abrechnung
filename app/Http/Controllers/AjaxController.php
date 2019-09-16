@@ -7,10 +7,15 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Group;
 use App\Fos_user;
+use App\Reason;
 use Log;
 
 class AjaxController extends Controller
 {
+
+	public function getReasons(){
+		return Reason::All()->pluck("title");
+	}
 
 	public function getAllGroups()
 	{
