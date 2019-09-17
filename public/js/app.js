@@ -1868,7 +1868,8 @@ __webpack_require__.r(__webpack_exports__);
       /*
           Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
       */
-      this.$emit('addstudents'); //Reset filters and clear everything else
+      this.$emit('addstudents'); //TODO: marehart muss mir hier morgen helfen beim umbau
+      //Reset filters and clear everything else
 
       $("#nameFilter")[0]["value"] = "";
       $("#classFilter")[0]["value"] = "";
@@ -50515,7 +50516,9 @@ Vue.component('prescribing-form', __webpack_require__(/*! ./components/Prescribi
 var data = {
   students: [],
   studentsDom: [],
+  //adding view draufklicken
   studentsLoaded: [],
+  //die im dropdown
   studentsLoadedLength: 0,
   groups: [],
   groupLength: 0
@@ -50546,7 +50549,7 @@ var app = new Vue({
   el: '#app',
   data: data,
   methods: {
-    addStudents: function addStudents() {
+    addStudents: function addStudents(studentsDom) {
       console.log("Adding students:");
       console.log(this.studentsDom); //Todo check for duplicates
       //Add to students
@@ -50899,15 +50902,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************!*\
   !*** ./resources/js/components/PrescribingForm.vue ***!
   \*****************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PrescribingForm_vue_vue_type_template_id_45d8a233___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PrescribingForm.vue?vue&type=template&id=45d8a233& */ "./resources/js/components/PrescribingForm.vue?vue&type=template&id=45d8a233&");
 /* harmony import */ var _PrescribingForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PrescribingForm.vue?vue&type=script&lang=js& */ "./resources/js/components/PrescribingForm.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _PrescribingForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _PrescribingForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -50937,7 +50939,7 @@ component.options.__file = "resources/js/components/PrescribingForm.vue"
 /*!******************************************************************************!*\
   !*** ./resources/js/components/PrescribingForm.vue?vue&type=script&lang=js& ***!
   \******************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

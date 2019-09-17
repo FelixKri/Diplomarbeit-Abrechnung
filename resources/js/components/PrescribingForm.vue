@@ -26,7 +26,7 @@
             
             <student-list-table></student-list-table>
 
-            <input type="submit" value="Speichern" class="btn btn-success">
+            <input type="button" value="Speichern" class="btn btn-success" @click="store();">
         </form>
     </div>
 </template>
@@ -65,9 +65,18 @@
             }
         },
         methods: {
-           store: function(){
+            store: function(){
 
-           }
+            },
+            addStudents: function(studentsDom)
+            {
+                console.log("Adding students:");
+                console.log(tudentsDom);
+
+                //Todo check for duplicates
+                //Add to students
+                this.students = studentsDom;
+            }
         },
     }
 </script>
