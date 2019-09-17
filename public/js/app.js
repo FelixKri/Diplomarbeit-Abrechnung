@@ -1759,10 +1759,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
+    var that = this;
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      type: "POST",
+      url: '/getAllGroups',
+      dataType: 'json',
+      data: {},
+      success: function success(response) {
+        that.groups = response;
+        var count = 0;
+
+        for (var thing in that.groups) {
+          count++;
+        }
+
+        that.groupLength = count;
+      }
+    });
+    console.log(this.groups);
   },
   data: function data() {
     return {
-      data: this.$parent
+      //data: this.$parent,
+      studentsLoaded: [],
+      studentsDom: [],
+      studentsLoadedLength: 0,
+      groups: [],
+      groupLength: 0
     };
   },
   methods: {
@@ -1770,8 +1796,8 @@ __webpack_require__.r(__webpack_exports__);
       /*
        * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet 
        */
-      for (var i = 0; i < this.$parent.studentsLoadedLength; i++) {
-        if (this.$parent.studentsLoaded[i]["id"] == id) return this.$parent.studentsLoaded[i];
+      for (var i = 0; i < this.studentsLoadedLength; i++) {
+        if (this.studentsLoaded[i]["id"] == id) return this.studentsLoaded[i];
       } //Fatal error, id not found
 
 
@@ -1784,20 +1810,20 @@ __webpack_require__.r(__webpack_exports__);
       //No way around it, count studentsDom
       var count = 0;
 
-      for (var thing in this.$parent.studentsDom) {
+      for (var thing in this.studentsDom) {
         count++;
       }
 
       for (var i = 0; i < count; i++) {
-        if (this.$parent.studentsDom[i]["id"] == id) return i;
+        if (this.studentsDom[i]["id"] == id) return i;
       } //Fatal error, id not found
 
 
       console.log("Error: could not find id: '" + id + "' in getStudentIndexAfterId");
     },
     getGroupName: function getGroupName(groupId) {
-      for (var i = 0; i < this.$parent.groupLength; i++) {
-        if (this.$parent.groups[i]["id"] == groupId) return this.$parent.groups[i]["name"];
+      for (var i = 0; i < this.groupLength; i++) {
+        if (this.groups[i]["id"] == groupId) return this.groups[i]["name"];
       } //Should not get here, pretty much an error
 
 
@@ -1810,11 +1836,11 @@ __webpack_require__.r(__webpack_exports__);
       */
       if ($("#" + id)[0].checked) {
         //Checked
-        this.$parent.studentsDom.push(this.getStudentAfterId(id));
+        this.studentsDom.push(this.getStudentAfterId(id));
       } else {
         //unchecked
         //find out what index to splice
-        this.$parent.studentsDom.splice(this.getStudentIndexAfterId(id));
+        this.studentsDom.splice(this.getStudentIndexAfterId(id));
       }
     },
     getStudentsList: function getStudentsList() {
@@ -1834,12 +1860,12 @@ __webpack_require__.r(__webpack_exports__);
           classFilter: $("#classFilter")[0]["value"]
         },
         success: function success(response) {
-          if (that.$parent.studentsLoadedLength > 0) {
+          if (that.studentsLoadedLength > 0) {
             //Add all students that are checked because they stay on screen
             var checkedStudents = []; //DON'T USE FOREACH IT DOESNT WORK
 
-            for (var i = 0; i < that.$parent.studentsLoadedLength; i++) {
-              var student = that.$parent.studentsLoaded[i];
+            for (var i = 0; i < that.studentsLoadedLength; i++) {
+              var student = that.studentsLoaded[i];
               if ($("#" + student["id"])[0].checked) checkedStudents.push(student);
             } //Add search results after that
 
@@ -1849,18 +1875,18 @@ __webpack_require__.r(__webpack_exports__);
               var cb = $("#" + student.id)[0];
               if (cb == null || !cb.checked) checkedStudents.push(student);
             });
-            that.$parent.studentsLoaded = checkedStudents;
+            that.studentsLoaded = checkedStudents;
           } else {
-            that.$parent.studentsLoaded = response;
+            that.studentsLoaded = response;
           }
 
           var count = 0;
 
-          for (var thing in that.$parent.studentsLoaded) {
+          for (var thing in that.studentsLoaded) {
             count++;
           }
 
-          that.$parent.studentsLoadedLength = count;
+          that.studentsLoadedLength = count;
         }
       });
     },
@@ -1868,7 +1894,7 @@ __webpack_require__.r(__webpack_exports__);
       /*
           Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
       */
-      this.$emit('addstudents'); //TODO: marehart muss mir hier morgen helfen beim umbau
+      this.$emit('addstudents', this.studentsDom); //TODO: marehart muss mir hier morgen helfen beim umbau
       //Reset filters and clear everything else
 
       $("#nameFilter")[0]["value"] = "";
@@ -1882,16 +1908,16 @@ __webpack_require__.r(__webpack_exports__);
     },
     selectAll: function selectAll() {
       //DON'T USE FOREACH IT DOESNT WORK
-      for (var i = 0; i < this.$parent.studentsLoadedLength; i++) {
-        var student = this.$parent.studentsLoaded[i];
+      for (var i = 0; i < this.studentsLoadedLength; i++) {
+        var student = this.studentsLoaded[i];
         $("#" + student.id)[0].checked = true;
         this.cbClicked(student.id);
       }
     },
     selectNone: function selectNone() {
       //DON'T USE FOREACH IT DOESNT WORK
-      for (var i = 0; i < this.$parent.studentsLoadedLength; i++) {
-        var student = this.$parent.studentsLoaded[i];
+      for (var i = 0; i < this.studentsLoadedLength; i++) {
+        var student = this.studentsLoaded[i];
         $("#" + student.id)[0].checked = false;
         this.cbClicked(student.id);
       }
@@ -1934,8 +1960,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
 //
 //
 //
@@ -2122,7 +2146,7 @@ __webpack_require__.r(__webpack_exports__);
       url: '/getReasons',
       dataType: 'json',
       success: function success(response) {
-        data.reasons = response;
+        this.reasons = response;
       }
     });
   },
@@ -2140,7 +2164,12 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    store: function store() {}
+    store: function store() {},
+    addStudents: function addStudents(studentsDom) {
+      //Todo check for duplicates
+      //Add to students
+      this.students = studentsDom;
+    }
   }
 });
 
@@ -37644,7 +37673,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._l(_vm.data.studentsLoaded, function(student) {
+            _vm._l(_vm.studentsLoaded, function(student) {
               return _c(
                 "div",
                 { key: student["id"], staticClass: "modal-body" },
@@ -37849,27 +37878,12 @@ var render = function() {
                 staticClass: "btn btn-primary btn-sm",
                 attrs: {
                   "data-toggle": "modal",
-                  "data-target": "#addClass",
-                  type: "button"
-                }
-              },
-              [_vm._v("Klasse(n) hinzufügen")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-primary btn-sm",
-                attrs: {
-                  "data-toggle": "modal",
                   "data-target": "#addUser",
                   type: "button"
                 }
               },
               [_vm._v("Person(n) hinzufügen")]
             ),
-            _vm._v(" "),
-            _c("add-class-modal"),
             _vm._v(" "),
             _c("add-person-modal"),
             _vm._v(" "),
@@ -38115,19 +38129,18 @@ var render = function() {
           [_vm._v("Hinzufügen")]
         ),
         _vm._v(" "),
-        _c("add-person-modal", {
-          on: {
-            addstudents: function($event) {
-              return _vm.addStudents()
-            }
-          }
-        }),
+        _c("add-person-modal", { on: { addstudents: _vm.addStudents } }),
         _vm._v(" "),
         _c("student-list-table"),
         _vm._v(" "),
         _c("input", {
           staticClass: "btn btn-success",
-          attrs: { type: "submit", value: "Speichern" }
+          attrs: { type: "button", value: "Speichern" },
+          on: {
+            click: function($event) {
+              return _vm.store()
+            }
+          }
         })
       ],
       1
@@ -50513,50 +50526,14 @@ Vue.component('invoice-positions', __webpack_require__(/*! ./components/InvoiceP
 Vue.component('invoice-position', __webpack_require__(/*! ./components/InvoicePosition.vue */ "./resources/js/components/InvoicePosition.vue").default);
 Vue.component('position-tab', __webpack_require__(/*! ./components/PositionTab.vue */ "./resources/js/components/PositionTab.vue").default);
 Vue.component('prescribing-form', __webpack_require__(/*! ./components/PrescribingForm */ "./resources/js/components/PrescribingForm.vue").default);
-var data = {
-  students: [],
-  studentsDom: [],
-  //adding view draufklicken
-  studentsLoaded: [],
-  //die im dropdown
-  studentsLoadedLength: 0,
-  groups: [],
-  groupLength: 0
-}; //Seems really stupid to include groupLength
+var data = {}; //Seems really stupid to include groupLength
 //But objects don't have a .length property
 //So to not count this everytime we use it we just include it
 
-$.ajax({
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  },
-  type: "POST",
-  url: '/getAllGroups',
-  dataType: 'json',
-  data: {},
-  success: function success(response) {
-    data.groups = response;
-    var count = 0;
-
-    for (var thing in data.groups) {
-      count++;
-    }
-
-    data.groupLength = count;
-  }
-});
 var app = new Vue({
   el: '#app',
   data: data,
-  methods: {
-    addStudents: function addStudents(studentsDom) {
-      console.log("Adding students:");
-      console.log(this.studentsDom); //Todo check for duplicates
-      //Add to students
-
-      this.students = this.studentsDom;
-    }
-  },
+  methods: {},
   mounted: function mounted() {
     console.log('app.js mounted');
   }

@@ -39,7 +39,7 @@
     export default {
         mounted() {
             console.log('Component mounted.')
-
+            var that = this;
             $.ajax(
             {
                 headers: {
@@ -52,18 +52,20 @@
                 },
 
                 success: function (response) {
-                    this.groups = response;
+                    that.groups = response;
 
                     var count = 0;
 
-                    for(var thing in this.groups)
+                    for(var thing in that.groups)
                     {
                         count++;
                     }
 
-                    this.groupLength = count;
+                    that.groupLength = count;
                 }
             });
+
+            console.log(this.groups);
         },
         data: function () {
                 return {
@@ -145,7 +147,7 @@
                  * Sendet eine POST Request an /getUsers mit den gesetzten Filtern und erhält die Ausgewählten Schüler zurück. 
                  */
                 
-            var that = this;
+                var that = this;
                 $.ajax(
                 {
                     headers: {
@@ -160,15 +162,15 @@
                         },
 
                     success: function (response) {
-                        if(that.$parent.studentsLoadedLength > 0)
+                        if(that.studentsLoadedLength > 0)
                         {
                             //Add all students that are checked because they stay on screen
                             var checkedStudents = [];
 
                             //DON'T USE FOREACH IT DOESNT WORK
-                            for(var i = 0;i < that.$parent.studentsLoadedLength;i++)
+                            for(var i = 0;i < that.studentsLoadedLength;i++)
                             {
-                                var student = that.$parent.studentsLoaded[i];
+                                var student = that.studentsLoaded[i];
                                 
                                 if($("#" + student["id"])[0].checked)
                                     checkedStudents.push(student);
@@ -183,17 +185,17 @@
                                     checkedStudents.push(student);
                             });
                             
-                            that.$parent.studentsLoaded = checkedStudents;
+                            that.studentsLoaded = checkedStudents;
                         }
                         else
                         {
-                            that.$parent.studentsLoaded = response;
+                            that.studentsLoaded = response;
                         }
 
                         var count = 0;
-                        for(var thing in that.$parent.studentsLoaded)
+                        for(var thing in that.studentsLoaded)
                             count++;
-                        that.$parent.studentsLoadedLength = count;
+                        that.studentsLoadedLength = count;
                     }
                 });
             },
@@ -202,7 +204,7 @@
                     Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
                 */
 
-                this.$emit('addstudents', this.StudentsDom); //TODO: marehart muss mir hier morgen helfen beim umbau
+                this.$emit('addstudents', this.studentsDom); //TODO: marehart muss mir hier morgen helfen beim umbau
 
                 //Reset filters and clear everything else
                 $( "#nameFilter" )[0]["value"] = "";

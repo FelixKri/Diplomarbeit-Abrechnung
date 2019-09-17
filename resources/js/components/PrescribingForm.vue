@@ -22,7 +22,7 @@
             <hr>
             <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUser" type=button>Hinzufügen</button>
         
-            <add-person-modal v-on:addstudents="addStudents()"></add-person-modal>
+            <add-person-modal v-on:addstudents="addStudents"></add-person-modal>
             
             <student-list-table></student-list-table>
 
@@ -47,7 +47,7 @@
                 dataType: 'json',
 
                 success: function (response) {
-                    data.reasons = response;
+                    this.reasons = response;
                 }
             });
         },
@@ -70,8 +70,6 @@
             },
             addStudents: function(studentsDom)
             {
-                console.log("Adding students:");
-                console.log(tudentsDom);
 
                 //Todo check for duplicates
                 //Add to students
