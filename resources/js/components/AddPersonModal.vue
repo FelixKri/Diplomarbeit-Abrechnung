@@ -69,7 +69,6 @@
         },
         data: function () {
                 return {
-                    //data: this.$parent,
                     studentsLoaded: [],
                     studentsDom: [],
                     studentsLoadedLength: 0,

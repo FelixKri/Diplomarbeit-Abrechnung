@@ -5,35 +5,35 @@
             <div class="form-group">
                 <label for="title">Titel: </label> 
                 <input type="text" name="title" class="form-control" id="" v-model="title">
-                <ul v-if="errors.title" class="alert alert-danger">
+                <ul v-if="errors.title" class="alert alert-danger" style="margin: 1em 0;">
                     <li v-for="error in errors.title">{{error}}</li>
                 </ul>
             </div>
             <div class="form-group">
                 <label for="author">Vorschreiber: </label> 
                 <input type="text" v-model="author" readonly name="author" class="form-control">
-                <ul v-if="errors.author" class="alert alert-danger">
+                <ul v-if="errors.author" class="alert alert-danger" style="margin: 1em 0;">
                     <li v-for="error in errors.author">{{error}}</li>
                 </ul>
             </div>
             <div class="form-group">
                 <label for="date">Datum der Vorschreibung: </label> 
                 <input type="date" name="date" id="" v-model="date" class="form-control">
-                <ul v-if="errors.date" class="alert alert-danger">
+                <ul v-if="errors.date" class="alert alert-danger" style="margin: 1em 0;">
                     <li v-for="error in errors.date">{{error}}</li>
                 </ul>
             </div>
             <div class="form-group">
                 <label for="due_until">Spätestens gewünschtes Einzahlungsdatum: </label> 
                 <input type="date" name="due_until" class="form-control" v-model="due_until">
-                <ul v-if="errors.due_until" class="alert alert-danger">
+                <ul v-if="errors.due_until" class="alert alert-danger" style="margin: 1em 0;">
                     <li v-for="error in errors.due_until">{{error}}</li>
                 </ul>
             </div>
             <div class="form-group">
                 <label for="reason_suggestion">Grundvorschlag: </label> 
                 <input type="text" name="reason_suggestion" class="form-control" v-model="reason_suggestion">
-                <ul v-if="errors.reason_suggestion" class="alert alert-danger">
+                <ul v-if="errors.reason_suggestion" class="alert alert-danger" style="margin: 1em 0;">
                     <li v-for="error in errors.reason_suggestion">{{error}}</li>
                 </ul>
             </div>
@@ -42,14 +42,14 @@
                 <select name="reason" id="" class="form-control" v-model="reason">
                     <option v-for="reason in reasons" :value="reason.title">{{reason.title}}</option>
                 </select>
-                <ul v-if="errors.reason" class="alert alert-danger">
+                <ul v-if="errors.reason" class="alert alert-danger" style="margin: 1em 0;">
                     <li v-for="error in errors.reason">{{error}}</li>
                 </ul>
             </div>
             <div class="form-group">
                 <label for="description">Beschreibung: </label> 
                 <input type="text" name="description" id="" class="form-control" v-model="description"> 
-                <ul v-if="errors.description" class="alert alert-danger">
+                <ul v-if="errors.description" class="alert alert-danger" style="margin: 1em 0;">
                     <li v-for="error in errors.description">{{error}}</li>
                 </ul>
             </div>
@@ -102,9 +102,6 @@
         },
         methods: {
             store: function(){
-
-                alert("jetzt wird gespeichert");
-
                 var that = this; //i hate this(that)
                 var studentIds = [];
                 var studentAmounts = [];
@@ -115,10 +112,6 @@
                     studentAmounts.push(student.amount);
                     studentAnnotations.push(student.annotation);
                 });
-
-                console.log(studentIds);
-                console.log(studentAmounts);
-                console.log(studentAnnotations);
 
                 $.ajax(
                 {

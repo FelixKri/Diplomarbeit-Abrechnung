@@ -1783,7 +1783,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      //data: this.$parent,
       studentsLoaded: [],
       studentsDom: [],
       studentsLoadedLength: 0,
@@ -2201,7 +2200,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     store: function store() {
-      alert("jetzt wird gespeichert");
       var that = this; //i hate this(that)
 
       var studentIds = [];
@@ -2212,9 +2210,6 @@ __webpack_require__.r(__webpack_exports__);
         studentAmounts.push(student.amount);
         studentAnnotations.push(student.annotation);
       });
-      console.log(studentIds);
-      console.log(studentAmounts);
-      console.log(studentAnnotations);
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -38167,7 +38162,10 @@ var render = function() {
           _vm.errors.title
             ? _c(
                 "ul",
-                { staticClass: "alert alert-danger" },
+                {
+                  staticClass: "alert alert-danger",
+                  staticStyle: { margin: "1em 0" }
+                },
                 _vm._l(_vm.errors.title, function(error) {
                   return _c("li", [_vm._v(_vm._s(error))])
                 }),
@@ -38204,7 +38202,10 @@ var render = function() {
           _vm.errors.author
             ? _c(
                 "ul",
-                { staticClass: "alert alert-danger" },
+                {
+                  staticClass: "alert alert-danger",
+                  staticStyle: { margin: "1em 0" }
+                },
                 _vm._l(_vm.errors.author, function(error) {
                   return _c("li", [_vm._v(_vm._s(error))])
                 }),
@@ -38243,7 +38244,10 @@ var render = function() {
           _vm.errors.date
             ? _c(
                 "ul",
-                { staticClass: "alert alert-danger" },
+                {
+                  staticClass: "alert alert-danger",
+                  staticStyle: { margin: "1em 0" }
+                },
                 _vm._l(_vm.errors.date, function(error) {
                   return _c("li", [_vm._v(_vm._s(error))])
                 }),
@@ -38282,7 +38286,10 @@ var render = function() {
           _vm.errors.due_until
             ? _c(
                 "ul",
-                { staticClass: "alert alert-danger" },
+                {
+                  staticClass: "alert alert-danger",
+                  staticStyle: { margin: "1em 0" }
+                },
                 _vm._l(_vm.errors.due_until, function(error) {
                   return _c("li", [_vm._v(_vm._s(error))])
                 }),
@@ -38321,7 +38328,10 @@ var render = function() {
           _vm.errors.reason_suggestion
             ? _c(
                 "ul",
-                { staticClass: "alert alert-danger" },
+                {
+                  staticClass: "alert alert-danger",
+                  staticStyle: { margin: "1em 0" }
+                },
                 _vm._l(_vm.errors.reason_suggestion, function(error) {
                   return _c("li", [_vm._v(_vm._s(error))])
                 }),
@@ -38373,7 +38383,10 @@ var render = function() {
           _vm.errors.reason
             ? _c(
                 "ul",
-                { staticClass: "alert alert-danger" },
+                {
+                  staticClass: "alert alert-danger",
+                  staticStyle: { margin: "1em 0" }
+                },
                 _vm._l(_vm.errors.reason, function(error) {
                   return _c("li", [_vm._v(_vm._s(error))])
                 }),
@@ -38412,7 +38425,10 @@ var render = function() {
           _vm.errors.description
             ? _c(
                 "ul",
-                { staticClass: "alert alert-danger" },
+                {
+                  staticClass: "alert alert-danger",
+                  staticStyle: { margin: "1em 0" }
+                },
                 _vm._l(_vm.errors.description, function(error) {
                   return _c("li", [_vm._v(_vm._s(error))])
                 }),
