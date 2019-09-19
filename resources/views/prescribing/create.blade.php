@@ -1,7 +1,8 @@
 @extends('layout.master')
 
 @section('content')
-    <prescribing-form></prescribing-form>
+
+<prescribing-form :reasons="{{$reasons}}"></prescribing-form>
     
     
 @endsection

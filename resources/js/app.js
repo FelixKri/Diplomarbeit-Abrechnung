@@ -9,6 +9,7 @@ Vue.component('invoice-positions', require('./components/InvoicePositions.vue').
 Vue.component('invoice-position', require('./components/InvoicePosition.vue').default);
 Vue.component('position-tab', require('./components/PositionTab.vue').default);
 Vue.component('prescribing-form', require('./components/PrescribingForm').default);
+Vue.component('validation-errors', require('./components/ValidationErrors.vue').default);
 
 var data = {
     

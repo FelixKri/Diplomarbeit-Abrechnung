@@ -23,6 +23,7 @@ class PrescribingController extends Controller
 
 
         $validator = Validator::make(request()->all(), [
+            'date' => 'date|required',
             'due_until' => 'date|after:today|required|date_format:Y-m-d',
             'reason' => 'required_without:reason_suggestion',
             'reason_suggestion' => 'required_without:reason',
@@ -38,8 +39,7 @@ class PrescribingController extends Controller
         ]);
 
         if ($validator->fails()) {
-            Session::flash('error', $validator->messages()->first());
-            return redirect()->back()->withInput();
+            return response()->json(['errors' => $validator->errors()], 401);
         }
         
 
@@ -60,7 +60,7 @@ class PrescribingController extends Controller
             $user_has_presc->prescribing_suggestion_id = $presc->id;
             $user_has_presc->save();
         }
-        return redirect()->back()->with('success', 'Vorschreibung gespeichert!'); 
+        return response()->json(['success' => 'success'], 200);
     }
 
     public function update(){
