@@ -2354,14 +2354,18 @@ __webpack_require__.r(__webpack_exports__);
        * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
        */
       alert("Folgender Betrag wird auf alle Schüler aufgeteilt: " + this.amount_st);
-      var number_of_students = this.data.studentsDom.length;
+      var number_of_students = this.data.students.length;
       alert("Schülerzahl: " + number_of_students);
       var value = this.amount_st / number_of_students;
       alert("Betrag pro Schüler: " + value); //TODO: Betrag jedem Schüler (vue objekt) zuweisen.
+
+      this.data.students.forEach(function (student) {
+        student.amount = value;
+      });
     },
     splitSelected: function splitSelected() {
       /**
-       * Teiot den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
+       * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
        */
     },
     assignEveryone: function assignEveryone() {
