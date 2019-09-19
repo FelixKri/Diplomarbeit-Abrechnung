@@ -35,10 +35,8 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addClass" type=button>Klasse(n) hinzufügen</button> 
                 <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUser" type=button>Person(n) hinzufügen</button>
-            
-                <add-class-modal></add-class-modal>
+
                 <add-person-modal></add-person-modal>
 
                 <table class="table">

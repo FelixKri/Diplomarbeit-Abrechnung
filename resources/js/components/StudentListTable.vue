@@ -26,7 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            <student v-for="student in data.students" v-bind:id="student.id" v-bind:key="student.id" :data="student" :amount="0"  v-on:removeStudent="removeStudent($event);"></student>
+            <student v-for="student in data.students" v-bind:id="student.id" v-bind:key="student.id" :data="student" v-on:removeStudent="removeStudent($event);"></student>
         </tbody>
     </table>
 </template>

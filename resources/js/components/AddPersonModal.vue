@@ -26,7 +26,7 @@
                 <button type="button" class="btn btn-primary" @click="selectAll">Alle auswählen</button>
                 <button type="button" class="btn btn-primary" @click="selectNone">Keinen auswählen</button> 
             </div>
-            <div class="modal-body" v-bind:key="student['id']" v-for="student in data.studentsLoaded" >
+            <div class="modal-body" v-bind:key="student['id']" v-for="student in studentsLoaded" >
                 <input type="checkbox" :id="student['id']" @change="cbClicked(student['id'])">{{ student["first_name"] + " " + student["last_name"] + " | " + getGroupName(student['group_id']) }}
             </div>
         </div>
@@ -39,10 +39,41 @@
     export default {
         mounted() {
             console.log('Component mounted.')
+            var that = this;
+            $.ajax(
+            {
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: '/getAllGroups',
+                dataType: 'json',
+                data: {
+                },
+
+                success: function (response) {
+                    that.groups = response;
+
+                    var count = 0;
+
+                    for(var thing in that.groups)
+                    {
+                        count++;
+                    }
+
+                    that.groupLength = count;
+                }
+            });
+
+            console.log(this.groups);
         },
         data: function () {
                 return {
-                    data: this.$parent
+                    studentsLoaded: [],
+                    studentsDom: [],
+                    studentsLoadedLength: 0,
+                    groups: [],
+                    groupLength: 0
                 }
             },
         methods: {
@@ -51,10 +82,10 @@
                 /*
                  * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet 
                  */
-                for(var i = 0;i < this.$parent.studentsLoadedLength;i++)
+                for(var i = 0;i < this.studentsLoadedLength;i++)
                 {
-                    if(this.$parent.studentsLoaded[i]["id"] == id)
-                        return this.$parent.studentsLoaded[i];
+                    if(this.studentsLoaded[i]["id"] == id)
+                        return this.studentsLoaded[i];
                 }
 
                 //Fatal error, id not found
@@ -67,14 +98,14 @@
                  */
                 //No way around it, count studentsDom
                 var count = 0;
-                for(var thing in this.$parent.studentsDom)
+                for(var thing in this.studentsDom)
                 {
                     count++;
                 }
 
                 for(var i = 0;i < count;i++)
                 {
-                    if(this.$parent.studentsDom[i]["id"] == id)
+                    if(this.studentsDom[i]["id"] == id)
                         return i;
                 }
 
@@ -84,10 +115,10 @@
             getGroupName: function(groupId)
             {
 
-                for(var i = 0;i < this.$parent.groupLength;i++)
+                for(var i = 0;i < this.groupLength;i++)
                 {
-                    if(this.$parent.groups[i]["id"] == groupId)
-                        return this.$parent.groups[i]["name"];
+                    if(this.groups[i]["id"] == groupId)
+                        return this.groups[i]["name"];
                 }
                 //Should not get here, pretty much an error
                 return "Unbekannt";
@@ -101,13 +132,13 @@
                 if($( "#" + id )[0].checked)
                 {
                     //Checked
-                    this.$parent.studentsDom.push(this.getStudentAfterId(id));
+                    this.studentsDom.push(this.getStudentAfterId(id));
                 }
                 else
                 {
                     //unchecked
                     //find out what index to splice
-                    this.$parent.studentsDom.splice(this.getStudentIndexAfterId(id));
+                    this.studentsDom.splice(this.getStudentIndexAfterId(id));
                 }
             },
             getStudentsList: function(){
@@ -115,7 +146,7 @@
                  * Sendet eine POST Request an /getUsers mit den gesetzten Filtern und erhält die Ausgewählten Schüler zurück. 
                  */
                 
-            var that = this;
+                var that = this;
                 $.ajax(
                 {
                     headers: {
@@ -130,15 +161,15 @@
                         },
 
                     success: function (response) {
-                        if(that.$parent.studentsLoadedLength > 0)
+                        if(that.studentsLoadedLength > 0)
                         {
                             //Add all students that are checked because they stay on screen
                             var checkedStudents = [];
 
                             //DON'T USE FOREACH IT DOESNT WORK
-                            for(var i = 0;i < that.$parent.studentsLoadedLength;i++)
+                            for(var i = 0;i < that.studentsLoadedLength;i++)
                             {
-                                var student = that.$parent.studentsLoaded[i];
+                                var student = that.studentsLoaded[i];
                                 
                                 if($("#" + student["id"])[0].checked)
                                     checkedStudents.push(student);
@@ -153,17 +184,17 @@
                                     checkedStudents.push(student);
                             });
                             
-                            that.$parent.studentsLoaded = checkedStudents;
+                            that.studentsLoaded = checkedStudents;
                         }
                         else
                         {
-                            that.$parent.studentsLoaded = response;
+                            that.studentsLoaded = response;
                         }
 
                         var count = 0;
-                        for(var thing in that.$parent.studentsLoaded)
+                        for(var thing in that.studentsLoaded)
                             count++;
-                        that.$parent.studentsLoadedLength = count;
+                        that.studentsLoadedLength = count;
                     }
                 });
             },
@@ -172,7 +203,7 @@
                     Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
                 */
 
-                this.$emit('addstudents');
+                this.$emit('addstudents', this.studentsDom); //TODO: marehart muss mir hier morgen helfen beim umbau
 
                 //Reset filters and clear everything else
                 $( "#nameFilter" )[0]["value"] = "";
@@ -188,18 +219,18 @@
             },
             selectAll: function(){
                 //DON'T USE FOREACH IT DOESNT WORK
-                for(var i = 0;i < this.$parent.studentsLoadedLength;i++)
+                for(var i = 0;i < this.studentsLoadedLength;i++)
                 {
-                    var student = this.$parent.studentsLoaded[i];
+                    var student = this.studentsLoaded[i];
                     $("#" + student.id)[0].checked = true;
                     this.cbClicked(student.id);
                 }
             },
             selectNone: function(){
                 //DON'T USE FOREACH IT DOESNT WORK
-                for(var i = 0;i < this.$parent.studentsLoadedLength;i++)
+                for(var i = 0;i < this.studentsLoadedLength;i++)
                 {
-                    var student = this.$parent.studentsLoaded[i];
+                    var student = this.studentsLoaded[i];
                     $("#" + student.id)[0].checked = false;
                     this.cbClicked(student.id);
                 }

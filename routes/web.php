@@ -25,4 +25,5 @@ Route::get('/invoice/new', 'InvoiceController@create');
 Route::post('/invoice/new', 'InvoiceController@store');
 
 Route::post('/getUsers','AjaxController@getUsers');
-Route::post('/getAllGroups','AjaxController@getAllGroups');
+Route::post('/getAllGroups','AjaxController@getAllGroups'); // Method: POST Name: GETAllGroups *** Das sollte eine get request sein, man gettet ja was
+Route::get('/getReasons', 'AjaxController@getReasons');
