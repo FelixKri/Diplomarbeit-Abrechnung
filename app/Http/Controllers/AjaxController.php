@@ -76,30 +76,31 @@ class AjaxController extends Controller
 
 	        //Do not include searched after raw group id because it's stupid
 	        if(count($classes) > 0)
+	        {
 	        	$query = Fos_user::where('group_id', $classes[0]['id']);
 
-	        for($i = 1;$i < count($classes);$i++)
-	        {
-	        	$query->orWhere('group_id', $classes[$i]['id']);
-	        }
+		        for($i = 1;$i < count($classes);$i++)
+		        {
+		        	$query->orWhere('group_id', $classes[$i]['id']);
+		        }
 
-	        $tempUsers = $query->get();
-			
-			$users = $tempUsers->filter(function ($item) use($nameFilter){
+		        $tempUsers = $query->get();
+				
+				$users = $tempUsers->filter(function ($item) use($nameFilter){
 
-			   if(strpos(strtoupper($item["last_name"]), strtoupper($nameFilter)) !== false ||
-			   			strpos(strtoupper($item["first_name"]), strtoupper($nameFilter)) !== false ||
-			   			strpos(strtoupper (strval($item["id"])), strtoupper($nameFilter)) !== false)
-			   {
-			   	 Log::debug('Returning item');
-			   		return $item;
-			   }
-			   else
-			   {
-			   		return;
-			   }
-			});
-
+				   if(strpos(strtoupper($item["last_name"]), strtoupper($nameFilter)) !== false ||
+				   			strpos(strtoupper($item["first_name"]), strtoupper($nameFilter)) !== false ||
+				   			strpos(strtoupper (strval($item["id"])), strtoupper($nameFilter)) !== false)
+				   {
+				   	 Log::debug('Returning item');
+				   		return $item;
+				   }
+				   else
+				   {
+				   		return;
+				   }
+				});
+			}
             //$users = $tempUsers->where('last_name', 'LIKE', '%' . $nameFilter . '%')
               //  ->where('first_name', 'LIKE', '%' . $nameFilter . '%')
               //  ->where('id', 'LIKE', '%' . $nameFilter . '%');
