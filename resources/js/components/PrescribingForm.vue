@@ -97,6 +97,9 @@
                 reasons: [],
                 description: "",
                 students: [],
+                studentsDom: [],
+                studentsLoaded: [],
+                studentsLoadedLength: 0,
                 errors: {}
             }
         },

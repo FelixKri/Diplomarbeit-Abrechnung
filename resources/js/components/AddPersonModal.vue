@@ -69,9 +69,9 @@
         },
         data: function () {
                 return {
-                    studentsLoaded: [],
-                    studentsDom: [],
-                    studentsLoadedLength: 0,
+                    studentsLoaded: this.$parent.studentsLoaded,
+                    studentsDom: this.$parent.studentsDom,
+                    studentsLoadedLength: this.$parent.studentsLoadedLength,
                     groups: [],
                     groupLength: 0
                 }
@@ -203,7 +203,7 @@
                     Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
                 */
 
-                this.$emit('addstudents', this.studentsDom); //TODO: marehart muss mir hier morgen helfen beim umbau
+                this.$emit('addstudents', this.studentsDom); 
 
                 //Reset filters and clear everything else
                 $( "#nameFilter" )[0]["value"] = "";
