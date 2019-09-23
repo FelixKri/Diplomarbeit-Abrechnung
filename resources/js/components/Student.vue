@@ -1,5 +1,8 @@
 <template>
     <tr>
+        <td>
+            <input type="checkbox">
+        </td>
         <th scope="row">
             <input type="number" name="students[]" id="" readonly v-bind:value="data.id">
         </th>
