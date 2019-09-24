@@ -1,35 +1,42 @@
 <template>
+    <div>
+    <table>
+        <tr>
+            <td>
+                    <input type="number" id="number" placeholder="Betrag" class="form-control" v-model="amount_st">
+            </td>
+            <td>
+                <input class="btn btn-primary btn-sm" @click="splitEveryone();" type="button" value="Auf alle Aufteilen">
+            </td>
+            <td>
+                <input class="btn btn-primary btn-sm" @click="splitSelected();" type="button" value="Auf ausgewählte Aufteilen">
+            </td>
+            <td>
+                <input class="btn btn-primary btn-sm" @click="assignEveryone();" type="button" value="Betrag allen zuweisen">
+            </td>
+            <td>
+                <input class="btn btn-primary btn-sm" @click="assignSelected();" type="button" value="Betrag ausgewählten zuweisen ">
+            </td>
+        </tr>
+    </table>
     <table class="table">
         
         <thead>
-            <tr>
-                <td>
-                    <input type="number" id="number" placeholder="Betrag" class="form-control" v-model="amount_st">
-                </td>
-                <td>
-                    <input class="btn btn-primary btn-sm" @click="splitEveryone();" type="button" value="Auf alle Aufteilen">
-                </td>
-                <td>
-                    <input class="btn btn-primary btn-sm" @click="assignEveryone();" type="button" value="Betrag allen zuweisen">
-                </td>
-                <td>
-                    <input class="btn btn-primary btn-sm" @click="assignSelected();" type="button" value="Betrag ausgewählten zuweisen ">
-                </td>
-            </tr>
             <tr>
                 <th scope="col">X</th>
                 <th scope="col">Nr.</th>
                 <th scope="col">Klasse</th>
                 <th scope="col">Nachname</th>
                 <th scope="col">Vorname</th>
-                <th scope="col" style="width: 100px;">Betrag</th>
-                <th scope="col" style="width: 100px;">Anmerkung</th>
+                <th scope="col">Betrag</th>
+                <th scope="col">Anmerkung</th>
             </tr>
         </thead>
         <tbody>
             <student v-for="student in data.students" v-bind:id="student.id" v-bind:key="student.id" :data="student" v-on:removeStudent="removeStudent($event);"></student>
         </tbody>
     </table>
+    </div>
 </template>
 
 <script>
@@ -60,7 +67,6 @@
 
                 alert("Betrag pro Schüler: " + value);
 
-                //TODO: Betrag jedem Schüler (vue objekt) zuweisen.
                 this.data.students.forEach(function(student) {
                     student.amount = value;
                 });
@@ -72,17 +78,54 @@
                  * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
                  */
 
+                alert("Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " + this.amount_st);
+
+                let number_of_students = 0;
+                this.data.students.forEach(function(student) {
+                    if(student.checked){
+                        number_of_students++;
+                    }
+                });
+
+                alert("Schülerzahl: " + number_of_students);
+
+                let value = this.amount_st / number_of_students;
+
+                alert("Betrag pro Schüler: " + value);
+
+                this.data.students.forEach(function(student) {
+                    if(student.checked){
+                        student.amount = value;
+                    }
+                });
+
             },
             assignEveryone: function(){
-                /**
-                 * Weist den Betrag aus dem Betrag-Feld allen Schülern zu
-                 */
+
+                alert("Folgender Betrag wird allen Schülern zugewiesen: " + this.amount_st);
+
+                let value= this.amount_st;
+
+                this.data.students.forEach(function(student) {
+                    student.amount = value;
+                });
 
             },
             assignSelected: function(){
                 /*
                 * Weist den Betrag aus dem Betrag-Feld allen ausgewählten Schülern zu.
                 */
+                alert("Folgender Betrag wird ausgewählten Schülern zugewiesen: " + this.amount_st);
+
+                let value = this.amount_st;
+
+                this.data.students.forEach(function(student) {
+                    if(student.checked){
+                        student.amount = value;
+                    }
+                });
+
+
             },
             removeStudent: function(id){
                 /*
@@ -103,6 +146,7 @@
 
                 //Maybe: Also reload students in addPerson, because it is still show now, only unchecked
                 //Maybe this is a feature, not a bug tho
+                //>>> This is a feature . 
 
                 //remove from Data
                 this.data.students = this.data.students.filter(el => el.id !== id);

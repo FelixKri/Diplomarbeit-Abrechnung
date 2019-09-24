@@ -109,7 +109,8 @@ class AjaxController extends Controller
         foreach($users as $user)
         {
         	$user["amount"] = 0;
-        	$user["annotation"] = "";
+			$user["annotation"] = "";
+			$user["checked"] = null;
         }
 
         return $users;

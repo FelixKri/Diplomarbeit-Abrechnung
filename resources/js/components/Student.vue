@@ -1,7 +1,7 @@
 <template>
     <tr>
         <td>
-            <input type="checkbox">
+            <input type="checkbox" v-model="data.checked">
         </td>
         <th scope="row">
             <input type="number" name="students[]" id="" readonly v-bind:value="data.id">
@@ -15,7 +15,6 @@
         <td>
             <input type="text" name="annotation[]" id="" class="form-control" v-model="data.annotation">
         </td>
-        <td><i class="fas fa-edit" @click="editStudent();"></i></td>
         <td @click="removeStudent();" ><i class="fas fa-user-minus" ></i></td>
     </tr>
 </template>
@@ -28,7 +27,7 @@
         props: ["data"],
         data: function () {
             return {
-                
+                checked: null,
             }
         },
         methods:{

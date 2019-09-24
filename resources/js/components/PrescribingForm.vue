@@ -136,7 +136,6 @@
                         amount: studentAmounts,
                         annotation: studentAnnotations
                     },
-
                     success: function (response) {
                         alert("Erfolgreich gespeichert");
                     },
@@ -148,7 +147,6 @@
             },
             addStudents: function(studentsDom)
             {
-
                 //Todo check for duplicates
                 //Add to students
                 this.students = studentsDom;

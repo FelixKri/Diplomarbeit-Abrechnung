@@ -15,10 +15,6 @@ var data = {
     
 };
 
-//Seems really stupid to include groupLength
-//But objects don't have a .length property
-//So to not count this everytime we use it we just include it
-
 const app = new Vue({
     el: '#app',
     data: data,
