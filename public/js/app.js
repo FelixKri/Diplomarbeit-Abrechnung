@@ -1940,11 +1940,56 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
   },
-  props: ["name"]
+  props: ["position"]
 });
 
 /***/ }),
@@ -1958,58 +2003,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2081,11 +2074,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
   },
-  props: ["name"]
+  props: ["position"]
 });
 
 /***/ }),
@@ -2352,6 +2349,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
@@ -2359,7 +2366,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       data: this.$parent,
-      amount_st: 0
+      amount_st: 0,
+      type: "overwrite"
     };
   },
   methods: {
@@ -2372,9 +2380,16 @@ __webpack_require__.r(__webpack_exports__);
       alert("Schülerzahl: " + number_of_students);
       var value = this.amount_st / number_of_students;
       alert("Betrag pro Schüler: " + value);
-      this.data.students.forEach(function (student) {
-        student.amount = value;
-      });
+
+      if (this.type == "overwrite") {
+        this.data.students.forEach(function (student) {
+          student.amount = value;
+        });
+      } else {
+        this.data.students.forEach(function (student) {
+          student.amount += value;
+        });
+      }
     },
     splitSelected: function splitSelected() {
       /**
@@ -2390,18 +2405,34 @@ __webpack_require__.r(__webpack_exports__);
       alert("Schülerzahl: " + number_of_students);
       var value = this.amount_st / number_of_students;
       alert("Betrag pro Schüler: " + value);
-      this.data.students.forEach(function (student) {
-        if (student.checked) {
-          student.amount = value;
-        }
-      });
+
+      if (this.type == "overwrite") {
+        this.data.students.forEach(function (student) {
+          if (student.checked) {
+            student.amount = value;
+          }
+        });
+      } else {
+        this.data.students.forEach(function (student) {
+          if (student.checked) {
+            student.amount += value;
+          }
+        });
+      }
     },
     assignEveryone: function assignEveryone() {
       alert("Folgender Betrag wird allen Schülern zugewiesen: " + this.amount_st);
-      var value = this.amount_st;
-      this.data.students.forEach(function (student) {
-        student.amount = value;
-      });
+      var value = parseFloat(this.amount_st);
+
+      if (this.type == "overwrite") {
+        this.data.students.forEach(function (student) {
+          student.amount = value;
+        });
+      } else {
+        this.data.students.forEach(function (student) {
+          student.amount += value;
+        });
+      }
     },
     assignSelected: function assignSelected() {
       /*
@@ -2409,11 +2440,20 @@ __webpack_require__.r(__webpack_exports__);
       */
       alert("Folgender Betrag wird ausgewählten Schülern zugewiesen: " + this.amount_st);
       var value = this.amount_st;
-      this.data.students.forEach(function (student) {
-        if (student.checked) {
-          student.amount = value;
-        }
-      });
+
+      if (this.type == "overwrite") {
+        this.data.students.forEach(function (student) {
+          if (student.checked) {
+            student.amount = value;
+          }
+        });
+      } else {
+        this.data.students.forEach(function (student) {
+          if (student.checked) {
+            student.amount += value;
+          }
+        });
+      }
     },
     removeStudent: function removeStudent(id) {
       /*
@@ -37893,175 +37933,66 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "tab-pane fade",
+      staticClass: "tab-pane fade show",
       attrs: {
-        id: "nav-" + _vm.name,
+        id: "nav-" + _vm.position.name,
         role: "tabpanel",
-        "aria-labelledby": "nav-" + _vm.name + "-tab"
+        "aria-labelledby": "nav-" + _vm.position.name + "-tab"
       }
     },
     [
-      _c("p", [
+      _c("h2", [
         _vm._v(
-          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatum quam quas totam possimus laudantium natus, ab hic beatae rem ducimus qui consectetur impedit quod quo recusandae, fugiat placeat temporibus ad."
+          "ID: " +
+            _vm._s(_vm.position.id) +
+            " | NAME: " +
+            _vm._s(_vm.position.name)
+        )
+      ]),
+      _vm._v(" "),
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary btn-sm",
+          attrs: {
+            "data-toggle": "modal",
+            "data-target": "#addUser",
+            type: "button"
+          }
+        },
+        [_vm._v("Person(n) hinzufügen")]
+      ),
+      _vm._v(" "),
+      _c("add-person-modal"),
+      _vm._v(" "),
+      _c("table", { staticClass: "table" }, [
+        _vm._m(1),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.position.students, function(student) {
+            return _c("tr", [
+              _c("th", { attrs: { scope: "row" } }, [
+                _vm._v(_vm._s(student.id))
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(student.lastname))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(student.firstname))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(student.group))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(student.amount))])
+            ])
+          }),
+          0
         )
       ])
-    ]
+    ],
+    1
   )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/InvoicePositions.vue?vue&type=template&id=07f717a8&":
-/*!*******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/InvoicePositions.vue?vue&type=template&id=07f717a8& ***!
-  \*******************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", {}, [
-    _c("nav", [
-      _c(
-        "div",
-        {
-          staticClass: "nav nav-tabs",
-          attrs: { id: "nav-tab", role: "tablist" }
-        },
-        [
-          _vm._l(_vm.invoicePositions, function(position) {
-            return _c(
-              "a",
-              {
-                key: position.id,
-                staticClass: "nav-item nav-link",
-                attrs: {
-                  id: "nav-" + position.name + "-tab",
-                  "data-toggle": "tab",
-                  href: "#nav-" + position.name,
-                  role: "tab",
-                  "aria-controls": "nav-" + position.name,
-                  "aria-selected": "true"
-                }
-              },
-              [
-                _vm._v(
-                  "\n                " +
-                    _vm._s(position.name) +
-                    "\n            "
-                )
-              ]
-            )
-          }),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "nav-item nav-link",
-              attrs: {
-                id: "nav-add-tab",
-                "data-toggle": "tab",
-                href: "#nav-add",
-                role: "tab",
-                "aria-controls": "nav-add",
-                "aria-selected": "false"
-              },
-              on: {
-                click: function($event) {
-                  return _vm.addPos()
-                }
-              }
-            },
-            [_vm._v("+")]
-          )
-        ],
-        2
-      )
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "tab-content", attrs: { id: "nav-tabContent" } },
-      _vm._l(_vm.invoicePositions, function(position) {
-        return _c(
-          "div",
-          {
-            key: position.id,
-            staticClass: "tab-pane fade show",
-            attrs: {
-              id: "nav-" + position.name,
-              role: "tabpanel",
-              "aria-labelledby": "nav-" + position.name + "-tab"
-            }
-          },
-          [
-            _c("h2", [
-              _vm._v(
-                "ID: " +
-                  _vm._s(position.id) +
-                  " | NAME: " +
-                  _vm._s(position.name)
-              )
-            ]),
-            _vm._v(" "),
-            _vm._m(0, true),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-primary btn-sm",
-                attrs: {
-                  "data-toggle": "modal",
-                  "data-target": "#addUser",
-                  type: "button"
-                }
-              },
-              [_vm._v("Person(n) hinzufügen")]
-            ),
-            _vm._v(" "),
-            _c("add-person-modal"),
-            _vm._v(" "),
-            _c("table", { staticClass: "table" }, [
-              _vm._m(1, true),
-              _vm._v(" "),
-              _c(
-                "tbody",
-                _vm._l(position.students, function(student) {
-                  return _c("tr", [
-                    _c("th", { attrs: { scope: "row" } }, [
-                      _vm._v(_vm._s(student.id))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(student.lastname))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(student.firstname))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(student.group))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(student.amount))])
-                  ])
-                }),
-                0
-              )
-            ])
-          ],
-          1
-        )
-      }),
-      0
-    )
-  ])
 }
 var staticRenderFns = [
   function() {
@@ -38128,6 +38059,76 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/InvoicePositions.vue?vue&type=template&id=07f717a8&":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/InvoicePositions.vue?vue&type=template&id=07f717a8& ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", {}, [
+    _c("nav", [
+      _c(
+        "div",
+        {
+          staticClass: "nav nav-tabs",
+          attrs: { id: "nav-tab", role: "tablist" }
+        },
+        [
+          _vm._l(_vm.invoicePositions, function(pos) {
+            return _c("position-tab", { key: pos.id, attrs: { position: pos } })
+          }),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "nav-item nav-link",
+              attrs: {
+                id: "nav-add-tab",
+                "data-toggle": "tab",
+                href: "#nav-add",
+                role: "tab",
+                "aria-controls": "nav-add",
+                "aria-selected": "false"
+              },
+              on: {
+                click: function($event) {
+                  return _vm.addPos()
+                }
+              }
+            },
+            [_vm._v("+")]
+          )
+        ],
+        2
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "tab-content", attrs: { id: "nav-tabContent" } },
+      _vm._l(_vm.invoicePositions, function(pos) {
+        return _c("invoice-position", { key: pos.id, attrs: { position: pos } })
+      }),
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PositionTab.vue?vue&type=template&id=1348f691&":
 /*!**************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PositionTab.vue?vue&type=template&id=1348f691& ***!
@@ -38146,17 +38147,17 @@ var render = function() {
   return _c(
     "a",
     {
-      staticClass: "nav-item nav-link active",
+      staticClass: "nav-item nav-link",
       attrs: {
-        id: "nav-" + _vm.home + "-tab",
+        id: "nav-" + _vm.position.name + "-tab",
         "data-toggle": "tab",
-        href: "#nav-" + _vm.home,
+        href: "#nav-" + _vm.position.name,
         role: "tab",
-        "aria-controls": "nav-" + _vm.home,
+        "aria-controls": "nav-" + _vm.position.name,
         "aria-selected": "true"
       }
     },
-    [_vm._v(_vm._s(_vm.name))]
+    [_vm._v("\n    " + _vm._s(_vm.position.name) + "\n")]
   )
 }
 var staticRenderFns = []
@@ -38753,6 +38754,58 @@ var render = function() {
               }
             }
           })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("tr", [
+        _c("td", [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.type,
+                expression: "type"
+              }
+            ],
+            attrs: {
+              type: "radio",
+              id: "type",
+              name: "type",
+              value: "overwrite",
+              checked: ""
+            },
+            domProps: { checked: _vm._q(_vm.type, "overwrite") },
+            on: {
+              change: function($event) {
+                _vm.type = "overwrite"
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "type" } }, [_vm._v("Überschreiben")])
+        ]),
+        _vm._v(" "),
+        _c("td", [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.type,
+                expression: "type"
+              }
+            ],
+            attrs: { type: "radio", id: "type", name: "type", value: "add" },
+            domProps: { checked: _vm._q(_vm.type, "add") },
+            on: {
+              change: function($event) {
+                _vm.type = "add"
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "type" } }, [_vm._v("Hinzuaddieren")])
         ])
       ])
     ]),

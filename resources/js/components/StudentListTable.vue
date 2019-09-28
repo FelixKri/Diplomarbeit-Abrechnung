@@ -18,6 +18,16 @@
                 <input class="btn btn-primary btn-sm" @click="assignSelected();" type="button" value="Betrag ausgewählten zuweisen ">
             </td>
         </tr>
+        <tr>
+            <td>
+                <input type="radio" id="type" name="type" value="overwrite" checked v-model="type">
+                <label for="type">Überschreiben</label>
+            </td>
+            <td>
+                <input type="radio" id="type" name="type" value="add" v-model="type">
+                <label for="type">Hinzuaddieren</label>
+            </td>
+        </tr>
     </table>
     <table class="table">
         
@@ -49,7 +59,8 @@
         data: function () {
             return {
                 data: this.$parent,
-                amount_st: 0
+                amount_st: 0,
+                type: "overwrite",
             }
         },
         methods: {
@@ -67,9 +78,16 @@
 
                 alert("Betrag pro Schüler: " + value);
 
-                this.data.students.forEach(function(student) {
-                    student.amount = value;
-                });
+                if(this.type=="overwrite"){
+                    this.data.students.forEach(function(student) {
+                        student.amount = value;
+                    });
+                }else{
+                    this.data.students.forEach(function(student) {
+                        student.amount+=value;
+                    });
+                }
+                
 
             },
 
@@ -93,22 +111,36 @@
 
                 alert("Betrag pro Schüler: " + value);
 
-                this.data.students.forEach(function(student) {
-                    if(student.checked){
-                        student.amount = value;
-                    }
-                });
+                if(this.type=="overwrite"){
+                    this.data.students.forEach(function(student) {
+                        if(student.checked){
+                            student.amount = value;
+                        }
+                    });
+                }else{
+                    this.data.students.forEach(function(student) {
+                        if(student.checked){
+                            student.amount += value;
+                        }
+                    });
+                }
 
             },
             assignEveryone: function(){
 
                 alert("Folgender Betrag wird allen Schülern zugewiesen: " + this.amount_st);
 
-                let value= this.amount_st;
+                let value = parseFloat(this.amount_st);
 
-                this.data.students.forEach(function(student) {
-                    student.amount = value;
-                });
+                if(this.type=="overwrite"){
+                    this.data.students.forEach(function(student) {
+                        student.amount = value;
+                    });
+                }else{
+                    this.data.students.forEach(function(student) {
+                        student.amount += value;
+                    });
+                }
 
             },
             assignSelected: function(){
@@ -119,11 +151,19 @@
 
                 let value = this.amount_st;
 
-                this.data.students.forEach(function(student) {
-                    if(student.checked){
-                        student.amount = value;
-                    }
-                });
+                if(this.type=="overwrite"){
+                    this.data.students.forEach(function(student) {
+                        if(student.checked){
+                            student.amount = value;
+                        }
+                    });
+                }else{
+                    this.data.students.forEach(function(student) {
+                        if(student.checked){
+                            student.amount += value;
+                        }
+                    });
+                }
 
 
             },

@@ -1,5 +1,9 @@
 <template>
-    <a class="nav-item nav-link active" :id="'nav-' + home + '-tab'" data-toggle="tab" :href="'#nav-' + home" role="tab" :aria-controls="'nav-' + home" aria-selected="true">{{name}}</a>
+    <a class="nav-item nav-link" :id="'nav-' + position.name + '-tab'" data-toggle="tab" 
+                    :href="'#nav-' + position.name" role="tab" :aria-controls="'nav-' + position.name" 
+                    aria-selected="true">
+        {{position.name}}
+    </a>
 </template>
 
 <script>
@@ -8,7 +12,7 @@
             console.log('Component mounted.')
         },
         props: [
-            "name"
+            "position"
         ]
     }
 </script>
