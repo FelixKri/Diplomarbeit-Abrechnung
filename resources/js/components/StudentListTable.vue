@@ -59,9 +59,7 @@
             return {
                 data: this.$parent,
                 amount_st: 0,
-                type: "overwrite",
-                groups: function() {return this.$parent.groups},
-                groupLength: function() { return this.$parent.groupLength}
+                type: "overwrite"
             }
         },
         methods: {
