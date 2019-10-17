@@ -17,7 +17,7 @@
 <script>
     export default {
         mounted() {
-            console.log('Component mounted.')
+            console.log('Component mounted: InvoicePositions')
         },
         methods: {
             addPos: function(){

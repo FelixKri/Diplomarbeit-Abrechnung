@@ -71,6 +71,10 @@
     export default {
         props: ["reasons"],
         mounted() {
+            console.log('Component mounted: PrescribingForm')
+
+            var that = this;
+
             $.ajax({
 
                 headers: {
@@ -85,6 +89,7 @@
                     this.reasons = response;
                 }
             });
+
         },
         data: function () {
             return {
@@ -94,13 +99,14 @@
                 due_until: "",
                 reason_suggestion: "",
                 reason: "",
-                reasons: [],
                 description: "",
                 students: [],
                 studentsDom: [],
                 studentsLoaded: [],
                 studentsLoadedLength: 0,
-                errors: {}
+                errors: {},
+                groups: [],
+                groupLength: 0
             }
         },
         methods: {

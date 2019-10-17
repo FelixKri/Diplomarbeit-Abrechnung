@@ -43,7 +43,7 @@
             </tr>
         </thead>
         <tbody>
-            <student v-for="student in data.students" v-bind:id="student.id" v-bind:key="student.id" :data="student" v-on:removeStudent="removeStudent($event);"></student>
+            <student v-for="student in data.students" v-bind:id="student.id" v-bind:key="student.id" :student="student" v-on:removeStudent="removeStudent($event);"></student>
         </tbody>
     </table>
     </div>
@@ -52,15 +52,16 @@
 <script>
     export default {
         mounted() {
-            console.log('Component mounted.')
+            console.log('Component mounted: StudentListTable')   
 
-           
         },
         data: function () {
             return {
                 data: this.$parent,
                 amount_st: 0,
                 type: "overwrite",
+                groups: function() {return this.$parent.groups},
+                groupLength: function() { return this.$parent.groupLength}
             }
         },
         methods: {

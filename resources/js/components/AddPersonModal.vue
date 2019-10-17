@@ -38,8 +38,10 @@
 <script>
     export default {
         mounted() {
-            console.log('Component mounted.')
+            console.log('Component mounted: AddPersonModal')
+
             var that = this;
+            
             $.ajax(
             {
                 headers: {
@@ -52,28 +54,28 @@
                 },
 
                 success: function (response) {
-                    that.groups = response;
+                    
+                    that.$parent.groups = response;
+
+                    //console.log(that.$parent.groups);
 
                     var count = 0;
 
-                    for(var thing in that.groups)
+                    for(var thing in that.$parent.groups)
                     {
                         count++;
                     }
 
-                    that.groupLength = count;
+                    that.$parent.groupLength = count;
                 }
-            });
+            });        
 
-            console.log(this.groups);
         },
         data: function () {
                 return {
                     studentsLoaded: this.$parent.studentsLoaded,
                     studentsDom: this.$parent.studentsDom,
-                    studentsLoadedLength: this.$parent.studentsLoadedLength,
-                    groups: [],
-                    groupLength: 0
+                    studentsLoadedLength: this.$parent.studentsLoadedLength
                 }
             },
         methods: {
@@ -115,10 +117,10 @@
             getGroupName: function(groupId)
             {
 
-                for(var i = 0;i < this.groupLength;i++)
+                for(var i = 0;i < this.$parent.groupLength;i++)
                 {
-                    if(this.groups[i]["id"] == groupId)
-                        return this.groups[i]["name"];
+                    if(this.$parent.groups[i]["id"] == groupId)
+                        return this.$parent.groups[i]["name"];
                 }
                 //Should not get here, pretty much an error
                 return "Unbekannt";

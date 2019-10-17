@@ -41,7 +41,7 @@
                             <th scope="row">{{student.id}}</th>
                             <td>{{student.lastname}}</td>
                             <td>{{student.firstname}}</td>
-                            <td>{{student.group}}</td>
+                            <td>{{group[student.group]}}</td>
                             <td>{{student.amount}}</td>
                         </tr> 
                     </tbody>
@@ -51,8 +51,14 @@
 
 <script>
     export default {
-        mounted() {
-            console.log('Component mounted.')
+        created: function() {
+            console.log('Component created: InvoicePosition');
+
+        },
+        data: function() {
+            return {
+                    
+                };
         },
         props: [
             "position"

@@ -92,7 +92,6 @@ class AjaxController extends Controller
 				   			strpos(strtoupper($item["first_name"]), strtoupper($nameFilter)) !== false ||
 				   			strpos(strtoupper (strval($item["id"])), strtoupper($nameFilter)) !== false)
 				   {
-				   	 Log::debug('Returning item');
 				   		return $item;
 				   }
 				   else
@@ -112,6 +111,7 @@ class AjaxController extends Controller
 			$user["annotation"] = "";
 			$user["checked"] = null;
         }
+
 
         return $users;
     }
