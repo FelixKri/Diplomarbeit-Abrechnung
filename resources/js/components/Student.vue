@@ -1,19 +1,19 @@
 <template>
     <tr>
         <td>
-            <input type="checkbox" v-model="data.checked">
+            <input type="checkbox" v-model="student.checked">
         </td>
         <th scope="row">
-            <input type="number" name="students[]" id="" readonly v-bind:value="data.id">
+            <input type="number" name="students[]" id="" readonly v-bind:value="student.id">
         </th>
-        <td>{{ data.group_id }}</td>
-        <td>{{ data.last_name }}</td>
-        <td>{{ data.first_name }}</td>
+        <td>{{ getGroupName(student.group_id) }}</td>
+        <td>{{ student.last_name }}</td>
+        <td>{{ student.first_name }}</td>
         <td>
-            <input type="number" name="amount[]" id="" class="form-control" v-model="data.amount">
+            <input type="number" name="amount[]" id="" class="form-control" v-model="student.amount">
         </td>
         <td>
-            <input type="text" name="annotation[]" id="" class="form-control" v-model="data.annotation">
+            <input type="text" name="annotation[]" id="" class="form-control" v-model="student.annotation">
         </td>
         <td @click="removeStudent();" ><i class="fas fa-user-minus" ></i></td>
     </tr>
@@ -22,22 +22,38 @@
 <script>
     export default {
         mounted() {
-            console.log('Component mounted.')
+            console.log('Component mounted: Student')
         },
-        props: ["data"],
+        props: ["student"],
         data: function () {
             return {
-                checked: null,
+                checked: null
             }
         },
         methods:{
             removeStudent: function(){
-                console.log("deleting student with id " + this.data.id);
-                this.$emit('removeStudent', this.data.id);
+                console.log("deleting student with id " + this.student.id);
+                this.$emit('removeStudent', this.student.id);
             },
             editStudent: function(){
                 //Unsicher ob man das wirklich braucht 
             },
+            getGroupName: function(groupId)
+            {
+                //Really stupid solution, but necessary
+                //if we put group: this.$parent.group ... in data
+                //it will copy once on creation
+                //Thus will not have the groups in it
+                var prescribingForm = this.$parent.$parent;
+
+                for(var i = 0;i < prescribingForm.groupLength;i++)
+                {
+                    if(prescribingForm.groups[i]["id"] == groupId)
+                        return prescribingForm.groups[i]["name"];
+                }
+                //Should not get here, pretty much an error
+                return "Unbekannt";
+            }
         }
     }
 </script>
