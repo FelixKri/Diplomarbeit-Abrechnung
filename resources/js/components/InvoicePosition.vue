@@ -22,14 +22,15 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUser" type=button>Person(n) hinzufügen</button>
+                <button class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#addUser_'+position.id" type=button>Person(n) hinzufügen</button>
 
-                <add-person-modal></add-person-modal>
+                <add-person-modal v-on:addstudents="addStudents" :id="position.id"></add-person-modal>
 
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
+                            <th scope="col">X</th>
+                            <th scope="col">ID</th>
                             <th scope="col">Nachname</th>
                             <th scope="col">Vorname</th>
                             <th scope="col">Klasse</th>
@@ -37,13 +38,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="student in position.students">
-                            <th scope="row">{{student.id}}</th>
-                            <td>{{student.lastname}}</td>
-                            <td>{{student.firstname}}</td>
-                            <td>{{group[student.group]}}</td>
-                            <td>{{student.amount}}</td>
-                        </tr> 
+                        <student-invoice v-bind:key="student.id" v-for="student in position.students" :student="student"></student-invoice>
                     </tbody>
                 </table>
             </div>
@@ -55,13 +50,26 @@
             console.log('Component created: InvoicePosition');
 
         },
-        data: function() {
+        data: function () {
             return {
-                    
-                };
+                studentsDom: [],
+                studentsLoaded: [],
+                studentsLoadedLength: 0,
+                errors: {},
+                groups: [],
+                groupLength: 0
+            }
         },
         props: [
-            "position"
-        ]
+            "position",
+        ],
+        methods: {
+            addStudents: function(studentsDom)
+            {
+                this.position.students = studentsDom;
+                
+                console.log(this.position.students);
+            }
+        }
     }
 </script>
