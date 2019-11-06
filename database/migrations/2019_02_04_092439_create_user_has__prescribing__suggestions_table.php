@@ -16,7 +16,7 @@ class CreateUserHasPrescribingSuggestionsTable extends Migration
         Schema::create('user_has__prescribing__suggestions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->integer('amount');
+            $table->decimal('amount', 10, 2);
             $table->string('annotation')->nullable();
             $table->integer('prescribing_suggestion_id');
             $table->timestamps();
