@@ -2429,13 +2429,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       data: this.$parent,
       amount_st: 0,
-      type: "overwrite",
-      groups: function groups() {
-        return this.$parent.groups;
-      },
-      groupLength: function groupLength() {
-        return this.$parent.groupLength;
-      }
+      type: "overwrite"
     };
   },
   methods: {
