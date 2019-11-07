@@ -68,6 +68,7 @@
             {
                 this.position.students = studentsDom;
                 
+                console.log("Added students. Students:");
                 console.log(this.position.students);
             }
         }
