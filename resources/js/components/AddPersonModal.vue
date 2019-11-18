@@ -13,8 +13,8 @@
               <td>
                 <input
                   type="text"
-                  name="nameFilter"
-                  id="nameFilter"
+                  :name="'nameFilter' + this.id"
+                  :id="'nameFilter' + this.id"
                   class="form-control typeahead"
                   placeholder="Name"
                   v-on:keyup="getStudentsList()"
@@ -23,8 +23,8 @@
               <td>
                 <input
                   type="text"
-                  name="classFilter"
-                  id="classFilter"
+                  :name="'classFilter' + this.id"
+                  :id="'classFilter' + this.id"
                   class="form-control typeahead"
                   placeholder="Klasse"
                   v-on:keyup="getStudentsList()"
@@ -45,8 +45,8 @@
           <button type="button" class="btn btn-primary" @click="selectAll">Alle auswählen</button>
           <button type="button" class="btn btn-primary" @click="selectNone">Keinen auswählen</button>
         </div>
-        <div class="modal-body" v-bind:key="student['id']" v-for="student in studentsLoaded">
-          <input type="checkbox" :id="student['id']" @change="cbClicked(student['id'])" />
+        <div class="modal-body" v-bind:key="student['id'] + id" v-for="student in this.$parent.studentsLoaded">
+          <input type="checkbox" :id="student['id'] + 'i' + id" @change="cbClicked(student['id'])" />
           {{ student["first_name"] + " " + student["last_name"] + " | " + getGroupName(student['group_id']) }}
         </div>
       </div>
@@ -87,9 +87,9 @@ export default {
   },
   data: function() {
     return {
-      studentsLoaded: this.$parent.studentsLoaded,
-      studentsDom: this.$parent.studentsDom,
-      studentsLoadedLength: this.$parent.studentsLoadedLength
+      //studentsLoaded: this.$parent.studentsLoaded,
+      //studentsDom: this.$parent.studentsDom,
+      //studentsLoadedLength: this.$parent.studentsLoadedLength
     };
   },
   props: ["id"],
@@ -98,8 +98,11 @@ export default {
       /*
        * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet
        */
-      for (var i = 0; i < this.studentsLoadedLength; i++) {
-        if (this.studentsLoaded[i]["id"] == id) return this.studentsLoaded[i];
+      var studentsLoaded = this.$parent.studentsLoaded;
+      var studentsLoadedLength = this.$parent.studentsLoadedLength;
+
+      for (var i = 0; i < studentsLoadedLength; i++) {
+        if (studentsLoaded[i]["id"] == id) return studentsLoaded[i];
       }
 
       //Fatal error, id not found
@@ -112,13 +115,14 @@ export default {
        * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet
        */
       //No way around it, count studentsDom
+      var studentsDom = this.$parent.studentsDom;
       var count = 0;
-      for (var thing in this.studentsDom) {
+      for (var thing in studentsDom) {
         count++;
       }
 
       for (var i = 0; i < count; i++) {
-        if (this.studentsDom[i]["id"] == id) return i;
+        if (studentsDom[i]["id"] == id) return i;
       }
 
       //Fatal error, id not found
@@ -139,20 +143,32 @@ export default {
        *  Wird ausgelöst wenn der Status des Checkmarks neben einem Schüler verändert wird.
        *  Fügt hinzu/entfernt den jeweiligen Schüler aus dem StudentsDOM Array
        */
-
-      if ($("#" + id)[0].checked) {
+      if ($("#" + id + "i" + this.id)[0].checked) {
         //Checked
-        this.studentsDom.push(this.getStudentAfterId(id));
+        this.$parent.studentsDom.push(this.getStudentAfterId(id));
       } else {
         //unchecked
         //find out what index to splice
-        this.studentsDom.splice(this.getStudentIndexAfterId(id));
+        this.$parent.studentsDom.splice(this.getStudentIndexAfterId(id));
       }
     },
     getStudentsList: function() {
       /*
        * Sendet eine POST Request an /getUsers mit den gesetzten Filtern und erhält die Ausgewählten Schüler zurück.
        */
+       var studentsLoaded = this.$parent.studentsLoaded;
+        var studentsLoadedLength = this.$parent.studentsLoadedLength;
+       var cbs = [];
+
+        if (studentsLoadedLength > 0)
+        {
+          for(var i = 0; i < studentsLoadedLength;i++)
+          {
+            console.log("Getting cb:");
+            console.log("'" + (studentsLoaded[i]["id"] + 'i' + this.id) + "'");
+            cbs.push($("#" + studentsLoaded[i]["id"] + 'i' + this.id));
+          }
+        }
 
       var that = this;
       $.ajax({
@@ -163,74 +179,86 @@ export default {
         url: "/getUsers",
         dataType: "json",
         data: {
-          nameFilter: $("#nameFilter")[0]["value"],
-          classFilter: $("#classFilter")[0]["value"]
+          nameFilter: $("#nameFilter" + that.id)[0]["value"],
+          classFilter: $("#classFilter" + that.id)[0]["value"]
         },
 
         success: function(response) {
-          if (that.studentsLoadedLength > 0) {
+          
+          if (studentsLoadedLength > 0) {
             //Add all students that are checked because they stay on screen
             var checkedStudents = [];
 
             //DON'T USE FOREACH IT DOESNT WORK
-            for (var i = 0; i < that.studentsLoadedLength; i++) {
-              var student = that.studentsLoaded[i];
+            for (var i = 0; i < studentsLoadedLength; i++) {
+              var student = studentsLoaded[i];
 
-              if ($("#" + student["id"])[0].checked)
+              if (cbs[i].checked)
                 checkedStudents.push(student);
             }
 
+            var iterator = 0;
             //Add search results after that
             response.forEach(student => {
               //Check if student is already in it (if cb is checked)
-              var cb = $("#" + student.id)[0];
+              var cb = cbs[iterator];
 
               if (cb == null || !cb.checked) checkedStudents.push(student);
+              iterator++;
             });
 
-            that.studentsLoaded = checkedStudents;
+            that.$parent.studentsLoaded = checkedStudents;
           } else {
-            that.studentsLoaded = response;
+            that.$parent.studentsLoaded = response;
           }
 
           var count = 0;
-          for (var thing in that.studentsLoaded) count++;
-          that.studentsLoadedLength = count;
+          for (var thing in that.$parent.studentsLoaded) count++;
+          that.$parent.studentsLoadedLength = count;
+
         }
       });
+
     },
     addStudents: function() {
       /*
                     Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
                 */
-
-      this.$emit("addstudents", this.studentsDom);
+                var studentsDom = this.$parent.studentsDom;
+                console.log("Emitting addstudents event");
+                console.log(studentsDom);
+      
+      this.$emit("addstudents", studentsDom);
 
       //Reset filters and clear everything else
-      $("#nameFilter")[0]["value"] = "";
-      $("#classFilter")[0]["value"] = "";
+      $("#nameFilter" + this.id)[0]["value"] = "";
+      $("#classFilter" + this.id)[0]["value"] = "";
       this.getStudentsList();
 
       //Todo show message like "Users added"
     },
     resetFilter: function() {
-      $("#nameFilter")[0]["value"] = "";
-      $("#classFilter")[0]["value"] = "";
+      $("#nameFilter" + this.id)[0]["value"] = "";
+      $("#classFilter" + this.id)[0]["value"] = "";
       this.getStudentsList();
     },
     selectAll: function() {
+      var studentsLoaded = this.$parent.studentsLoaded;
+      var studentsLoadedLength = this.$parent.studentsLoadedLength;
       //DON'T USE FOREACH IT DOESNT WORK
-      for (var i = 0; i < this.studentsLoadedLength; i++) {
-        var student = this.studentsLoaded[i];
-        $("#" + student.id)[0].checked = true;
+      for (var i = 0; i < studentsLoadedLength; i++) {
+        var student = studentsLoaded[i];
+        $("#" + student.id + "i" + this.id)[0].checked = true;
         this.cbClicked(student.id);
       }
     },
     selectNone: function() {
+      var studentsLoaded = this.$parent.studentsLoaded;
+      var studentsLoadedLength = this.$parent.studentsLoadedLength;
       //DON'T USE FOREACH IT DOESNT WORK
-      for (var i = 0; i < this.studentsLoadedLength; i++) {
-        var student = this.studentsLoaded[i];
-        $("#" + student.id)[0].checked = false;
+      for (var i = 0; i < studentsLoadedLength; i++) {
+        var student = studentsLoaded[i];
+        $("#" + student.id + "i" + this.id)[0].checked = false;
         this.cbClicked(student.id);
       }
     }
