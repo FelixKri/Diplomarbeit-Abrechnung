@@ -92,9 +92,7 @@ export default {
       studentsLoadedLength: this.$parent.studentsLoadedLength
     };
   },
-  props: [
-      "id"
-  ],
+  props: ["id"],
   methods: {
     getStudentAfterId: function(id) {
       /*
