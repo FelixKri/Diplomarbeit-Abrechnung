@@ -21,6 +21,7 @@ class PrescribingController extends Controller
 
     public function store(){
 
+        return request()->all();
 
         $validator = Validator::make(request()->all(), [
             'date' => 'date|required',

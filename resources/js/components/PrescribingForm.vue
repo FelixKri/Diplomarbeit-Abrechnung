@@ -144,6 +144,7 @@
                         annotation: studentAnnotations
                     },
                     success: function (response) {
+                        console.log(response);
                         alert("Erfolgreich gespeichert");
                     },
                     error: function(xhr, status, error) {

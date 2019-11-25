@@ -46,6 +46,15 @@
                     v-model="iban"
                 />
             </div>
+            <div class="form-group">
+                <label for="annotation">Anmerkungen</label>
+                <textarea
+                    class="form-control"
+                    id="annotation"
+                    rows="5"
+                    v-model="annotation"
+                ></textarea>
+            </div>
 
             <div class="">
                 <nav>
@@ -95,6 +104,7 @@ export default {
             date: "",
             iban: "",
             reason: "",
+            annotation: "",
             invoicePositions: [],
             id: 0
         };
@@ -127,6 +137,7 @@ export default {
             var position = {
                 id: id,
                 name: name,
+                belegNr: "10",
                 students: []
             };
 
@@ -148,8 +159,6 @@ export default {
                     "studentAnnotations": []
                 });
 
-                console.log(JSON.stringify(invoicePositionsStripped));
-
                 position.students.forEach(function(student) {
                     invoicePositionsStripped[position.id - 1].studentIDs.push(
                         student.id
@@ -165,16 +174,7 @@ export default {
                 });
             });
 
-            var data = {
-                "author": this.author,
-                "iban": this.iban,
-                "date": this.date,
-                "reason": this.reason,
-                "invoicePositions": invoicePositionsStripped
-            };
-
-            console.log(JSON.stringify(invoicePositionsStripped));
-            console.log(JSON.stringify(data));
+            console.log(invoicePositionsStripped);
 
             $.ajax({
                 headers: {
@@ -183,13 +183,19 @@ export default {
                 type: "POST",
                 url: "/invoice/new",
                 dataType: "json",
-                data: that.data,
+                data: {
+                    "author": that.author,
+                    "iban": that.iban,
+                    "date": that.date,
+                    "reason": that.reason,
+                    "invoicePositions": invoicePositionsStripped
+                },
                 success: function(response) {
-                    alert(response);
-                    //  alert("Erfolgreich gespeichert");
+                    alert("Erfolgreich gespeichert!");
                 },
                 error: function(xhr, status, error) {
                     alert(xhr.responseText);
+                    console.log(xhr.responseText);
                     var respJson = JSON.parse(xhr.responseText);
                     that.errors = respJson.errors;
                 }

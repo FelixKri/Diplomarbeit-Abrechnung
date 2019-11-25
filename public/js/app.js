@@ -2065,6 +2065,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2072,6 +2081,7 @@ __webpack_require__.r(__webpack_exports__);
       date: "",
       iban: "",
       reason: "",
+      annotation: "",
       invoicePositions: [],
       id: 0
     };
@@ -2100,6 +2110,7 @@ __webpack_require__.r(__webpack_exports__);
       var position = {
         id: id,
         name: name,
+        belegNr: "10",
         students: []
       };
       this.invoicePositions.push(position);
@@ -2118,22 +2129,13 @@ __webpack_require__.r(__webpack_exports__);
           "studentAmounts": [],
           "studentAnnotations": []
         });
-        console.log(JSON.stringify(invoicePositionsStripped));
         position.students.forEach(function (student) {
           invoicePositionsStripped[position.id - 1].studentIDs.push(student.id);
           invoicePositionsStripped[position.id - 1].studentAmounts.push(student.amount);
           invoicePositionsStripped[position.id - 1].studentAnnotations.push(student.annotation);
         });
       });
-      var data = {
-        "author": this.author,
-        "iban": this.iban,
-        "date": this.date,
-        "reason": this.reason,
-        "invoicePositions": invoicePositionsStripped
-      };
-      console.log(JSON.stringify(invoicePositionsStripped));
-      console.log(JSON.stringify(data));
+      console.log(invoicePositionsStripped);
       $.ajax({
         headers: {
           "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -2141,12 +2143,19 @@ __webpack_require__.r(__webpack_exports__);
         type: "POST",
         url: "/invoice/new",
         dataType: "json",
-        data: that.data,
+        data: {
+          "author": that.author,
+          "iban": that.iban,
+          "date": that.date,
+          "reason": that.reason,
+          "invoicePositions": invoicePositionsStripped
+        },
         success: function success(response) {
-          alert(response); //  alert("Erfolgreich gespeichert");
+          alert("Erfolgreich gespeichert!");
         },
         error: function error(xhr, status, _error) {
           alert(xhr.responseText);
+          console.log(xhr.responseText);
           var respJson = JSON.parse(xhr.responseText);
           that.errors = respJson.errors;
         }
@@ -2446,6 +2455,7 @@ __webpack_require__.r(__webpack_exports__);
           annotation: studentAnnotations
         },
         success: function success(response) {
+          console.log(response);
           alert("Erfolgreich gespeichert");
         },
         error: function error(xhr, status, _error) {
@@ -38332,6 +38342,32 @@ var render = function() {
                 return
               }
               _vm.iban = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "annotation" } }, [_vm._v("Anmerkungen")]),
+        _vm._v(" "),
+        _c("textarea", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.annotation,
+              expression: "annotation"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { id: "annotation", rows: "5" },
+          domProps: { value: _vm.annotation },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.annotation = $event.target.value
             }
           }
         })
