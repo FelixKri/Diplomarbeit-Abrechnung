@@ -113,7 +113,6 @@ export default {
         addPos: function() {
             /*
                     Aufbau einer invoicePosition:
-
                     {
                         id: 1,
                         name: "Skikurs",
@@ -138,6 +137,8 @@ export default {
                 id: id,
                 name: name,
                 belegNr: "10",
+                amount: 0,
+                annotation: "",
                 students: []
             };
 

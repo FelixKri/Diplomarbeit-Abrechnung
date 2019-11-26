@@ -10,6 +10,7 @@
     <td>
       <input type="number" name="amount[]" id class="form-control" v-model="student.amount" />
     </td>
+    <td @click="removeStudent();" ><i class="fas fa-user-minus" ></i></td>
   </tr>
 </template>
 
@@ -21,8 +22,14 @@ export default {
   props: ["student"],
   data: function() {
     return {
-      checked: null
+      
     };
+  },
+  methods:{
+    removeStudent: function(){
+      console.log("deleting student with id " + this.student.id);
+      this.$emit('removeStudent', this.student.id);
+    },
   }
 };
 </script>

@@ -15,7 +15,7 @@
                         type="number"
                         class="form-control"
                         placeholder="Betrag"
-                        v-model="amount"
+                        v-model="position.amount"
                     />
                 </div>
                 <div class="form-group">
@@ -24,7 +24,7 @@
                         type="number"
                         class="form-control"
                         placeholder="Belegnummer"
-                        v-model="belegNr"
+                        v-model="position.belegNr"
                     />
                 </div>
             </div>
@@ -35,7 +35,7 @@
                         class="form-control"
                         id="annotation"
                         rows="5"
-                        v-model="annotation"
+                        v-model="position.annotation"
                     ></textarea>
                 </div>
             </div>
@@ -71,6 +71,7 @@
                     v-bind:key="student.id"
                     v-for="student in position.students"
                     :student="student"
+                    v-on:removeStudent="removeStudent($event);"
                 ></student-invoice>
             </tbody>
         </table>
@@ -84,9 +85,9 @@ export default {
     },
     data: function() {
         return {
-            amount: 0,
-            annotation: "",
-            belegNr: 0,
+            // amount: 0,
+            // annotation: "",
+            // belegNr: 0,
             studentsDom: [],
             studentsLoaded: [],
             studentsLoadedLength: 0,
@@ -102,7 +103,23 @@ export default {
 
             console.log("Added students. Students:");
             console.log(this.position.students);
-        }
+        },
+        removeStudent: function(id){
+                
+                alert("loda");
+                this.studentsDom.filter(el => el.id !== id);
+                
+                
+                this.studentsLoaded.filter(el => el.id !== id);
+
+                var result = this.position.students.filter(obj => {
+                    if(obj.id===id){
+                        obj.checked = false;
+                    }
+                });
+
+                this.position.students = this.position.students.filter(el => el.id !== id);
+            }
     }
 };
 </script>

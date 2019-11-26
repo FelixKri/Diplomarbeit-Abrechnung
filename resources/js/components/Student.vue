@@ -27,7 +27,7 @@
         props: ["student"],
         data: function () {
             return {
-                checked: null
+                
             }
         },
         methods:{

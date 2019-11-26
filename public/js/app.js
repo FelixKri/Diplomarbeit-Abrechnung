@@ -2090,7 +2090,7 @@ __webpack_require__.r(__webpack_exports__);
     addPos: function addPos() {
       /*
               Aufbau einer invoicePosition:
-               {
+              {
                   id: 1,
                   name: "Skikurs",
                   students: [
@@ -2111,6 +2111,8 @@ __webpack_require__.r(__webpack_exports__);
         id: id,
         name: name,
         belegNr: "10",
+        amount: 0,
+        annotation: "",
         students: []
       };
       this.invoicePositions.push(position);
@@ -2254,15 +2256,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     console.log("Component created: InvoicePosition");
   },
   data: function data() {
     return {
-      amount: 0,
-      annotation: "",
-      belegNr: 0,
+      // amount: 0,
+      // annotation: "",
+      // belegNr: 0,
       studentsDom: [],
       studentsLoaded: [],
       studentsLoadedLength: 0,
@@ -2277,6 +2280,23 @@ __webpack_require__.r(__webpack_exports__);
       this.position.students = studentsDom;
       console.log("Added students. Students:");
       console.log(this.position.students);
+    },
+    removeStudent: function removeStudent(id) {
+      alert("loda");
+      this.studentsDom.filter(function (el) {
+        return el.id !== id;
+      });
+      this.studentsLoaded.filter(function (el) {
+        return el.id !== id;
+      });
+      var result = this.position.students.filter(function (obj) {
+        if (obj.id === id) {
+          obj.checked = false;
+        }
+      });
+      this.position.students = this.position.students.filter(function (el) {
+        return el.id !== id;
+      });
     }
   }
 });
@@ -2510,9 +2530,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: ["student"],
   data: function data() {
-    return {
-      checked: null
-    };
+    return {};
   },
   methods: {
     removeStudent: function removeStudent() {
@@ -2564,15 +2582,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log("Component mounted: Student");
   },
   props: ["student"],
   data: function data() {
-    return {
-      checked: null
-    };
+    return {};
+  },
+  methods: {
+    removeStudent: function removeStudent() {
+      console.log("deleting student with id " + this.student.id);
+      this.$emit('removeStudent', this.student.id);
+    }
   }
 });
 
@@ -38491,19 +38514,19 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.amount,
-                  expression: "amount"
+                  value: _vm.position.amount,
+                  expression: "position.amount"
                 }
               ],
               staticClass: "form-control",
               attrs: { type: "number", placeholder: "Betrag" },
-              domProps: { value: _vm.amount },
+              domProps: { value: _vm.position.amount },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.amount = $event.target.value
+                  _vm.$set(_vm.position, "amount", $event.target.value)
                 }
               }
             })
@@ -38517,19 +38540,19 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.belegNr,
-                  expression: "belegNr"
+                  value: _vm.position.belegNr,
+                  expression: "position.belegNr"
                 }
               ],
               staticClass: "form-control",
               attrs: { type: "number", placeholder: "Belegnummer" },
-              domProps: { value: _vm.belegNr },
+              domProps: { value: _vm.position.belegNr },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.belegNr = $event.target.value
+                  _vm.$set(_vm.position, "belegNr", $event.target.value)
                 }
               }
             })
@@ -38547,19 +38570,19 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.annotation,
-                  expression: "annotation"
+                  value: _vm.position.annotation,
+                  expression: "position.annotation"
                 }
               ],
               staticClass: "form-control",
               attrs: { id: "annotation", rows: "5" },
-              domProps: { value: _vm.annotation },
+              domProps: { value: _vm.position.annotation },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.annotation = $event.target.value
+                  _vm.$set(_vm.position, "annotation", $event.target.value)
                 }
               }
             })
@@ -38593,7 +38616,12 @@ var render = function() {
           _vm._l(_vm.position.students, function(student) {
             return _c("student-invoice", {
               key: student.id,
-              attrs: { student: student }
+              attrs: { student: student },
+              on: {
+                removeStudent: function($event) {
+                  return _vm.removeStudent($event)
+                }
+              }
             })
           }),
           1
@@ -39261,7 +39289,19 @@ var render = function() {
           }
         }
       })
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "td",
+      {
+        on: {
+          click: function($event) {
+            return _vm.removeStudent()
+          }
+        }
+      },
+      [_c("i", { staticClass: "fas fa-user-minus" })]
+    )
   ])
 }
 var staticRenderFns = []
