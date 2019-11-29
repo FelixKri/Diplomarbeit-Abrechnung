@@ -2257,6 +2257,74 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     console.log("Component created: InvoicePosition");
@@ -2271,7 +2339,8 @@ __webpack_require__.r(__webpack_exports__);
       studentsLoadedLength: 0,
       errors: {},
       groups: [],
-      groupLength: 0
+      groupLength: 0,
+      amount_st: 0
     };
   },
   props: ["position"],
@@ -2280,6 +2349,90 @@ __webpack_require__.r(__webpack_exports__);
       this.position.students = studentsDom;
       console.log("Added students. Students:");
       console.log(this.position.students);
+    },
+    splitEveryone: function splitEveryone() {
+      /**
+       * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
+       */
+      alert("Folgender Betrag wird auf alle Schüler aufgeteilt: " + this.amount_st);
+      var number_of_students = this.position.students.length;
+      alert("Schülerzahl: " + number_of_students);
+      var value = this.amount_st / number_of_students;
+      alert("Betrag pro Schüler: " + value);
+
+      if (this.type == "overwrite") {
+        this.position.students.forEach(function (student) {
+          student.amount = value;
+        });
+      } else {
+        this.position.students.forEach(function (student) {
+          student.amount += value;
+        });
+      }
+    },
+    splitSelected: function splitSelected() {
+      /**
+       * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
+       */
+      alert("Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " + this.amount_st);
+      var number_of_students = 0;
+      this.data.students.forEach(function (student) {
+        if (student.checked) {
+          number_of_students++;
+        }
+      });
+      alert("Schülerzahl: " + number_of_students);
+      var value = this.amount_st / number_of_students;
+      alert("Betrag pro Schüler: " + value);
+
+      if (this.type == "overwrite") {
+        this.position.students.forEach(function (student) {
+          if (student.checked) {
+            student.amount = value;
+          }
+        });
+      } else {
+        this.position.students.forEach(function (student) {
+          if (student.checked) {
+            student.amount += value;
+          }
+        });
+      }
+    },
+    assignEveryone: function assignEveryone() {
+      alert("Folgender Betrag wird allen Schülern zugewiesen: " + this.amount_st);
+      var value = parseFloat(this.amount_st);
+
+      if (this.type == "overwrite") {
+        this.position.students.forEach(function (student) {
+          student.amount = value;
+        });
+      } else {
+        this.position.students.forEach(function (student) {
+          student.amount += value;
+        });
+      }
+    },
+    assignSelected: function assignSelected() {
+      /*
+       * Weist den Betrag aus dem Betrag-Feld allen ausgewählten Schülern zu.
+       */
+      alert("Folgender Betrag wird ausgewählten Schülern zugewiesen: " + this.amount_st);
+      var value = this.amount_st;
+
+      if (this.type == "overwrite") {
+        this.position.students.forEach(function (student) {
+          if (student.checked) {
+            student.amount = value;
+          }
+        });
+      } else {
+        this.position.students.forEach(function (student) {
+          if (student.checked) {
+            student.amount += value;
+          }
+        });
+      }
     },
     removeStudent: function removeStudent(id) {
       alert("loda");
@@ -38586,6 +38739,134 @@ var render = function() {
                 }
               }
             })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("table", [
+        _c("tr", [
+          _c("td", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.amount_st,
+                  expression: "amount_st"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "number", id: "number", placeholder: "Betrag" },
+              domProps: { value: _vm.amount_st },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.amount_st = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              staticClass: "btn btn-primary btn-sm",
+              attrs: { type: "button", value: "Auf alle Aufteilen" },
+              on: {
+                click: function($event) {
+                  return _vm.splitEveryone()
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              staticClass: "btn btn-primary btn-sm",
+              attrs: { type: "button", value: "Auf ausgewählte Aufteilen" },
+              on: {
+                click: function($event) {
+                  return _vm.splitSelected()
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              staticClass: "btn btn-primary btn-sm",
+              attrs: { type: "button", value: "Betrag allen zuweisen" },
+              on: {
+                click: function($event) {
+                  return _vm.assignEveryone()
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              staticClass: "btn btn-primary btn-sm",
+              attrs: { type: "button", value: "Betrag ausgewählten zuweisen " },
+              on: {
+                click: function($event) {
+                  return _vm.assignSelected()
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("td", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.type,
+                  expression: "type"
+                }
+              ],
+              attrs: {
+                type: "radio",
+                id: "type",
+                name: "type",
+                value: "overwrite",
+                checked: ""
+              },
+              domProps: { checked: _vm._q(_vm.type, "overwrite") },
+              on: {
+                change: function($event) {
+                  _vm.type = "overwrite"
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "type" } }, [_vm._v("Überschreiben")])
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.type,
+                  expression: "type"
+                }
+              ],
+              attrs: { type: "radio", id: "type", name: "type", value: "add" },
+              domProps: { checked: _vm._q(_vm.type, "add") },
+              on: {
+                change: function($event) {
+                  _vm.type = "add"
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "type" } }, [_vm._v("Hinzuaddieren")])
           ])
         ])
       ]),
