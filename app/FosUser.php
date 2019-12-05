@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class fos_user extends Model
+class fosUser extends Model
 {
     protected $table = 'fos_user'; 
     public $timestamps = false;
@@ -21,7 +21,7 @@ class fos_user extends Model
         return $this->belongsTo(Group::class);
     }
 
-    public function email_cc(){
-        return $this->hasMany(email_cc::class, 'user_id');
+    public function emailCc(){
+        return $this->hasMany(emailCc::class, 'user_id');
     }
 }

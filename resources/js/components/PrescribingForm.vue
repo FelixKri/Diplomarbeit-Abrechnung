@@ -116,7 +116,7 @@
                 var studentIds = [];
                 var studentAmounts = [];
                 var studentAnnotations = [];
-
+                
                 this.students.forEach(function(student) {
                     studentIds.push(student.id);
                     studentAmounts.push(student.amount);
@@ -132,16 +132,16 @@
                     url: '/prescribing/new',
                     dataType: 'json',
                     data: {
-                        title: that.title,
-                        author: that.author,
-                        date: that.date,
-                        due_until: that.due_until,
-                        reason_suggestion: that.reason_suggestion,
-                        reason: that.reason,
-                        description: that.description,
-                        students: studentIds,
-                        amount: studentAmounts,
-                        annotation: studentAnnotations
+                        "title": that.title,
+                        "author": that.author,
+                        "date": that.date,
+                        "due_until": that.due_until,
+                        "reason_suggestion": that.reason_suggestion,
+                        "reason": that.reason,
+                        "description": that.description,
+                        "students": studentIds,
+                        "amount": studentAmounts,
+                        "annotation": studentAnnotations
                     },
                     success: function (response) {
                         console.log(response);

@@ -14,16 +14,19 @@ use Illuminate\Support\Facades\Log;
 */
 
 Route::get('/', function () {
-    return dd(App\Fos_user::take(20)->get());
+    return dd(App\FosUser::take(20)->get());
 });
+
+Route::get('/testroute', 'PDFController@dowloadTestPDF');
 
 Route::get('/prescribing/new', 'PrescribingController@create');
 Route::post('/prescribing/new', 'PrescribingController@store');
 Route::get('/prescribing/show', 'PrescribingController@show');
+Route::get('/prescribing/list', 'PrescribingController@show');
 
 Route::get('/invoice/new', 'InvoiceController@create');
 Route::post('/invoice/new', 'InvoiceController@store');
 
-Route::post('/getUsers','AjaxController@getUsers');
+Route::post('/getUsers','AjaxController@getUsers');  //Sollte Get request sein
 Route::post('/getAllGroups','AjaxController@getAllGroups'); // Method: POST Name: GETAllGroups *** Das sollte eine get request sein, man gettet ja was
 Route::get('/getReasons', 'AjaxController@getReasons');

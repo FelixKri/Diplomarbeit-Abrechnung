@@ -13,7 +13,7 @@ class CreatePrescribingSuggestionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('prescribing__suggestions', function (Blueprint $table) {
+        Schema::create('prescribing_suggestions', function (Blueprint $table) {
             $table->increments('id');
             $table->date('due_until');
             $table->integer('reason_id')->nullable();
@@ -34,6 +34,6 @@ class CreatePrescribingSuggestionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prescribing__suggestions');
+        Schema::dropIfExists('prescribing_suggestions');
     }
 }

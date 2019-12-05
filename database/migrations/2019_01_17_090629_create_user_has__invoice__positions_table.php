@@ -13,7 +13,7 @@ class CreateUserHasInvoicePositionsTable extends Migration
     */
     public function up()
     {
-        Schema::create('user_has__invoice__positions', function (Blueprint $table) {
+        Schema::create('user_has_invoice_positions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('invoice_position_id');
@@ -30,6 +30,6 @@ class CreateUserHasInvoicePositionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_has__invoice__positions');
+        Schema::dropIfExists('user_has_invoice_positions');
     }
 }

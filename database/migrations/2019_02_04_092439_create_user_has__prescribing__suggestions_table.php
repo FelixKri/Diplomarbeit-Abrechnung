@@ -13,7 +13,7 @@ class CreateUserHasPrescribingSuggestionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_has__prescribing__suggestions', function (Blueprint $table) {
+        Schema::create('user_has_prescribing_suggestions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->decimal('amount', 10, 2);
@@ -30,6 +30,6 @@ class CreateUserHasPrescribingSuggestionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_has__prescribing__suggestions');
+        Schema::dropIfExists('user_has_prescribing_suggestions');
     }
 }

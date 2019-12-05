@@ -17,7 +17,7 @@ class Payment extends Model
         return $this->belongsTo(Prescribing::class);
     }
 
-    public function bank_payment(){
-        return $this->belongsTo(Bank_Payment::class);
+    public function bankPayment(){
+        return $this->belongsTo(BankPayment::class);
     }
 }

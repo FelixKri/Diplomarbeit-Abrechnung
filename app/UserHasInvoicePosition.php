@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User_has_Invoice_Position extends Model
+class UserHasInvoicePosition extends Model
 {
     protected $fillable = ['user_id', 'comment', 'invoice_position_id', 'amount'];
 
@@ -12,7 +12,7 @@ class User_has_Invoice_Position extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function invoice_position(){
-        return $this->belongsTo(Invoice_Position::class);
+    public function invoicePosition(){
+        return $this->belongsTo(InvoicePosition::class);
     }
 }

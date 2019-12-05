@@ -2625,16 +2625,16 @@ __webpack_require__.r(__webpack_exports__);
         url: '/prescribing/new',
         dataType: 'json',
         data: {
-          title: that.title,
-          author: that.author,
-          date: that.date,
-          due_until: that.due_until,
-          reason_suggestion: that.reason_suggestion,
-          reason: that.reason,
-          description: that.description,
-          students: studentIds,
-          amount: studentAmounts,
-          annotation: studentAnnotations
+          "title": that.title,
+          "author": that.author,
+          "date": that.date,
+          "due_until": that.due_until,
+          "reason_suggestion": that.reason_suggestion,
+          "reason": that.reason,
+          "description": that.description,
+          "students": studentIds,
+          "amount": studentAmounts,
+          "annotation": studentAnnotations
         },
         success: function success(response) {
           console.log(response);
