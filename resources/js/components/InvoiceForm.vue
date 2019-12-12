@@ -129,20 +129,24 @@ export default {
                         wenn neue Rechnungspos geöffnet wird: Prompt ob neu oder aus prescribing
                 */
             var name = prompt("Namen der Rechnungspos eingeben", "");
+            if(name != null){
+                while(name === "" || this.invoicePositions.filter(e => e.name === name).length > 0){
+                    name = prompt("Bitte den Namen der Rechnungsposition nicht leer lassen oder einen bereits verwendeten Namen eingeben.")
+                }
+                this.id = this.id + 1;
+                var id = this.id;
 
-            this.id = this.id + 1;
-            var id = this.id;
-
-            var position = {
-                id: id,
-                name: name,
-                belegNr: "10",
-                amount: 0,
-                annotation: "",
-                students: []
-            };
-
-            this.invoicePositions.push(position);
+                var position = {
+                    id: id,
+                    name: name,
+                    belegNr: "10",
+                    amount: 0,
+                    annotation: "",
+                    students: []
+                };
+                this.invoicePositions.push(position);
+            }
+            
         },
 
         store: function() {

@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Session;
 use Illuminate\Http\Request;
 use App\Group;
-use App\Fos_user;
-use App\Prescribing_Suggestion;
-use App\User_has_Prescribing_Suggestion;
+use App\FosUser;
+use App\PrescribingSuggestion;
+use App\UserHasPrescribingSuggestion;
 use App\Reason;
 
 use Illuminate\Support\Facades\Validator;
@@ -20,8 +20,6 @@ class PrescribingController extends Controller
     }
 
     public function store(){
-
-        return request()->all();
 
         $validator = Validator::make(request()->all(), [
             'date' => 'date|required',
@@ -44,23 +42,24 @@ class PrescribingController extends Controller
         }
         
 
-        $presc = New Prescribing_Suggestion();
+        $presc = New PrescribingSuggestion();
         $presc->due_until = request()->due_until;
         $presc->reason_id = Reason::where('title', request()->reason)->first()->id;
         $presc->reason_suggestion = request()->reason_suggestion;
         $presc->title = request()->title;
         $presc->description = request()->description;
-        $presc->author_id = Fos_user::where('username', request()->author)->first()->id;
+        $presc->author_id = FosUser::where('username', request()->author)->first()->id;
         $presc->save();
 
         for ($i=0; $i < sizeof(request()->students); $i++) { 
-            $user_has_presc = new User_has_Prescribing_Suggestion;
+            $user_has_presc = new UserHasPrescribingSuggestion;
             $user_has_presc->user_id = request()->students[$i];
             $user_has_presc->amount = (float)request()->amount[$i];
             $user_has_presc->annotation = request()->annotation[$i];
             $user_has_presc->prescribing_suggestion_id = $presc->id;
             $user_has_presc->save();
         }
+
         return response()->json(['success' => 'success'], 200);
     }
 
@@ -70,5 +69,11 @@ class PrescribingController extends Controller
 
     public function destroy(){
 
+    }
+
+    public function show(){
+
+        $presc = PrescribingSuggestion::all();
+        return view('prescribing.listview', compact("presc"));
     }
 }

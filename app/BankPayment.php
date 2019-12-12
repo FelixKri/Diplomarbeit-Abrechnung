@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Bank_Payment extends Model
+class BankPayment extends Model
 {
     protected $table = 'bank_payments'; 
     public $timestamps = false;

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Group;
-use App\Fos_user;
+use App\FosUser;
 use App\Reason;
 use Log;
 
@@ -45,7 +45,7 @@ class AjaxController extends Controller
         else if($classFilter == "")
         {
         	//Filter only after name
-            $users = Fos_user::where('last_name', 'LIKE', '%' . $nameFilter . '%')
+            $users = FosUser::where('last_name', 'LIKE', '%' . $nameFilter . '%')
                 ->orWhere('first_name', 'LIKE', '%' . $nameFilter . '%')
                 ->orWhere('id', 'LIKE', '%' . $nameFilter . '%')->take($limit)->get();
         }
@@ -59,7 +59,7 @@ class AjaxController extends Controller
 	        	return [];
 
 	        //Do not include searched after raw group id because it's stupid
-	        $query = Fos_user::where('group_id', $classes[0]['id']);
+	        $query = FosUser::where('group_id', $classes[0]['id']);
 
 	        for($i = 1;$i < count($classes);$i++)
 	        {
@@ -77,7 +77,7 @@ class AjaxController extends Controller
 	        //Do not include searched after raw group id because it's stupid
 	        if(count($classes) > 0)
 	        {
-	        	$query = Fos_user::where('group_id', $classes[0]['id']);
+	        	$query = FosUser::where('group_id', $classes[0]['id']);
 
 		        for($i = 1;$i < count($classes);$i++)
 		        {

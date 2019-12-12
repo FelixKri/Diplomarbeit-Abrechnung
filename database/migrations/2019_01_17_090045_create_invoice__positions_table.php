@@ -13,7 +13,7 @@ class CreateInvoicePositionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('invoice__positions', function (Blueprint $table) {
+        Schema::create('invoice_positions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('designation');
             $table->float('total_amount', 8, 2);
@@ -31,6 +31,6 @@ class CreateInvoicePositionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invoice__positions');
+        Schema::dropIfExists('invoice_positions');
     }
 }
