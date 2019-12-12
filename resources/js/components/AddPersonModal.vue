@@ -164,8 +164,8 @@ export default {
         {
           for(var i = 0; i < studentsLoadedLength;i++)
           {
-            console.log("Getting cb:");
-            console.log("'" + (studentsLoaded[i]["id"] + 'i' + this.id) + "'");
+            //console.log("Getting cb:");
+            //console.log("'" + (studentsLoaded[i]["id"] + 'i' + this.id) + "'");
             cbs.push($("#" + studentsLoaded[i]["id"] + 'i' + this.id));
           }
         }

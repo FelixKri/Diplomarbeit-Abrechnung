@@ -77,16 +77,63 @@
 
                 alert("Betrag pro Schüler: " + value);
 
+                var splitMoney = 0;
+
                 if(this.type=="overwrite"){
                     this.data.students.forEach(function(student) {
-                        student.amount = value;
+                        var studentMoney = Math.round(value * 100) / 100;
+                        student.amount = studentMoney;
+                        splitMoney += studentMoney;
                     });
                 }else{
+                    
                     this.data.students.forEach(function(student) {
-                        student.amount+=value;
+                        var studentMoney = Math.round(value * 100) / 100;
+                        student.amount += studentMoney;
+                        splitMoney += studentMoney;
                     });
                 }
                 
+                //CENTAUSGLEICH
+                //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+                var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+                console.log("centdiff: " + centdiff);
+                console.log("splitted money: " + splitMoney);
+                console.log("all money: " + this.amount_st);
+
+                if(centdiff > 0)
+                {
+                    this.data.students.forEach(function(student) {
+                            
+                        if(centdiff <= 0)
+                        {
+                            return;
+                        }
+
+                        //Same here, 33.33 + .01 = 33,339999999999996
+                        student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+                        centdiff -= 0.01;
+                    });
+                }
+                else if(centdiff < 0)
+                {
+                    //Students pay too much
+                        this.data.students.forEach(function(student) {
+                            
+                        if(centdiff >= 0)
+                        {
+                            return;
+                        }
+
+                        //Same here
+                        student.amount -= Math.round((student.amount - 0.01) * 100) / 100;
+                        centdiff += 0.01;
+                    });
+                }
+
+                //Just for information: the program will not reach this point after centausgleich
+                //Because return was used instead of break
+                //Because break does not exist. Sucks to be vue.js
 
             },
 
