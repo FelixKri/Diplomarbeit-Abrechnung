@@ -11,6 +11,8 @@ Vue.component('position-tab', require('./components/PositionTab.vue').default);
 Vue.component('validation-errors', require('./components/ValidationErrors.vue').default);
 Vue.component('invoice-form', require('./components/InvoiceForm.vue').default);
 Vue.component('student-invoice', require('./components/StudentInvoice.vue').default);
+Vue.component('prescribing-list', require('./components/PrescribingList.vue').default);
+Vue.component('prescribing-detail', require('./components/PrescribingDetail.vue').default);
 
 const app = new Vue({
     el: '#app',

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\FosUser;
 
 class UserHasPrescribingSuggestion extends Model
 {
@@ -10,7 +11,7 @@ class UserHasPrescribingSuggestion extends Model
     protected $table = "user_has_prescribing_suggestions";
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(FosUser::class, 'user_id');
     }
 
     public function prescribingSuggestion(){

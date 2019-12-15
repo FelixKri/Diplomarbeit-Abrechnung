@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class email_cc extends Model
+class emailCc extends Model
 {
     protected $table = 'email_cc'; 
     public $timestamps = false;

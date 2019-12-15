@@ -146,6 +146,7 @@
                     success: function (response) {
                         console.log(response);
                         alert("Erfolgreich gespeichert");
+                        window.location = "/";
                     },
                     error: function(xhr, status, error) {
                         var respJson = JSON.parse(xhr.responseText);
