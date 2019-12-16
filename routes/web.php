@@ -21,9 +21,10 @@ Route::get('/testroute', 'PDFController@dowloadTestPDF');
 
 Route::get('/prescribing/new', 'PrescribingController@create');
 Route::post('/prescribing/new', 'PrescribingController@store');
-Route::get('/prescribing/show', 'PrescribingController@show');
 Route::get('/prescribing/list', 'PrescribingController@show');
-
+Route::get('/prescribing/list/getPrescribings', 'PrescribingController@getPrescribings');
+Route::get('/prescribing/view/{id}', 'PrescribingController@showDetail');
+Route::get('/prescribing/view/getPrescribing/{id}', 'PrescribingController@getPrescribingById');
 Route::get('/invoice/new', 'InvoiceController@create');
 Route::post('/invoice/new', 'InvoiceController@store');
 

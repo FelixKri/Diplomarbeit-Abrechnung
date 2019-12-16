@@ -32,7 +32,7 @@ class PrescribingController extends Controller
             'students' => 'required|array|min:1',
             'students.*' => 'required|integer|distinct|min:1',
             'amount' => 'required|array|min:1',
-            'amount.*' => 'required|integer|min:1',
+            'amount.*' => 'required|min:1',
             'annotation' => 'required|array',
             'annotation.*' => 'string|nullable'
         ]);
@@ -72,8 +72,20 @@ class PrescribingController extends Controller
     }
 
     public function show(){
-
         $presc = PrescribingSuggestion::all();
         return view('prescribing.listview', compact("presc"));
+    }
+
+    public function showDetail($id){
+        return view('prescribing.showDetail', compact('id'));
+    }
+
+    public function getPrescribingById($id){
+        $prescribing = PrescribingSuggestion::with('author', 'positions', 'reason', 'positions.user', 'positions.user.group')->find($id);
+        return $prescribing;
+    }
+
+    public function getPrescribings(){
+        return PrescribingSuggestion::all();
     }
 }

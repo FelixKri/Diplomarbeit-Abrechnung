@@ -17,4 +17,8 @@ class PrescribingSuggestion extends Model
     public function positions(){
         return $this->hasMany(UserHasPrescribingSuggestion::class);
     }
+
+    public function reason(){
+        return $this->belongsTo(Reason::class, 'reason_id', 'id');
+    }
 }
