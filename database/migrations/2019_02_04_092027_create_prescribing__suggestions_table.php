@@ -15,6 +15,7 @@ class CreatePrescribingSuggestionsTable extends Migration
     {
         Schema::create('prescribing_suggestions', function (Blueprint $table) {
             $table->increments('id');
+            $table->date('date');
             $table->date('due_until');
             $table->integer('reason_id')->nullable();
             $table->string('reason_suggestion')->nullable();
