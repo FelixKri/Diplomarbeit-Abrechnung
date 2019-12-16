@@ -45,8 +45,8 @@
           <button type="button" class="btn btn-primary" @click="selectAll">Alle auswählen</button>
           <button type="button" class="btn btn-primary" @click="selectNone">Keinen auswählen</button>
         </div>
-        <div class="modal-body" v-bind:key="student['id'] + id" v-for="student in this.$parent.studentsLoaded">
-          <input type="checkbox" :id="student['id'] + 'i' + id" @change="cbClicked(student['id'])" />
+        <div class="modal-body" v-bind:key="student['id'] + id" v-for="student in this.studentsLoaded">
+          <input type="checkbox" :id="student['id'] + 'i' + id" />
           {{ student["first_name"] + " " + student["last_name"] + " | " + getGroupName(student['group_id']) }}
         </div>
       </div>
@@ -87,6 +87,8 @@ export default {
   },
   data: function() {
     return {
+      studentsLoaded: [],
+      studentsLoadedLength: 0,
       //studentsLoaded: this.$parent.studentsLoaded,
       //studentsDom: this.$parent.studentsDom,
       //studentsLoadedLength: this.$parent.studentsLoadedLength
@@ -94,12 +96,11 @@ export default {
   },
   props: ["id"],
   methods: {
+    /*
     getStudentAfterId: function(id) {
       /*
        * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet
-       */
-      var studentsLoaded = this.$parent.studentsLoaded;
-      var studentsLoadedLength = this.$parent.studentsLoadedLength;
+       
 
       for (var i = 0; i < studentsLoadedLength; i++) {
         if (studentsLoaded[i]["id"] == id) return studentsLoaded[i];
@@ -109,11 +110,11 @@ export default {
       console.log(
         "Error: could not find id: '" + id + "' in getStudentAfterId"
       );
-    },
-    getStudentIndexAfterId: function(id) {
+    },*/
+    /*getStudentIndexAfterId: function(id) {
       /*
        * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet
-       */
+       
       //No way around it, count studentsDom
       var studentsDom = this.$parent.studentsDom;
       var count = 0;
@@ -129,7 +130,7 @@ export default {
       console.log(
         "Error: could not find id: '" + id + "' in getStudentIndexAfterId"
       );
-    },
+    },*/
     getGroupName: function(groupId) {
       for (var i = 0; i < this.$parent.groupLength; i++) {
         if (this.$parent.groups[i]["id"] == groupId)
@@ -138,11 +139,13 @@ export default {
       //Should not get here, pretty much an error
       return "Unbekannt";
     },
-    cbClicked: function(id) {
+    /*cbClicked: function(id) {
       /*
        *  Wird ausgelöst wenn der Status des Checkmarks neben einem Schüler verändert wird.
        *  Fügt hinzu/entfernt den jeweiligen Schüler aus dem StudentsDOM Array
        */
+
+      /*
       if ($("#" + id + "i" + this.id)[0].checked) {
         //Checked
         this.$parent.studentsDom.push(this.getStudentAfterId(id));
@@ -151,24 +154,25 @@ export default {
         //find out what index to splice
         this.$parent.studentsDom.splice(this.getStudentIndexAfterId(id));
       }
-    },
+      
+    },*/
     getStudentsList: function() {
       /*
        * Sendet eine POST Request an /getUsers mit den gesetzten Filtern und erhält die Ausgewählten Schüler zurück.
        */
-       var studentsLoaded = this.$parent.studentsLoaded;
-        var studentsLoadedLength = this.$parent.studentsLoadedLength;
+       /*
        var cbs = [];
 
-        if (studentsLoadedLength > 0)
+        if (this.$parent.students > 0)
         {
-          for(var i = 0; i < studentsLoadedLength;i++)
+          for(var i = 0; i < this.$parent.students.length;i++)
           {
             //console.log("Getting cb:");
             //console.log("'" + (studentsLoaded[i]["id"] + 'i' + this.id) + "'");
-            cbs.push($("#" + studentsLoaded[i]["id"] + 'i' + this.id));
+            cbs.push($("#" + this.studentsLoaded[i]["id"] + 'i' + this.id));
           }
         }
+        */
 
       var that = this;
       $.ajax({
@@ -184,37 +188,66 @@ export default {
         },
 
         success: function(response) {
-          
-          if (studentsLoadedLength > 0) {
-            //Add all students that are checked because they stay on screen
-            var checkedStudents = [];
+        that.studentsLoaded = response;
 
-            //DON'T USE FOREACH IT DOESNT WORK
-            for (var i = 0; i < studentsLoadedLength; i++) {
-              var student = studentsLoaded[i];
+        var count = 0;
+        for (var thing in that.studentsLoaded){
+          count++;
+        }
+        that.studentsLoadedLength = count;
 
-              if (cbs[i].checked)
-                checkedStudents.push(student);
+        var studentsAlreadyIn = [];
+
+        //console.log("Students loaded length: " + that.studentsLoadedLength);
+
+        for(var j = 0;j < that.studentsLoadedLength;j++)
+        {
+          var thing = that.studentsLoaded[j];
+          //Check if in parent.students
+          if(that.$parent.getStudents() != null)
+          {
+            var studentsCount = 0;
+
+            for(var s in that.$parent.getStudents())
+              studentsCount++;
+
+            for(var i = 0;i < studentsCount;i++)
+            {
+              var student = that.$parent.getStudents()[i];
+
+              if(student["id"] == thing["id"])
+              {
+                //Add to array
+                studentsAlreadyIn.push(student["id"]);
+              }
             }
-
-            var iterator = 0;
-            //Add search results after that
-            response.forEach(student => {
-              //Check if student is already in it (if cb is checked)
-              var cb = cbs[iterator];
-
-              if (cb == null || !cb.checked) checkedStudents.push(student);
-              iterator++;
-            });
-
-            that.$parent.studentsLoaded = checkedStudents;
-          } else {
-            that.$parent.studentsLoaded = response;
           }
+        }
 
-          var count = 0;
-          for (var thing in that.$parent.studentsLoaded) count++;
-          that.$parent.studentsLoadedLength = count;
+        that.$nextTick(() => 
+          {
+            //console.log("Already in students: ");
+            //console.log(studentsAlreadyIn);
+
+            for(var i = 0;i < studentsAlreadyIn.length;i++)
+            {
+              var num = studentsAlreadyIn[i];
+
+              //console.log("Found already added student id: " + num);
+
+              //console.log("getting: " + "#" + num + "i" + that.id);
+
+              var cb = $("#" + num + "i" + that.id)[0];
+
+              //cnsole.log("cb:");
+              //console.log(cb);
+                    
+              cb.checked = true;
+              cb.disabled = true;
+              //that.$("#" + student["id"])[0]["checked"] = true;
+              //that.$("#" + student["id"])[0]["disabled"] = true;
+            }
+          });
 
         }
       });
@@ -222,18 +255,35 @@ export default {
     },
     addStudents: function() {
       /*
-                    Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
-                */
-                var studentsDom = this.$parent.studentsDom;
-                console.log("Emitting addstudents event");
-                console.log(studentsDom);
+        Triggert die funktion addStudents in app.js(?)
+      */
       
-      this.$emit("addstudents", studentsDom);
+      var eventStudents = [];
+
+      for(var i = 0;i < this.studentsLoadedLength;i++)
+      {
+        var student = this.studentsLoaded[i];
+
+        var cb = $("#" + student["id"] + 'i' + this.id);
+
+        if(cb[0].checked && !(cb[0].disabled))
+        {
+          eventStudents.push(student);
+        }
+      }
+
+      console.log("Emitting addstudents event");
+      console.log(eventStudents);
+      
+      this.$emit("addstudents", eventStudents);
 
       //Reset filters and clear everything else
       $("#nameFilter" + this.id)[0]["value"] = "";
       $("#classFilter" + this.id)[0]["value"] = "";
+
+      //Todo close this instead of refresh
       this.getStudentsList();
+
 
       //Todo show message like "Users added"
     },
@@ -243,23 +293,17 @@ export default {
       this.getStudentsList();
     },
     selectAll: function() {
-      var studentsLoaded = this.$parent.studentsLoaded;
-      var studentsLoadedLength = this.$parent.studentsLoadedLength;
       //DON'T USE FOREACH IT DOESNT WORK
-      for (var i = 0; i < studentsLoadedLength; i++) {
-        var student = studentsLoaded[i];
+      for (var i = 0; i < this.studentsLoadedLength; i++) {
+        var student = this.studentsLoaded[i];
         $("#" + student.id + "i" + this.id)[0].checked = true;
-        this.cbClicked(student.id);
       }
     },
     selectNone: function() {
-      var studentsLoaded = this.$parent.studentsLoaded;
-      var studentsLoadedLength = this.$parent.studentsLoadedLength;
       //DON'T USE FOREACH IT DOESNT WORK
-      for (var i = 0; i < studentsLoadedLength; i++) {
-        var student = studentsLoaded[i];
+      for (var i = 0; i < this.studentsLoadedLength; i++) {
+        var student = this.studentsLoaded[i];
         $("#" + student.id + "i" + this.id)[0].checked = false;
-        this.cbClicked(student.id);
       }
     }
   }

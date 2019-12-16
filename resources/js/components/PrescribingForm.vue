@@ -102,15 +102,16 @@
                 reason: "",
                 description: "",
                 students: [],
-                studentsDom: [],
-                studentsLoaded: [],
-                studentsLoadedLength: 0,
                 errors: {},
                 groups: [],
                 groupLength: 0
             }
         },
         methods: {
+            getStudents: function()
+            {
+                return this.students;
+            },
             store: function(){
                 var that = this; //i hate this(that)
                 var studentIds = [];
@@ -158,7 +159,10 @@
             {
                 //Todo check for duplicates
                 //Add to students
-                this.students = studentsDom;
+                if(this.students == null)
+                    this.students = studentsDom;
+                else
+                    this.students = this.students.concat(studentsDom);
             }
         },
     }

@@ -121,7 +121,7 @@
         <add-person-modal
             v-on:addstudents="addStudents"
             :id="position.id"
-        ></add-person-modal>
+        ></add-person-modal>   
 
         <table class="table">
             <thead>
@@ -156,22 +156,28 @@ export default {
             // amount: 0,
             // annotation: "",
             // belegNr: 0,
-            studentsDom: [],
-            studentsLoaded: [],
-            studentsLoadedLength: 0,
             errors: {},
             groups: [],
             groupLength: 0,
             amount_st: 0,
+            type: false
         };
     },
     props: ["position"],
     methods: {
+        getStudents: function()
+        {
+            return this.position.students;
+        },
         addStudents: function(studentsDom) {
-            this.position.students = studentsDom;
 
-            console.log("Added students. Students:");
-            console.log(this.position.students);
+            if(this.position.students == null)
+                    this.position.students = studentsDom;
+                else
+                    this.position.students = this.position.students.concat(studentsDom);
+
+            //console.log("Added students. Students:");
+            //console.log(this.position.students);
         },
         splitEveryone: function() {
             /**
@@ -282,10 +288,6 @@ export default {
             }
         },
         removeStudent: function(id) {
-            alert("loda");
-            this.studentsDom.filter(el => el.id !== id);
-
-            this.studentsLoaded.filter(el => el.id !== id);
 
             var result = this.position.students.filter(obj => {
                 if (obj.id === id) {

@@ -225,10 +225,10 @@
                 //remove from DOM
                 //This removes the checkbox only, not the student
                 //$("#"+id).remove();
-                this.data.studentsDom.filter(el => el.id !== id);
+                //this.data.studentsDom.filter(el => el.id !== id);
                 //Also remove from studentsLoaded
-                this.data.studentsLoaded.filter(el => el.id !== id);
-                $( "#" + id )[0].checked = false;
+                //this.data.studentsLoaded.filter(el => el.id !== id);
+                //$( "#" + id )[0].checked = false;
 
                 //Maybe: Also reload students in addPerson, because it is still show now, only unchecked
                 //Maybe this is a feature, not a bug tho
