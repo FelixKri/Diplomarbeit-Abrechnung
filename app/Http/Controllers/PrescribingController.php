@@ -43,6 +43,7 @@ class PrescribingController extends Controller
         
 
         $presc = New PrescribingSuggestion();
+        $presc->date = request()->date;
         $presc->due_until = request()->due_until;
         $presc->reason_id = Reason::where('title', request()->reason)->first()->id;
         $presc->reason_suggestion = request()->reason_suggestion;
