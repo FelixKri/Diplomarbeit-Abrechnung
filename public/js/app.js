@@ -3085,6 +3085,16 @@ __webpack_require__.r(__webpack_exports__);
     removeStudent: function removeStudent() {
       console.log("deleting student with id " + this.student.id);
       this.$emit('removeStudent', this.student.id);
+    },
+    getGroupName: function getGroupName(id) {
+      for (var i = 0; i < this.$parent.groupLength; i++) {
+        if (this.$parent.groups[i]["id"] == id) {
+          return this.$parent.groups[i]["name"];
+        }
+      }
+
+      console.log("Could not find groupId: " + id);
+      return "Error";
     }
   }
 });
@@ -40404,9 +40414,7 @@ var render = function() {
     _vm._v(" "),
     _c("td", [_vm._v(_vm._s(_vm.student.first_name))]),
     _vm._v(" "),
-    _c("td", [
-      _vm._v(_vm._s(this.$parent.groups[_vm.student.group_id]["name"]))
-    ]),
+    _c("td", [_vm._v(_vm._s(_vm.getGroupName(_vm.student.group_id)))]),
     _vm._v(" "),
     _c("td", [
       _c("input", {
