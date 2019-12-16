@@ -205,8 +205,10 @@ export default {
             var studentIds = [];
             var studentAmounts = [];
             var studentAnnotations = [];
+            var positionIds = [];
 
             this.prescribing.positions.forEach(function(position) {
+                positionIds.push(position.id);
                 studentIds.push(position.user_id);
                 studentAmounts.push(position.amount);
                 studentAnnotations.push(position.annotation);
@@ -220,16 +222,18 @@ export default {
                 url: "/prescribing/update",
                 dataType: "json",
                 data: {
+                    id: that.prescribing.id,
                     title: that.prescribing.title,
-                    author: that.prescribing.author_id,
+                    author: that.prescribing.author.username,
                     date: that.prescribing.created_at,
                     due_until: that.prescribing.due_until,
                     reason_suggestion: that.prescribing.reason_suggestion,
-                    reason: that.prescribing.reason,
+                    reason: that.prescribing.reason.title,
                     description: that.prescribing.description,
                     students: studentIds,
                     amount: studentAmounts,
-                    annotation: studentAnnotations
+                    annotation: studentAnnotations,
+                    positionIds: positionIds,
                 },
                 success: function(response) {
                     console.log(response);
