@@ -108,7 +108,7 @@ class PrescribingController extends Controller
     }
 
     public function destroy(){
-
+        
     }
 
     public function show(){
@@ -126,6 +126,6 @@ class PrescribingController extends Controller
     }
 
     public function getPrescribings(){
-        return PrescribingSuggestion::all();
+        return PrescribingSuggestion::with('positions.user')->get();
     }
 }

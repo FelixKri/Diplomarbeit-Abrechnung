@@ -13,6 +13,7 @@ Vue.component('invoice-form', require('./components/InvoiceForm.vue').default);
 Vue.component('student-invoice', require('./components/StudentInvoice.vue').default);
 Vue.component('prescribing-list', require('./components/PrescribingList.vue').default);
 Vue.component('prescribing-detail', require('./components/PrescribingDetail.vue').default);
+Vue.component('add-from-prescribing-modal', require('./components/AddPersonFromPrescribingModal.vue').default);
 
 const app = new Vue({
     el: '#app',

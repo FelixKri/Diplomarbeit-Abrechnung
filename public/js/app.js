@@ -1710,6 +1710,80 @@ module.exports = function isBuffer (obj) {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    var _this = this;
+
+    axios.get("/prescribing/list/getPrescribings").then(function (response) {
+      return _this.prescribings = response.data;
+    }).catch(function (error) {
+      return console.log(error);
+    });
+  },
+  props: ["id"],
+  data: function data() {
+    return {
+      prescribings: []
+    };
+  },
+  methods: {
+    copyStudentsToInvoicePosition: function copyStudentsToInvoicePosition(positions) {
+      var students = [];
+      positions.forEach(function (pos) {
+        students.push(pos.user);
+      });
+      students.forEach(function (st) {
+        st.amount = "";
+        st.annotation = "";
+        st.checked = false;
+      });
+      console.log(students);
+      this.$emit("addstudents", students);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddPersonModal.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddPersonModal.vue?vue&type=script&lang=js& ***!
@@ -2334,6 +2408,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     console.log("Component created: InvoicePosition");
@@ -2349,12 +2434,14 @@ __webpack_require__.r(__webpack_exports__);
       errors: {},
       groups: [],
       groupLength: 0,
-      amount_st: 0
+      amount_st: 0,
+      type: null
     };
   },
   props: ["position"],
   methods: {
     addStudents: function addStudents(studentsDom) {
+      console.log(studentsDom);
       this.position.students = studentsDom;
       console.log("Added students. Students:");
       console.log(this.position.students);
@@ -38581,6 +38668,101 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=template&id=00772c48&":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=template&id=00772c48& ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade",
+      attrs: { id: "getFromPrescribing_" + _vm.id, role: "dialog" }
+    },
+    [
+      _c("div", { staticClass: "modal-dialog" }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-body" }, [
+            _c("table", { staticClass: "table" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.prescribings, function(prescribing) {
+                  return _c(
+                    "tr",
+                    { key: prescribing.id, staticStyle: { cursor: "pointer" } },
+                    [
+                      _c(
+                        "td",
+                        {
+                          on: {
+                            click: function($event) {
+                              return _vm.copyStudentsToInvoicePosition(
+                                prescribing.positions
+                              )
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(prescribing.title))]
+                      )
+                    ]
+                  )
+                }),
+                0
+              )
+            ])
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Hinzufügen")]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("\n                    ×\n                ")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [_c("th", { attrs: { scope: "col" } }, [_vm._v("Titel")])])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddPersonModal.vue?vue&type=template&id=c618f6bc&":
 /*!*****************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddPersonModal.vue?vue&type=template&id=c618f6bc& ***!
@@ -39037,14 +39219,7 @@ var render = function() {
       }
     },
     [
-      _c("h2", [
-        _vm._v(
-          "ID: " +
-            _vm._s(_vm.position.id) +
-            " | NAME: " +
-            _vm._s(_vm.position.name)
-        )
-      ]),
+      _c("h2", [_vm._v(_vm._s(_vm.position.name))]),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-sm" }, [
@@ -39270,10 +39445,28 @@ var render = function() {
             type: "button"
           }
         },
-        [_vm._v("\n        Person(n) hinzufügen\n    ")]
+        [_vm._v("\n        Person(en) hinzufügen\n    ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary btn-sm",
+          attrs: {
+            "data-toggle": "modal",
+            "data-target": "#getFromPrescribing_" + _vm.position.id,
+            type: "button"
+          }
+        },
+        [_vm._v("\n        Personen aus Vorschreibung übernehmen\n    ")]
       ),
       _vm._v(" "),
       _c("add-person-modal", {
+        attrs: { id: _vm.position.id },
+        on: { addstudents: _vm.addStudents }
+      }),
+      _vm._v(" "),
+      _c("add-from-prescribing-modal", {
         attrs: { id: _vm.position.id },
         on: { addstudents: _vm.addStudents }
       }),
@@ -52822,6 +53015,7 @@ Vue.component('invoice-form', __webpack_require__(/*! ./components/InvoiceForm.v
 Vue.component('student-invoice', __webpack_require__(/*! ./components/StudentInvoice.vue */ "./resources/js/components/StudentInvoice.vue").default);
 Vue.component('prescribing-list', __webpack_require__(/*! ./components/PrescribingList.vue */ "./resources/js/components/PrescribingList.vue").default);
 Vue.component('prescribing-detail', __webpack_require__(/*! ./components/PrescribingDetail.vue */ "./resources/js/components/PrescribingDetail.vue").default);
+Vue.component('add-from-prescribing-modal', __webpack_require__(/*! ./components/AddPersonFromPrescribingModal.vue */ "./resources/js/components/AddPersonFromPrescribingModal.vue").default);
 var app = new Vue({
   el: '#app',
   data: {},
@@ -52888,6 +53082,75 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/components/AddPersonFromPrescribingModal.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/AddPersonFromPrescribingModal.vue ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AddPersonFromPrescribingModal_vue_vue_type_template_id_00772c48___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AddPersonFromPrescribingModal.vue?vue&type=template&id=00772c48& */ "./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=template&id=00772c48&");
+/* harmony import */ var _AddPersonFromPrescribingModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AddPersonFromPrescribingModal.vue?vue&type=script&lang=js& */ "./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AddPersonFromPrescribingModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AddPersonFromPrescribingModal_vue_vue_type_template_id_00772c48___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AddPersonFromPrescribingModal_vue_vue_type_template_id_00772c48___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AddPersonFromPrescribingModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AddPersonFromPrescribingModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AddPersonFromPrescribingModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AddPersonFromPrescribingModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=template&id=00772c48&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=template&id=00772c48& ***!
+  \**************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddPersonFromPrescribingModal_vue_vue_type_template_id_00772c48___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AddPersonFromPrescribingModal.vue?vue&type=template&id=00772c48& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=template&id=00772c48&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddPersonFromPrescribingModal_vue_vue_type_template_id_00772c48___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddPersonFromPrescribingModal_vue_vue_type_template_id_00772c48___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
