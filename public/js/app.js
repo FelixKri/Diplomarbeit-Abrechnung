@@ -1874,46 +1874,48 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   data: function data() {
-    return {//studentsLoaded: this.$parent.studentsLoaded,
+    return {
+      studentsLoaded: [],
+      studentsLoadedLength: 0 //studentsLoaded: this.$parent.studentsLoaded,
       //studentsDom: this.$parent.studentsDom,
       //studentsLoadedLength: this.$parent.studentsLoadedLength
+
     };
   },
   props: ["id"],
   methods: {
-    getStudentAfterId: function getStudentAfterId(id) {
+    /*
+    getStudentAfterId: function(id) {
       /*
        * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet
-       */
-      var studentsLoaded = this.$parent.studentsLoaded;
-      var studentsLoadedLength = this.$parent.studentsLoadedLength;
-
-      for (var i = 0; i < studentsLoadedLength; i++) {
+       
+       for (var i = 0; i < studentsLoadedLength; i++) {
         if (studentsLoaded[i]["id"] == id) return studentsLoaded[i];
-      } //Fatal error, id not found
+      }
+       //Fatal error, id not found
+      console.log(
+        "Error: could not find id: '" + id + "' in getStudentAfterId"
+      );
+    },*/
 
-
-      console.log("Error: could not find id: '" + id + "' in getStudentAfterId");
-    },
-    getStudentIndexAfterId: function getStudentIndexAfterId(id) {
+    /*getStudentIndexAfterId: function(id) {
       /*
        * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet
-       */
+       
       //No way around it, count studentsDom
       var studentsDom = this.$parent.studentsDom;
       var count = 0;
-
       for (var thing in studentsDom) {
         count++;
       }
-
-      for (var i = 0; i < count; i++) {
+       for (var i = 0; i < count; i++) {
         if (studentsDom[i]["id"] == id) return i;
-      } //Fatal error, id not found
-
-
-      console.log("Error: could not find id: '" + id + "' in getStudentIndexAfterId");
-    },
+      }
+       //Fatal error, id not found
+      console.log(
+        "Error: could not find id: '" + id + "' in getStudentIndexAfterId"
+      );
+    },*/
     getGroupName: function getGroupName(groupId) {
       for (var i = 0; i < this.$parent.groupLength; i++) {
         if (this.$parent.groups[i]["id"] == groupId) return this.$parent.groups[i]["name"];
@@ -1922,36 +1924,41 @@ __webpack_require__.r(__webpack_exports__);
 
       return "Unbekannt";
     },
-    cbClicked: function cbClicked(id) {
+
+    /*cbClicked: function(id) {
       /*
        *  Wird ausgelöst wenn der Status des Checkmarks neben einem Schüler verändert wird.
        *  Fügt hinzu/entfernt den jeweiligen Schüler aus dem StudentsDOM Array
        */
-      if ($("#" + id + "i" + this.id)[0].checked) {
-        //Checked
-        this.$parent.studentsDom.push(this.getStudentAfterId(id));
-      } else {
-        //unchecked
-        //find out what index to splice
-        this.$parent.studentsDom.splice(this.getStudentIndexAfterId(id));
-      }
-    },
+
+    /*
+    if ($("#" + id + "i" + this.id)[0].checked) {
+      //Checked
+      this.$parent.studentsDom.push(this.getStudentAfterId(id));
+    } else {
+      //unchecked
+      //find out what index to splice
+      this.$parent.studentsDom.splice(this.getStudentIndexAfterId(id));
+    }
+    
+    },*/
     getStudentsList: function getStudentsList() {
       /*
        * Sendet eine POST Request an /getUsers mit den gesetzten Filtern und erhält die Ausgewählten Schüler zurück.
        */
-      var studentsLoaded = this.$parent.studentsLoaded;
-      var studentsLoadedLength = this.$parent.studentsLoadedLength;
+
+      /*
       var cbs = [];
-
-      if (studentsLoadedLength > 0) {
-        for (var i = 0; i < studentsLoadedLength; i++) {
-          //console.log("Getting cb:");
-          //console.log("'" + (studentsLoaded[i]["id"] + 'i' + this.id) + "'");
-          cbs.push($("#" + studentsLoaded[i]["id"] + 'i' + this.id));
-        }
-      }
-
+        if (this.$parent.students > 0)
+       {
+         for(var i = 0; i < this.$parent.students.length;i++)
+         {
+           //console.log("Getting cb:");
+           //console.log("'" + (studentsLoaded[i]["id"] + 'i' + this.id) + "'");
+           cbs.push($("#" + this.studentsLoaded[i]["id"] + 'i' + this.id));
+         }
+       }
+       */
       var that = this;
       $.ajax({
         headers: {
@@ -1965,50 +1972,77 @@ __webpack_require__.r(__webpack_exports__);
           classFilter: $("#classFilter" + that.id)[0]["value"]
         },
         success: function success(response) {
-          if (studentsLoadedLength > 0) {
-            //Add all students that are checked because they stay on screen
-            var checkedStudents = []; //DON'T USE FOREACH IT DOESNT WORK
-
-            for (var i = 0; i < studentsLoadedLength; i++) {
-              var student = studentsLoaded[i];
-              if (cbs[i].checked) checkedStudents.push(student);
-            }
-
-            var iterator = 0; //Add search results after that
-
-            response.forEach(function (student) {
-              //Check if student is already in it (if cb is checked)
-              var cb = cbs[iterator];
-              if (cb == null || !cb.checked) checkedStudents.push(student);
-              iterator++;
-            });
-            that.$parent.studentsLoaded = checkedStudents;
-          } else {
-            that.$parent.studentsLoaded = response;
-          }
-
+          that.studentsLoaded = response;
           var count = 0;
 
-          for (var thing in that.$parent.studentsLoaded) {
+          for (var thing in that.studentsLoaded) {
             count++;
           }
 
-          that.$parent.studentsLoadedLength = count;
+          that.studentsLoadedLength = count;
+          var studentsAlreadyIn = []; //console.log("Students loaded length: " + that.studentsLoadedLength);
+
+          for (var j = 0; j < that.studentsLoadedLength; j++) {
+            var thing = that.studentsLoaded[j]; //Check if in parent.students
+
+            if (that.$parent.getStudents() != null) {
+              var studentsCount = 0;
+
+              for (var s in that.$parent.getStudents()) {
+                studentsCount++;
+              }
+
+              for (var i = 0; i < studentsCount; i++) {
+                var student = that.$parent.getStudents()[i];
+
+                if (student["id"] == thing["id"]) {
+                  //Add to array
+                  studentsAlreadyIn.push(student["id"]);
+                }
+              }
+            }
+          }
+
+          that.$nextTick(function () {
+            //console.log("Already in students: ");
+            //console.log(studentsAlreadyIn);
+            for (var i = 0; i < studentsAlreadyIn.length; i++) {
+              var num = studentsAlreadyIn[i]; //console.log("Found already added student id: " + num);
+              //console.log("getting: " + "#" + num + "i" + that.id);
+
+              var cb = $("#" + num + "i" + that.id)[0]; //cnsole.log("cb:");
+              //console.log(cb);
+
+              cb.checked = true;
+              cb.disabled = true; //that.$("#" + student["id"])[0]["checked"] = true;
+              //that.$("#" + student["id"])[0]["disabled"] = true;
+            }
+          });
         }
       });
     },
     addStudents: function addStudents() {
       /*
-                    Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
-                */
-      var studentsDom = this.$parent.studentsDom;
+        Triggert die funktion addStudents in app.js(?)
+      */
+      var eventStudents = [];
+
+      for (var i = 0; i < this.studentsLoadedLength; i++) {
+        var student = this.studentsLoaded[i];
+        var cb = $("#" + student["id"] + 'i' + this.id);
+
+        if (cb[0].checked && !cb[0].disabled) {
+          eventStudents.push(student);
+        }
+      }
+
       console.log("Emitting addstudents event");
-      console.log(studentsDom);
-      this.$emit("addstudents", studentsDom); //Reset filters and clear everything else
+      console.log(eventStudents);
+      this.$emit("addstudents", eventStudents); //Reset filters and clear everything else
 
       $("#nameFilter" + this.id)[0]["value"] = "";
       $("#classFilter" + this.id)[0]["value"] = "";
-      this.getStudentsList(); //Todo show message like "Users added"
+      this.getStudentsList(); //Todo show message like "Users added" ?
     },
     resetFilter: function resetFilter() {
       $("#nameFilter" + this.id)[0]["value"] = "";
@@ -2016,23 +2050,17 @@ __webpack_require__.r(__webpack_exports__);
       this.getStudentsList();
     },
     selectAll: function selectAll() {
-      var studentsLoaded = this.$parent.studentsLoaded;
-      var studentsLoadedLength = this.$parent.studentsLoadedLength; //DON'T USE FOREACH IT DOESNT WORK
-
-      for (var i = 0; i < studentsLoadedLength; i++) {
-        var student = studentsLoaded[i];
+      //DON'T USE FOREACH IT DOESNT WORK
+      for (var i = 0; i < this.studentsLoadedLength; i++) {
+        var student = this.studentsLoaded[i];
         $("#" + student.id + "i" + this.id)[0].checked = true;
-        this.cbClicked(student.id);
       }
     },
     selectNone: function selectNone() {
-      var studentsLoaded = this.$parent.studentsLoaded;
-      var studentsLoadedLength = this.$parent.studentsLoadedLength; //DON'T USE FOREACH IT DOESNT WORK
-
-      for (var i = 0; i < studentsLoadedLength; i++) {
-        var student = studentsLoaded[i];
+      //DON'T USE FOREACH IT DOESNT WORK
+      for (var i = 0; i < this.studentsLoadedLength; i++) {
+        var student = this.studentsLoaded[i];
         $("#" + student.id + "i" + this.id)[0].checked = false;
-        this.cbClicked(student.id);
       }
     }
   }
@@ -38844,7 +38872,7 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-success",
-                  attrs: { type: "button" },
+                  attrs: { type: "button", "data-dismiss": "modal" },
                   on: { click: _vm.addStudents }
                 },
                 [_vm._v("Hinzufügen")]
@@ -38873,7 +38901,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._l(this.$parent.studentsLoaded, function(student) {
+            _vm._l(this.studentsLoaded, function(student) {
               return _c(
                 "div",
                 { key: student["id"] + _vm.id, staticClass: "modal-body" },
@@ -38882,11 +38910,6 @@ var render = function() {
                     attrs: {
                       type: "checkbox",
                       id: student["id"] + "i" + _vm.id
-                    },
-                    on: {
-                      change: function($event) {
-                        return _vm.cbClicked(student["id"])
-                      }
                     }
                   }),
                   _vm._v(
@@ -40610,7 +40633,7 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
-        attrs: { type: "number", name: "amount[]", id: "" },
+        attrs: { type: "number", name: "amount[]" },
         domProps: { value: _vm.student.amount },
         on: {
           input: function($event) {
