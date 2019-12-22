@@ -1848,52 +1848,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log("Component mounted: AddPersonModal");
@@ -1994,7 +1948,7 @@ __webpack_require__.r(__webpack_exports__);
         for (var i = 0; i < studentsLoadedLength; i++) {
           //console.log("Getting cb:");
           //console.log("'" + (studentsLoaded[i]["id"] + 'i' + this.id) + "'");
-          cbs.push($("#" + studentsLoaded[i]["id"] + "i" + this.id));
+          cbs.push($("#" + studentsLoaded[i]["id"] + 'i' + this.id));
         }
       }
 
@@ -2045,8 +1999,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     addStudents: function addStudents() {
       /*
-              Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
-          */
+                    Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
+                */
       var studentsDom = this.$parent.studentsDom;
       console.log("Emitting addstudents event");
       console.log(studentsDom);
@@ -2473,23 +2427,21 @@ __webpack_require__.r(__webpack_exports__);
       // amount: 0,
       // annotation: "",
       // belegNr: 0,
-      studentsDom: [],
-      studentsLoaded: [],
-      studentsLoadedLength: 0,
       errors: {},
       groups: [],
       groupLength: 0,
       amount_st: 0,
-      type: null
+      type: false
     };
   },
   props: ["position"],
   methods: {
+    getStudents: function getStudents() {
+      return this.position.students;
+    },
     addStudents: function addStudents(studentsDom) {
-      console.log(studentsDom);
-      this.position.students = studentsDom;
-      console.log("Added students. Students:");
-      console.log(this.position.students);
+      if (this.position.students == null) this.position.students = studentsDom;else this.position.students = this.position.students.concat(studentsDom); //console.log("Added students. Students:");
+      //console.log(this.position.students);
     },
     splitEveryone: function splitEveryone() {
       /**
@@ -2576,12 +2528,6 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     removeStudent: function removeStudent(id) {
-      this.studentsDom.filter(function (el) {
-        return el.id !== id;
-      });
-      this.studentsLoaded.filter(function (el) {
-        return el.id !== id;
-      });
       var result = this.position.students.filter(function (obj) {
         if (obj.id === id) {
           obj.checked = false;
@@ -2989,15 +2935,15 @@ __webpack_require__.r(__webpack_exports__);
       reason: "",
       description: "",
       students: [],
-      studentsDom: [],
-      studentsLoaded: [],
-      studentsLoadedLength: 0,
       errors: {},
       groups: [],
       groupLength: 0
     };
   },
   methods: {
+    getStudents: function getStudents() {
+      return this.students;
+    },
     store: function store() {
       var that = this; //i hate this(that)
 
@@ -3042,7 +2988,7 @@ __webpack_require__.r(__webpack_exports__);
     addStudents: function addStudents(studentsDom) {
       //Todo check for duplicates
       //Add to students
-      this.students = studentsDom;
+      if (this.students == null) this.students = studentsDom;else this.students = this.students.concat(studentsDom);
     }
   }
 });
@@ -3438,18 +3384,14 @@ __webpack_require__.r(__webpack_exports__);
       //remove from DOM
       //This removes the checkbox only, not the student
       //$("#"+id).remove();
-      this.data.studentsDom.filter(function (el) {
-        return el.id !== id;
-      }); //Also remove from studentsLoaded
-
-      this.data.studentsLoaded.filter(function (el) {
-        return el.id !== id;
-      });
-      $("#" + id)[0].checked = false; //Maybe: Also reload students in addPerson, because it is still show now, only unchecked
+      //this.data.studentsDom.filter(el => el.id !== id);
+      //Also remove from studentsLoaded
+      //this.data.studentsLoaded.filter(el => el.id !== id);
+      //$( "#" + id )[0].checked = false;
+      //Maybe: Also reload students in addPerson, because it is still show now, only unchecked
       //Maybe this is a feature, not a bug tho
       //>>> This is a feature . 
       //remove from Data
-
       this.data.students = this.data.students.filter(function (el) {
         return el.id !== id;
       });
@@ -38881,11 +38823,7 @@ var render = function() {
                         attrs: { type: "button" },
                         on: { click: _vm.resetFilter }
                       },
-                      [
-                        _vm._v(
-                          "\n                                Filter löschen\n                            "
-                        )
-                      ]
+                      [_vm._v("Filter löschen")]
                     )
                   ])
                 ])
@@ -38899,7 +38837,7 @@ var render = function() {
                   staticClass: "btn btn-default",
                   attrs: { type: "button", "data-dismiss": "modal" }
                 },
-                [_vm._v("\n                    Schließen\n                ")]
+                [_vm._v("Schließen")]
               ),
               _vm._v(" "),
               _c(
@@ -38909,7 +38847,7 @@ var render = function() {
                   attrs: { type: "button" },
                   on: { click: _vm.addStudents }
                 },
-                [_vm._v("\n                    Hinzufügen\n                ")]
+                [_vm._v("Hinzufügen")]
               )
             ]),
             _vm._v(" "),
@@ -38921,11 +38859,7 @@ var render = function() {
                   attrs: { type: "button" },
                   on: { click: _vm.selectAll }
                 },
-                [
-                  _vm._v(
-                    "\n                    Alle auswählen\n                "
-                  )
-                ]
+                [_vm._v("Alle auswählen")]
               ),
               _vm._v(" "),
               _c(
@@ -38935,11 +38869,7 @@ var render = function() {
                   attrs: { type: "button" },
                   on: { click: _vm.selectNone }
                 },
-                [
-                  _vm._v(
-                    "\n                    Keinen auswählen\n                "
-                  )
-                ]
+                [_vm._v("Keinen auswählen")]
               )
             ]),
             _vm._v(" "),
@@ -38960,7 +38890,7 @@ var render = function() {
                     }
                   }),
                   _vm._v(
-                    "\n                " +
+                    "\n        " +
                       _vm._s(
                         student["first_name"] +
                           " " +
@@ -38968,7 +38898,7 @@ var render = function() {
                           " | " +
                           _vm.getGroupName(student["group_id"])
                       ) +
-                      "\n            "
+                      "\n      "
                   )
                 ]
               )
@@ -38994,7 +38924,7 @@ var staticRenderFns = [
           staticClass: "close",
           attrs: { type: "button", "data-dismiss": "modal" }
         },
-        [_vm._v("\n                    ×\n                ")]
+        [_vm._v("×")]
       )
     ])
   }
