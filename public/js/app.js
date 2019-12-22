@@ -1772,8 +1772,7 @@ __webpack_require__.r(__webpack_exports__);
         students.push(pos.user);
       });
       students.forEach(function (st) {
-        st.amount = "";
-        st.annotation = "";
+        st.amount = 0;
         st.checked = false;
       });
       console.log(students);
@@ -1793,6 +1792,52 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1949,7 +1994,7 @@ __webpack_require__.r(__webpack_exports__);
         for (var i = 0; i < studentsLoadedLength; i++) {
           //console.log("Getting cb:");
           //console.log("'" + (studentsLoaded[i]["id"] + 'i' + this.id) + "'");
-          cbs.push($("#" + studentsLoaded[i]["id"] + 'i' + this.id));
+          cbs.push($("#" + studentsLoaded[i]["id"] + "i" + this.id));
         }
       }
 
@@ -2000,8 +2045,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     addStudents: function addStudents() {
       /*
-                    Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
-                */
+              Triggert die funktion addStudents in app.js(?) und cleared danach die gesetzten Filter.
+          */
       var studentsDom = this.$parent.studentsDom;
       console.log("Emitting addstudents event");
       console.log(studentsDom);
@@ -2531,7 +2576,6 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     removeStudent: function removeStudent(id) {
-      alert("loda");
       this.studentsDom.filter(function (el) {
         return el.id !== id;
       });
@@ -38837,7 +38881,11 @@ var render = function() {
                         attrs: { type: "button" },
                         on: { click: _vm.resetFilter }
                       },
-                      [_vm._v("Filter löschen")]
+                      [
+                        _vm._v(
+                          "\n                                Filter löschen\n                            "
+                        )
+                      ]
                     )
                   ])
                 ])
@@ -38851,7 +38899,7 @@ var render = function() {
                   staticClass: "btn btn-default",
                   attrs: { type: "button", "data-dismiss": "modal" }
                 },
-                [_vm._v("Schließen")]
+                [_vm._v("\n                    Schließen\n                ")]
               ),
               _vm._v(" "),
               _c(
@@ -38861,7 +38909,7 @@ var render = function() {
                   attrs: { type: "button" },
                   on: { click: _vm.addStudents }
                 },
-                [_vm._v("Hinzufügen")]
+                [_vm._v("\n                    Hinzufügen\n                ")]
               )
             ]),
             _vm._v(" "),
@@ -38873,7 +38921,11 @@ var render = function() {
                   attrs: { type: "button" },
                   on: { click: _vm.selectAll }
                 },
-                [_vm._v("Alle auswählen")]
+                [
+                  _vm._v(
+                    "\n                    Alle auswählen\n                "
+                  )
+                ]
               ),
               _vm._v(" "),
               _c(
@@ -38883,7 +38935,11 @@ var render = function() {
                   attrs: { type: "button" },
                   on: { click: _vm.selectNone }
                 },
-                [_vm._v("Keinen auswählen")]
+                [
+                  _vm._v(
+                    "\n                    Keinen auswählen\n                "
+                  )
+                ]
               )
             ]),
             _vm._v(" "),
@@ -38904,7 +38960,7 @@ var render = function() {
                     }
                   }),
                   _vm._v(
-                    "\n        " +
+                    "\n                " +
                       _vm._s(
                         student["first_name"] +
                           " " +
@@ -38912,7 +38968,7 @@ var render = function() {
                           " | " +
                           _vm.getGroupName(student["group_id"])
                       ) +
-                      "\n      "
+                      "\n            "
                   )
                 ]
               )
@@ -38938,7 +38994,7 @@ var staticRenderFns = [
           staticClass: "close",
           attrs: { type: "button", "data-dismiss": "modal" }
         },
-        [_vm._v("×")]
+        [_vm._v("\n                    ×\n                ")]
       )
     ])
   }

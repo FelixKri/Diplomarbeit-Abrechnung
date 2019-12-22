@@ -295,7 +295,6 @@ export default {
             }
         },
         removeStudent: function(id) {
-            alert("loda");
             this.studentsDom.filter(el => el.id !== id);
 
             this.studentsLoaded.filter(el => el.id !== id);

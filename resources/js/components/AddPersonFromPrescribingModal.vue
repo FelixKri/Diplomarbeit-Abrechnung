@@ -51,8 +51,7 @@ export default {
             });
 
             students.forEach(st => {
-                st.amount = "";
-                st.annotation = "";
+                st.amount = 0;
                 st.checked = false;
             });
 
