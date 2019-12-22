@@ -2222,6 +2222,7 @@ __webpack_require__.r(__webpack_exports__);
           belegNr: "10",
           amount: 0,
           annotation: "",
+          paidByTeacher: false,
           students: []
         };
         this.invoicePositions.push(position);
@@ -2237,6 +2238,7 @@ __webpack_require__.r(__webpack_exports__);
           "amount": position.amount,
           "annotation": position.annotation,
           "belegNr": position.belegNr,
+          "paidByTeacher": position.paidByTeacher,
           "studentIDs": [],
           "studentAmounts": [],
           "studentAnnotations": []
@@ -2263,6 +2265,7 @@ __webpack_require__.r(__webpack_exports__);
           "invoicePositions": invoicePositionsStripped
         },
         success: function success(response) {
+          console.log(response);
           alert("Erfolgreich gespeichert!");
         },
         error: function error(xhr, status, _error) {
@@ -2287,6 +2290,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -39257,6 +39261,48 @@ var render = function() {
               }
             })
           ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.position.paidByTeacher,
+                expression: "position.paidByTeacher"
+              }
+            ],
+            attrs: { type: "checkbox" },
+            domProps: {
+              checked: Array.isArray(_vm.position.paidByTeacher)
+                ? _vm._i(_vm.position.paidByTeacher, null) > -1
+                : _vm.position.paidByTeacher
+            },
+            on: {
+              change: function($event) {
+                var $$a = _vm.position.paidByTeacher,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = null,
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 &&
+                      _vm.$set(_vm.position, "paidByTeacher", $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      _vm.$set(
+                        _vm.position,
+                        "paidByTeacher",
+                        $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                      )
+                  }
+                } else {
+                  _vm.$set(_vm.position, "paidByTeacher", $$c)
+                }
+              }
+            }
+          }),
+          _c("span", [_vm._v("Von Lehrpersonal bezhalt")]),
           _vm._v(" "),
           _c("div", { staticClass: "form-group" }, [
             _c("label", { attrs: { for: "billnumber" } }, [_vm._v("BelegNr")]),

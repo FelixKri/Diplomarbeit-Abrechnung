@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Invoice;
 use App\InvoicePosition;
-use App\User_hasInvoice_Position;
+use App\UserHasInvoicePosition;
 use App\FosUser;
 
 
@@ -42,15 +42,21 @@ class InvoiceController extends Controller
 
         
         for ($i=0; $i < sizeof(request()->invoicePositions); $i++) { 
+            $paidByTeacher = false;
+            if(request()->invoicePositions[$i]['paidByTeacher'] === "true"){
+                $paidByTeacher = true;
+            }
+
             $inv_pos = new InvoicePosition;
             $inv_pos->designation = request()->invoicePositions[$i]['name'];
             $inv_pos->invoice_id = $inv->id;
-            $inv_pos->paid_by_teacher = true;
+            $inv_pos->paid_by_teacher = $paidByTeacher;
             $inv_pos->document_number = request()->invoicePositions[$i]["belegNr"];
             $inv_pos->total_amount = 100; //TODO: Total Amount berechnen
             $inv_pos->save();
             
             for ($j=0; $j < sizeof(request()->invoicePositions[$i]["studentIDs"]); $j++){
+
                 $usr_has_inv_pos = new UserHasInvoicePosition;
                 $usr_has_inv_pos->user_id = request()->invoicePositions[$i]["studentIDs"][$j];
                 $usr_has_inv_pos->comment = request()->invoicePositions[$i]["studentAnnotations"][$j];

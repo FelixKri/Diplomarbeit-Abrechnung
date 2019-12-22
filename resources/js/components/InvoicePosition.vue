@@ -18,6 +18,7 @@
                         v-model="position.amount"
                     />
                 </div>
+                <input type="checkbox" v-model="position.paidByTeacher"><span>Von Lehrpersonal bezhalt</span>
                 <div class="form-group">
                     <label for="billnumber">BelegNr</label>
                     <input
