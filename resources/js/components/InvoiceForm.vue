@@ -142,6 +142,7 @@ export default {
                     belegNr: "10",
                     amount: 0,
                     annotation: "",
+                    paidByTeacher: false,
                     students: []
                 };
                 this.invoicePositions.push(position);
@@ -159,6 +160,7 @@ export default {
                     "amount": position.amount,
                     "annotation": position.annotation,
                     "belegNr": position.belegNr,
+                    "paidByTeacher": position.paidByTeacher,
                     "studentIDs": [],
                     "studentAmounts": [],
                     "studentAnnotations": []
@@ -196,6 +198,7 @@ export default {
                     "invoicePositions": invoicePositionsStripped
                 },
                 success: function(response) {
+                    console.log(response);
                     alert("Erfolgreich gespeichert!");
                 },
                 error: function(xhr, status, error) {

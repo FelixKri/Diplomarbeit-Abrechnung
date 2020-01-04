@@ -5,7 +5,7 @@
         role="tabpanel"
         :aria-labelledby="'nav-' + position.name + '-tab'"
     >
-        <h2>ID: {{ position.id }} | NAME: {{ position.name }}</h2>
+        <h2>{{ position.name }}</h2>
 
         <div class="row">
             <div class="col-sm">
@@ -18,6 +18,7 @@
                         v-model="position.amount"
                     />
                 </div>
+                <input type="checkbox" v-model="position.paidByTeacher"><span>Von Lehrpersonal bezhalt</span>
                 <div class="form-group">
                     <label for="billnumber">BelegNr</label>
                     <input
@@ -115,14 +116,25 @@
             :data-target="'#addUser_' + position.id"
             type="button"
         >
-            Person(n) hinzufügen
+            Person(en) hinzufügen
+        </button>
+        <button
+            class="btn btn-primary btn-sm"
+            data-toggle="modal"
+            :data-target="'#getFromPrescribing_' + position.id"
+            type="button"
+        >
+            Personen aus Vorschreibung übernehmen
         </button>
 
         <add-person-modal
             v-on:addstudents="addStudents"
             :id="position.id"
-        ></add-person-modal>   
-
+        ></add-person-modal>
+        <add-from-prescribing-modal
+            v-on:addstudents="addStudents"
+            :id="position.id">
+        </add-from-prescribing-modal>
         <table class="table">
             <thead>
                 <tr>
