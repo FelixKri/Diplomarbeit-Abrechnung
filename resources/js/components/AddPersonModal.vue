@@ -38,7 +38,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-          <button type="button" class="btn btn-success" @click="addStudents">Hinzufügen</button>
+          <button type="button" class="btn btn-success" @click="addStudents" data-dismiss="modal">Hinzufügen</button>
         </div>
 
         <div class="modal-body">
@@ -281,11 +281,8 @@ export default {
       $("#nameFilter" + this.id)[0]["value"] = "";
       $("#classFilter" + this.id)[0]["value"] = "";
 
-      //Todo close this instead of refresh
       this.getStudentsList();
-
-
-      //Todo show message like "Users added"
+      //Todo show message like "Users added" ?
     },
     resetFilter: function() {
       $("#nameFilter" + this.id)[0]["value"] = "";
