@@ -13,6 +13,6 @@ class InvoicePosition extends Model
     }
 
     public function userHasInvoicePosition(){
-        return $this->hasMany(UserHasInvoicePosition::class);
+        return $this->hasMany(UserHasInvoicePosition::class, 'invoice_position_id');
     }
 }

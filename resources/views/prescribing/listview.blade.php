@@ -2,5 +2,5 @@
 
 @section('content')
   <h1>Liste aller Vorschreibungen: </h1>
-  <prescribing-list></prescribing-list>
+  <invoice-list></invoice-list>
 @endsection
