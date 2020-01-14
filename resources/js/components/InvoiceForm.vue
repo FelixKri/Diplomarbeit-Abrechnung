@@ -36,17 +36,6 @@
                 />
             </div>
             <div class="form-group">
-                <label for="iban">IBAN (falls notwendig)</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="iban"
-                    placeholder="IBAN"
-                    name="iban"
-                    v-model="iban"
-                />
-            </div>
-            <div class="form-group">
                 <label for="annotation">Anmerkungen</label>
                 <textarea
                     class="form-control"
@@ -102,7 +91,6 @@ export default {
         return {
             author: "admin",
             date: "",
-            iban: "",
             reason: "",
             annotation: "",
             invoicePositions: [],
@@ -143,6 +131,7 @@ export default {
                     amount: 0,
                     annotation: "",
                     paidByTeacher: false,
+                    iban: "",
                     students: []
                 };
                 this.invoicePositions.push(position);
@@ -159,8 +148,9 @@ export default {
                     "name": position.name,
                     "amount": position.amount,
                     "annotation": position.annotation,
-                    "belegNr": position.belegNr,
+                    "belegNr": position.document_number,
                     "paidByTeacher": position.paidByTeacher,
+                    "iban": position.iban,
                     "studentIDs": [],
                     "studentAmounts": [],
                     "studentAnnotations": []
@@ -192,7 +182,6 @@ export default {
                 dataType: "json",
                 data: {
                     "author": that.author,
-                    "iban": that.iban,
                     "date": that.date,
                     "reason": that.reason,
                     "invoicePositions": invoicePositionsStripped

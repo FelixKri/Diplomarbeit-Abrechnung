@@ -2,7 +2,7 @@
     <div class="container">
         <h1>Vorschreibungs Ansicht:</h1>
         <p>
-            Ursprünglicher Author:
+            Ursprünglicher Autor:
             <span style="font-weight: bold">{{
                 prescribing.author.username
             }}</span>
@@ -176,7 +176,7 @@
             type="button"
             value="Drucken"
             class="btn btn-primary"
-            @click="store"
+            @click="print"
         />
     </div>
 </template>
@@ -244,6 +244,12 @@ export default {
                     that.errors = respJson.errors;
                 }
             });
+        },
+        print: function(){
+            this.store();
+
+            window.location.href = '/prescribing/download/'+this.prescribing.id;
+            //Todo: Sende Request an PDF Generator Funktion im BackEnd
         }
     }
 };

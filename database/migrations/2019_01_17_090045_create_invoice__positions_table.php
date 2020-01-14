@@ -19,6 +19,7 @@ class CreateInvoicePositionsTable extends Migration
             $table->float('total_amount', 8, 2);
             $table->integer('invoice_id');
             $table->boolean('paid_by_teacher');
+            $table->string('iban');
             $table->integer('document_number');
             $table->timestamps();
         });

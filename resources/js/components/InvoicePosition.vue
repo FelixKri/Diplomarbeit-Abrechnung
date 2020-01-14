@@ -20,6 +20,17 @@
                 </div>
                 <input type="checkbox" v-model="position.paidByTeacher"><span>Von Lehrpersonal bezhalt</span>
                 <div class="form-group">
+                    <label for="iban">IBAN (falls notwendig)</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="iban"
+                        placeholder="IBAN"
+                        name="iban"
+                        v-model="position.iban"
+                    />
+                </div>
+                <div class="form-group">
                     <label for="billnumber">BelegNr</label>
                     <input
                         type="number"

@@ -22,7 +22,6 @@ class InvoiceController extends Controller
         $validator = Validator::make(request()->all(), [
             'date' => 'date|required',
             'author' => 'required|string',
-            'iban' => 'iban',
             'reason' => 'required|string',
             'annotation' => 'string|max:255',
         ]);
@@ -34,7 +33,6 @@ class InvoiceController extends Controller
         $inv = new Invoice;
         $inv->date = request()->date;
         $inv->author_id = FosUser::where('username', request()->author)->first()->id;
-        $inv->iban = request()->iban;
         $inv->reason = request()->reason;
         $inv->total_amount = 100; //TODO: Total Amount berechnen
         $inv->annotation = "test";
@@ -43,6 +41,7 @@ class InvoiceController extends Controller
         
         for ($i=0; $i < sizeof(request()->invoicePositions); $i++) { 
             $paidByTeacher = false;
+            
             if(request()->invoicePositions[$i]['paidByTeacher'] === "true"){
                 $paidByTeacher = true;
             }
@@ -51,6 +50,7 @@ class InvoiceController extends Controller
             $inv_pos->name = request()->invoicePositions[$i]['name'];
             $inv_pos->invoice_id = $inv->id;
             $inv_pos->paid_by_teacher = $paidByTeacher;
+            $inv_pos->iban = request()->invoicePositions[$i]['iban'];
             $inv_pos->document_number = request()->invoicePositions[$i]["belegNr"];
             $inv_pos->total_amount = 100; //TODO: Total Amount berechnen
             $inv_pos->save();

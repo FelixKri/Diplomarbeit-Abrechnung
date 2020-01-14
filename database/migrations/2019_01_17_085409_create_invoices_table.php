@@ -21,7 +21,6 @@ class CreateInvoicesTable extends Migration
             $table->boolean('approved')->default($value = false);
             $table->boolean('saved')->default($value = false);
             $table->float('total_amount', 8, 2);
-            $table->string('iban');
             $table->date('date');
             $table->timestamps();
         });

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Invoice extends Model
 {
     protected $table = 'invoices'; 
-    protected $fillable = ['reason', 'author_id', 'annotation', 'approved', 'saved', 'total_amount', 'date', 'iban'];
+    protected $fillable = ['reason', 'author_id', 'annotation', 'approved', 'saved', 'total_amount', 'date'];
 
     public function author(){
         return $this->belongsTo(FosUser::class, 'author_id');
