@@ -24,7 +24,7 @@ class InvoiceController extends Controller
             'author' => 'required|string',
             'iban' => 'iban',
             'reason' => 'required|string',
-            'annotation' => 'string|max:255'
+            'annotation' => 'string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -35,7 +35,7 @@ class InvoiceController extends Controller
         $inv->date = request()->date;
         $inv->author_id = FosUser::where('username', request()->author)->first()->id;
         $inv->iban = request()->iban;
-        $inv->reason_id = 1; //TODO: Reason Selection Text
+        $inv->reason = request()->reason;
         $inv->total_amount = 100; //TODO: Total Amount berechnen
         $inv->annotation = "test";
         $inv->save();
@@ -48,7 +48,7 @@ class InvoiceController extends Controller
             }
 
             $inv_pos = new InvoicePosition;
-            $inv_pos->designation = request()->invoicePositions[$i]['name'];
+            $inv_pos->name = request()->invoicePositions[$i]['name'];
             $inv_pos->invoice_id = $inv->id;
             $inv_pos->paid_by_teacher = $paidByTeacher;
             $inv_pos->document_number = request()->invoicePositions[$i]["belegNr"];
@@ -68,5 +68,32 @@ class InvoiceController extends Controller
         }
 
         return response()->json(['success' => 'success'], 200);
+    }
+
+    public function show(){
+        $invoices = Invoice::all();
+        return view('invoice.listview', compact("invoices"));
+    }
+
+    public function getInvoices(){
+        return Invoice::with('author')->get();
+    }
+
+    public function getInvoiceById($id){
+        $invoice = Invoice::with('author', 'positions', 'positions.userHasInvoicePosition', 'positions.userHasInvoicePosition.user', 'positions.userHasInvoicePosition.user.group')->find($id);
+
+        return $invoice;
+    }
+
+    public function showDetail($id){
+        return view('invoice.detailView', compact('id'));
+    }
+
+    public function update(){
+
+    }
+
+    public function destroy(){
+            
     }
 }

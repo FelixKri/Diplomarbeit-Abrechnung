@@ -25,9 +25,15 @@ Route::get('/prescribing/list', 'PrescribingController@show');
 Route::get('/prescribing/list/getPrescribings', 'PrescribingController@getPrescribings');
 Route::get('/prescribing/view/{id}', 'PrescribingController@showDetail');
 Route::get('/prescribing/view/getPrescribing/{id}', 'PrescribingController@getPrescribingById');
+Route::post('/prescribing/update', 'PrescribingController@update');
+
 Route::get('/invoice/new', 'InvoiceController@create');
 Route::post('/invoice/new', 'InvoiceController@store');
-Route::post('/prescribing/update', 'PrescribingController@update');
+Route::get('/invoice/list', 'InvoiceController@show');
+Route::get('/invoice/view/{id}', 'InvoiceController@showDetail');
+Route::post('/invoice/update', 'InvoiceController@update');
+Route::get('/invoices/list/getInvoices', 'InvoiceController@getInvoices');
+Route::get('/invoices/view/getInvoice/{id}', 'InvoiceController@getInvoiceById');
 
 Route::post('/getUsers','AjaxController@getUsers');  //Sollte Get request sein
 Route::post('/getAllGroups','AjaxController@getAllGroups'); // Method: POST Name: GETAllGroups *** Das sollte eine get request sein, man gettet ja was

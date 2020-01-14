@@ -147,12 +147,12 @@
                 </tr>
             </thead>
             <tbody>
-                <student-invoice
+                <student-invoice-detail
                     v-bind:key="student.id"
-                    v-for="student in position.students"
+                    v-for="student in position.user_has_invoice_position"
                     :student="student"
                     v-on:removeStudent="removeStudent($event)"
-                ></student-invoice>
+                ></student-invoice-detail>
             </tbody>
         </table>
     </div>
@@ -179,14 +179,14 @@ export default {
     methods: {
         getStudents: function()
         {
-            return this.position.students;
+            return this.position.user_has_invoice_position;
         },
         addStudents: function(studentsDom) {
 
-            if(this.position.students == null)
-                    this.position.students = studentsDom;
+            if(this.position.user_has_invoice_position == null)
+                    this.position.user_has_invoice_position = studentsDom;
                 else
-                    this.position.students = this.position.students.concat(studentsDom);
+                    this.position.user_has_invoice_position = this.position.user_has_invoice_position.concat(studentsDom);
 
             //console.log("Added students. Students:");
             //console.log(this.position.students);
@@ -200,7 +200,7 @@ export default {
                     this.amount_st
             );
 
-            let number_of_students = this.position.students.length;
+            let number_of_students = this.position.user_has_invoice_position.length;
 
             alert("Schülerzahl: " + number_of_students);
 
@@ -209,11 +209,11 @@ export default {
             alert("Betrag pro Schüler: " + value);
 
             if (this.type == "overwrite") {
-                this.position.students.forEach(function(student) {
+                this.position.user_has_invoice_position.forEach(function(student) {
                     student.amount = value;
                 });
             } else {
-                this.position.students.forEach(function(student) {
+                this.position.user_has_invoice_position.forEach(function(student) {
                     student.amount += value;
                 });
             }
@@ -230,7 +230,7 @@ export default {
             );
 
             let number_of_students = 0;
-            this.data.students.forEach(function(student) {
+            this.position.user_has_invoice_position.forEach(function(student) {
                 if (student.checked) {
                     number_of_students++;
                 }
@@ -243,13 +243,13 @@ export default {
             alert("Betrag pro Schüler: " + value);
 
             if (this.type == "overwrite") {
-                this.position.students.forEach(function(student) {
+                this.position.user_has_invoice_position.forEach(function(student) {
                     if (student.checked) {
                         student.amount = value;
                     }
                 });
             } else {
-                this.position.students.forEach(function(student) {
+                this.position.user_has_invoice_position.forEach(function(student) {
                     if (student.checked) {
                         student.amount += value;
                     }
@@ -265,11 +265,11 @@ export default {
             let value = parseFloat(this.amount_st);
 
             if (this.type == "overwrite") {
-                this.position.students.forEach(function(student) {
+                this.position.user_has_invoice_position.forEach(function(student) {
                     student.amount = value;
                 });
             } else {
-                this.position.students.forEach(function(student) {
+                this.position.user_has_invoice_position.forEach(function(student) {
                     student.amount += value;
                 });
             }
@@ -286,13 +286,13 @@ export default {
             let value = this.amount_st;
 
             if (this.type == "overwrite") {
-                this.position.students.forEach(function(student) {
+                this.position.user_has_invoice_position.forEach(function(student) {
                     if (student.checked) {
                         student.amount = value;
                     }
                 });
             } else {
-                this.position.students.forEach(function(student) {
+                this.position.user_has_invoice_position.forEach(function(student) {
                     if (student.checked) {
                         student.amount += value;
                     }
@@ -301,13 +301,13 @@ export default {
         },
         removeStudent: function(id) {
 
-            var result = this.position.students.filter(obj => {
+            var result = this.position.user_has_invoice_position.filter(obj => {
                 if (obj.id === id) {
                     obj.checked = false;
                 }
             });
 
-            this.position.students = this.position.students.filter(
+            this.position.user_has_invoice_position = this.position.user_has_invoice_position.filter(
                 el => el.id !== id
             );
         }
