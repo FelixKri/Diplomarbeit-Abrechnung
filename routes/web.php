@@ -32,3 +32,8 @@ Route::post('/prescribing/update', 'PrescribingController@update');
 Route::post('/getUsers','AjaxController@getUsers');  //Sollte Get request sein
 Route::post('/getAllGroups','AjaxController@getAllGroups'); // Method: POST Name: GETAllGroups *** Das sollte eine get request sein, man gettet ja was
 Route::get('/getReasons', 'AjaxController@getReasons');
+
+
+Auth::routes(['register' => false]);
+
+Route::get('/home', 'HomeController@index')->name('home');

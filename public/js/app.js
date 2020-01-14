@@ -1754,30 +1754,6 @@ module.exports = {
 
 /***/ }),
 
-<<<<<<< HEAD
-=======
-/***/ "./node_modules/axios/node_modules/is-buffer/index.js":
-/*!************************************************************!*\
-  !*** ./node_modules/axios/node_modules/is-buffer/index.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-module.exports = function isBuffer (obj) {
-  return obj != null && obj.constructor != null &&
-    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddPersonFromPrescribingModal.vue?vue&type=script&lang=js& ***!
@@ -1851,7 +1827,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
->>>>>>> 0d6a0d33f71b2e5df4cd632222d2ad4493fe9cd6
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddPersonModal.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddPersonModal.vue?vue&type=script&lang=js& ***!
@@ -1958,10 +1933,10 @@ __webpack_require__.r(__webpack_exports__);
       /*
        * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet
        
-       for (var i = 0; i < studentsLoadedLength; i++) {
+        for (var i = 0; i < studentsLoadedLength; i++) {
         if (studentsLoaded[i]["id"] == id) return studentsLoaded[i];
       }
-       //Fatal error, id not found
+        //Fatal error, id not found
       console.log(
         "Error: could not find id: '" + id + "' in getStudentAfterId"
       );
@@ -1977,10 +1952,10 @@ __webpack_require__.r(__webpack_exports__);
       for (var thing in studentsDom) {
         count++;
       }
-       for (var i = 0; i < count; i++) {
+        for (var i = 0; i < count; i++) {
         if (studentsDom[i]["id"] == id) return i;
       }
-       //Fatal error, id not found
+        //Fatal error, id not found
       console.log(
         "Error: could not find id: '" + id + "' in getStudentIndexAfterId"
       );
@@ -2018,7 +1993,7 @@ __webpack_require__.r(__webpack_exports__);
 
       /*
       var cbs = [];
-        if (this.$parent.students > 0)
+         if (this.$parent.students > 0)
        {
          for(var i = 0; i < this.$parent.students.length;i++)
          {
