@@ -15,6 +15,9 @@ Vue.component('prescribing-list', require('./components/PrescribingList.vue').de
 Vue.component('prescribing-detail', require('./components/PrescribingDetail.vue').default);
 Vue.component('add-from-prescribing-modal', require('./components/AddPersonFromPrescribingModal.vue').default);
 Vue.component('invoice-list', require('./components/InvoiceList.vue').default);
+Vue.component('invoice-detail', require('./components/InvoiceDetail.vue').default);
+Vue.component('invoice-detail-position', require('./components/InvoiceDetailPosition.vue').default);
+Vue.component('student-invoice-detail', require('./components/StudentInvoiceDetail').default);
 
 const app = new Vue({
     el: '#app',

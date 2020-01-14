@@ -9,7 +9,7 @@ class UserHasInvoicePosition extends Model
     protected $fillable = ['user_id', 'comment', 'invoice_position_id', 'amount'];
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(FosUser::class);
     }
 
     public function invoicePosition(){

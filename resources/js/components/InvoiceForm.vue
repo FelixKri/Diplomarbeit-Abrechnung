@@ -139,7 +139,7 @@ export default {
                 var position = {
                     id: id,
                     name: name,
-                    belegNr: "10",
+                    document_number: "",
                     amount: 0,
                     annotation: "",
                     paidByTeacher: false,

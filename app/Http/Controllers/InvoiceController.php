@@ -48,7 +48,7 @@ class InvoiceController extends Controller
             }
 
             $inv_pos = new InvoicePosition;
-            $inv_pos->designation = request()->invoicePositions[$i]['name'];
+            $inv_pos->name = request()->invoicePositions[$i]['name'];
             $inv_pos->invoice_id = $inv->id;
             $inv_pos->paid_by_teacher = $paidByTeacher;
             $inv_pos->document_number = request()->invoicePositions[$i]["belegNr"];
@@ -80,12 +80,13 @@ class InvoiceController extends Controller
     }
 
     public function getInvoiceById($id){
-        $invoice = PrescribingSuggestion::with('author', 'positions', 'reason', 'positions.userHasInvoicePosition', 'positions.userHasInvoicePosition.user', 'positions.userHasInvoicePosition.user.group')->find($id);
+        $invoice = Invoice::with('author', 'positions', 'positions.userHasInvoicePosition', 'positions.userHasInvoicePosition.user', 'positions.userHasInvoicePosition.user.group')->find($id);
+
         return $invoice;
     }
 
-    public function showDetail(){
-
+    public function showDetail($id){
+        return view('invoice.detailView', compact('id'));
     }
 
     public function update(){

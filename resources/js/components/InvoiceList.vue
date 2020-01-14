@@ -17,7 +17,7 @@
                     v-for="i in invoices"
                     v-bind:key="i.id"
                     style="cursor: pointer;"
-                    @click="redirectToInvoice(p.id)"
+                    @click="redirectToInvoice(i.id)"
                 >
                     <th scope="row">{{ i.id }}</th>
                     <td>{{ i.reason}}</td>
