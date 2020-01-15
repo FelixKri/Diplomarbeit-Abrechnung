@@ -2676,22 +2676,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     addPos: function addPos() {
-      /*
-              Aufbau einer invoicePosition:
-              {
-                  id: 1,
-                  name: "Skikurs",
-                  students: [
-                      {object} <- id, lastname, firstname, group, amount, annotation
-                      {object}
-                      {object}
-                      ...
-                  ]
-              }
-               Feature Ideen:
-                  global schüler hinzufügen button: Schüler werden allen Rechnungspos hinzugefügt
-                  wenn neue Rechnungspos geöffnet wird: Prompt ob neu oder aus prescribing
-          */
       var name = prompt("Namen der Rechnungspos eingeben", "");
 
       if (name != null) {
@@ -2707,8 +2691,8 @@ __webpack_require__.r(__webpack_exports__);
           id: id,
           name: name,
           document_number: "",
-          amount: 0,
           annotation: "",
+          amount: 0,
           paidByTeacher: false,
           iban: "",
           students: []
@@ -2719,6 +2703,7 @@ __webpack_require__.r(__webpack_exports__);
     store: function store() {
       var that = this;
       var invoicePositionsStripped = [];
+      alert("loda");
       this.invoicePositions.forEach(function (position) {
         invoicePositionsStripped.push({
           "id": position.id,
@@ -2731,10 +2716,10 @@ __webpack_require__.r(__webpack_exports__);
           "studentIDs": [],
           "studentAmounts": []
         });
+        console.log(invoicePositionsStripped);
         position.students.forEach(function (student) {
           invoicePositionsStripped[position.id - 1].studentIDs.push(student.id);
           invoicePositionsStripped[position.id - 1].studentAmounts.push(student.amount);
-          invoicePositionsStripped[position.id - 1].studentAnnotations.push(student.annotation);
         });
       });
       console.log(invoicePositionsStripped);
@@ -3035,10 +3020,77 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     console.log("Component created: InvoicePosition");
-    alert('invoicePositions.'.concat(this.position.id - 1, '.belegNr'));
+    alert("invoicePositions.".concat(this.position.id - 1, ".belegNr"));
   },
   data: function data() {
     return {
@@ -3047,6 +3099,16 @@ __webpack_require__.r(__webpack_exports__);
       amount_st: 0,
       type: false
     };
+  },
+  computed: {
+    totalAmountComputed: function totalAmountComputed() {
+      var totalAmt = 0;
+      this.position.students.forEach(function (student) {
+        totalAmt += Number(student.amount);
+      });
+      this.position.amount = totalAmt;
+      return totalAmt;
+    }
   },
   props: ["position", "errors"],
   methods: {
@@ -40621,19 +40683,19 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.position.amount,
-                  expression: "position.amount"
+                  value: _vm.totalAmountComputed,
+                  expression: "totalAmountComputed"
                 }
               ],
               staticClass: "form-control",
-              attrs: { type: "number", placeholder: "Betrag" },
-              domProps: { value: _vm.position.amount },
+              attrs: { type: "number", placeholder: "Betrag", disabled: "" },
+              domProps: { value: _vm.totalAmountComputed },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.$set(_vm.position, "amount", $event.target.value)
+                  _vm.totalAmountComputed = $event.target.value
                 }
               }
             })
@@ -40728,7 +40790,11 @@ var render = function() {
                     ],
                     function(error) {
                       return _c("li", { key: error.id }, [
-                        _vm._v(_vm._s(error))
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(error) +
+                            "\n                    "
+                        )
                       ])
                     }
                   ),
@@ -40780,7 +40846,11 @@ var render = function() {
                     ],
                     function(error) {
                       return _c("li", { key: error.id }, [
-                        _vm._v(_vm._s(error))
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(error) +
+                            "\n                    "
+                        )
                       ])
                     }
                   ),
@@ -40836,7 +40906,11 @@ var render = function() {
                     ],
                     function(error) {
                       return _c("li", { key: error.id }, [
-                        _vm._v(_vm._s(error))
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(error) +
+                            "\n                    "
+                        )
                       ])
                     }
                   ),

@@ -63,7 +63,7 @@ class InvoiceController extends Controller
             $inv_pos->iban = request()->invoicePositions[$i]['iban'];
             $inv_pos->document_number = request()->invoicePositions[$i]["belegNr"];
             $inv_pos->annotation = request()->invoicePositions[$i]["annotation"];
-            $inv_pos->total_amount = 100; //TODO: Total Amount berechnen
+            $inv_pos->total_amount = request()->invoicePositions[$i]["amount"];
             $inv_pos->save();
             
             for ($j=0; $j < sizeof(request()->invoicePositions[$i]["studentIDs"]); $j++){

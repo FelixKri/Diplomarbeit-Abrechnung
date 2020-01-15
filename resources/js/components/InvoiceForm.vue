@@ -110,23 +110,6 @@ export default {
     },
     methods: {
         addPos: function() {
-            /*
-                    Aufbau einer invoicePosition:
-                    {
-                        id: 1,
-                        name: "Skikurs",
-                        students: [
-                            {object} <- id, lastname, firstname, group, amount, annotation
-                            {object}
-                            {object}
-                            ...
-                        ]
-                    }
-
-                    Feature Ideen:
-                        global schüler hinzufügen button: Schüler werden allen Rechnungspos hinzugefügt
-                        wenn neue Rechnungspos geöffnet wird: Prompt ob neu oder aus prescribing
-                */
             var name = prompt("Namen der Rechnungspos eingeben", "");
             if(name != null){
                 while(name === "" || this.invoicePositions.filter(e => e.name === name).length > 0){
@@ -139,12 +122,13 @@ export default {
                     id: id,
                     name: name,
                     document_number: "",
-                    amount: 0,
                     annotation: "",
+                    amount: 0,
                     paidByTeacher: false,
                     iban: "",
                     students: []
                 };
+
                 this.invoicePositions.push(position);
             }
             
@@ -153,6 +137,10 @@ export default {
         store: function() {
             var that = this;
             var invoicePositionsStripped = [];
+
+
+            alert("loda");
+
             this.invoicePositions.forEach(function(position) {
                 invoicePositionsStripped.push({
                     "id": position.id,
@@ -166,6 +154,8 @@ export default {
                     "studentAmounts": [],
                 });
 
+                console.log(invoicePositionsStripped);
+
                 position.students.forEach(function(student) {
                     invoicePositionsStripped[position.id - 1].studentIDs.push(
                         student.id
@@ -174,10 +164,6 @@ export default {
                     invoicePositionsStripped[
                         position.id - 1
                     ].studentAmounts.push(student.amount);
-
-                    invoicePositionsStripped[
-                        position.id - 1
-                    ].studentAnnotations.push(student.annotation);
                 });
             });
 
