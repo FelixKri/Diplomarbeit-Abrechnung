@@ -2652,6 +2652,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2660,7 +2670,8 @@ __webpack_require__.r(__webpack_exports__);
       reason: "",
       annotation: "",
       invoicePositions: [],
-      id: 0
+      id: 0,
+      errors: {}
     };
   },
   methods: {
@@ -2718,8 +2729,7 @@ __webpack_require__.r(__webpack_exports__);
           "paidByTeacher": position.paidByTeacher,
           "iban": position.iban,
           "studentIDs": [],
-          "studentAmounts": [],
-          "studentAnnotations": []
+          "studentAmounts": []
         });
         position.students.forEach(function (student) {
           invoicePositionsStripped[position.id - 1].studentIDs.push(student.id);
@@ -2739,15 +2749,15 @@ __webpack_require__.r(__webpack_exports__);
           "author": that.author,
           "date": that.date,
           "reason": that.reason,
+          "annotation": that.annotation,
           "invoicePositions": invoicePositionsStripped
         },
         success: function success(response) {
+          alert("loda");
           console.log(response);
           alert("Erfolgreich gespeichert!");
         },
         error: function error(xhr, status, _error) {
-          alert(xhr.responseText);
-          console.log(xhr.responseText);
           var respJson = JSON.parse(xhr.responseText);
           that.errors = respJson.errors;
         }
@@ -3016,23 +3026,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     console.log("Component created: InvoicePosition");
+    alert('invoicePositions.'.concat(this.position.id - 1, '.belegNr'));
   },
   data: function data() {
     return {
-      // amount: 0,
-      // annotation: "",
-      // belegNr: 0,
-      errors: {},
       groups: [],
       groupLength: 0,
       amount_st: 0,
       type: false
     };
   },
-  props: ["position"],
+  props: ["position", "errors"],
   methods: {
     getStudents: function getStudents() {
       return this.position.students;
@@ -40266,7 +40282,21 @@ var render = function() {
               _vm.reason = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _vm.errors.reason
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.reason, function(error) {
+                return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+              }),
+              0
+            )
+          : _vm._e()
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group" }, [
@@ -40297,7 +40327,21 @@ var render = function() {
               _vm.date = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _vm.errors.date
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.date, function(error) {
+                return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+              }),
+              0
+            )
+          : _vm._e()
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group" }, [
@@ -40354,7 +40398,21 @@ var render = function() {
               _vm.annotation = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _vm.errors.annotation
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.annotation, function(error) {
+                return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+              }),
+              0
+            )
+          : _vm._e()
       ]),
       _vm._v(" "),
       _c("div", {}, [
@@ -40404,7 +40462,7 @@ var render = function() {
           _vm._l(_vm.invoicePositions, function(pos) {
             return _c("invoice-position", {
               key: pos.id,
-              attrs: { position: pos }
+              attrs: { position: pos, errors: _vm.errors }
             })
           }),
           1
@@ -40653,7 +40711,30 @@ var render = function() {
                   _vm.$set(_vm.position, "iban", $event.target.value)
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.errors[
+              "invoicePositions.".concat(this.position.id - 1, ".iban")
+            ]
+              ? _c(
+                  "ul",
+                  {
+                    staticClass: "alert alert-danger",
+                    staticStyle: { margin: "1em 0" }
+                  },
+                  _vm._l(
+                    _vm.errors[
+                      "invoicePositions.".concat(this.position.id - 1, ".iban")
+                    ],
+                    function(error) {
+                      return _c("li", { key: error.id }, [
+                        _vm._v(_vm._s(error))
+                      ])
+                    }
+                  ),
+                  0
+                )
+              : _vm._e()
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "form-group" }, [
@@ -40679,7 +40760,33 @@ var render = function() {
                   _vm.$set(_vm.position, "document_number", $event.target.value)
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.errors[
+              "invoicePositions.".concat(this.position.id - 1, ".belegNr")
+            ]
+              ? _c(
+                  "ul",
+                  {
+                    staticClass: "alert alert-danger",
+                    staticStyle: { margin: "1em 0" }
+                  },
+                  _vm._l(
+                    _vm.errors[
+                      "invoicePositions.".concat(
+                        this.position.id - 1,
+                        ".belegNr"
+                      )
+                    ],
+                    function(error) {
+                      return _c("li", { key: error.id }, [
+                        _vm._v(_vm._s(error))
+                      ])
+                    }
+                  ),
+                  0
+                )
+              : _vm._e()
           ])
         ]),
         _vm._v(" "),
@@ -40709,7 +40816,33 @@ var render = function() {
                   _vm.$set(_vm.position, "annotation", $event.target.value)
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.errors[
+              "invoicePositions.".concat(this.position.id - 1, ".annotation")
+            ]
+              ? _c(
+                  "ul",
+                  {
+                    staticClass: "alert alert-danger",
+                    staticStyle: { margin: "1em 0" }
+                  },
+                  _vm._l(
+                    _vm.errors[
+                      "invoicePositions.".concat(
+                        this.position.id - 1,
+                        ".annotation"
+                      )
+                    ],
+                    function(error) {
+                      return _c("li", { key: error.id }, [
+                        _vm._v(_vm._s(error))
+                      ])
+                    }
+                  ),
+                  0
+                )
+              : _vm._e()
           ])
         ])
       ]),

@@ -12,6 +12,9 @@
                     name="reason"
                     v-model="reason"
                 />
+                <ul v-if="errors.reason" class="alert alert-danger" style="margin: 1em 0;">
+                    <li v-for="error in errors.reason" v-bind:key="error.id">{{error}}</li>
+                </ul>
             </div>
             <div class="form-group">
                 <label for="date">Datum</label>
@@ -23,6 +26,9 @@
                     name="date"
                     v-model="date"
                 />
+                <ul v-if="errors.date" class="alert alert-danger" style="margin: 1em 0;">
+                    <li v-for="error in errors.date" v-bind:key="error.id">{{error}}</li>
+                </ul>
             </div>
             <div class="form-group">
                 <label for="author">Abrechner</label>
@@ -43,6 +49,9 @@
                     rows="5"
                     v-model="annotation"
                 ></textarea>
+                <ul v-if="errors.annotation" class="alert alert-danger" style="margin: 1em 0;">
+                    <li v-for="error in errors.annotation" v-bind:key="error.id">{{error}}</li>
+                </ul>
             </div>
 
             <div class="">
@@ -71,6 +80,7 @@
                         v-for="pos in invoicePositions"
                         v-bind:key="pos.id"
                         :position="pos"
+                        :errors="errors"
                     ></invoice-position>
                 </div>
             </div>
@@ -94,7 +104,8 @@ export default {
             reason: "",
             annotation: "",
             invoicePositions: [],
-            id: 0
+            id: 0,
+            errors: {},
         };
     },
     methods: {
@@ -153,7 +164,6 @@ export default {
                     "iban": position.iban,
                     "studentIDs": [],
                     "studentAmounts": [],
-                    "studentAnnotations": []
                 });
 
                 position.students.forEach(function(student) {
@@ -184,15 +194,15 @@ export default {
                     "author": that.author,
                     "date": that.date,
                     "reason": that.reason,
+                    "annotation": that.annotation,
                     "invoicePositions": invoicePositionsStripped
                 },
                 success: function(response) {
+                    alert("loda")
                     console.log(response);
                     alert("Erfolgreich gespeichert!");
                 },
                 error: function(xhr, status, error) {
-                    alert(xhr.responseText);
-                    console.log(xhr.responseText);
                     var respJson = JSON.parse(xhr.responseText);
                     that.errors = respJson.errors;
                 }

@@ -24,6 +24,16 @@ class InvoiceController extends Controller
             'author' => 'required|string',
             'reason' => 'required|string',
             'annotation' => 'string|max:255',
+            'invoicePositions' => 'required|array|min:1',
+            'invoicePositions.*.name' => "required|string",
+            'invoicePositions.*.amount' => "required|integer",
+            'invoicePositions.*.annotation' => "string",
+            'invoicePositions.*.belegNr' => "required",
+            'invoicePositions.*.iban' => "required_if:invoicePositions.*.paidByTeacher,true",
+            'invoicePositions.*.studentIDs' => "required|array|min:1",
+            'invoicePositions.*.studentIDs.*' => "integer",
+            'invoicePositions.*.studentAmounts' => "required|array|min:1",
+            'invoicePositions.*.studentAmounts.*' => "integer",
         ]);
 
         if ($validator->fails()) {
@@ -35,7 +45,7 @@ class InvoiceController extends Controller
         $inv->author_id = FosUser::where('username', request()->author)->first()->id;
         $inv->reason = request()->reason;
         $inv->total_amount = 100; //TODO: Total Amount berechnen
-        $inv->annotation = "test";
+        $inv->annotation = request()->annotation;
         $inv->save();
 
         
@@ -52,6 +62,7 @@ class InvoiceController extends Controller
             $inv_pos->paid_by_teacher = $paidByTeacher;
             $inv_pos->iban = request()->invoicePositions[$i]['iban'];
             $inv_pos->document_number = request()->invoicePositions[$i]["belegNr"];
+            $inv_pos->annotation = request()->invoicePositions[$i]["annotation"];
             $inv_pos->total_amount = 100; //TODO: Total Amount berechnen
             $inv_pos->save();
             
@@ -59,7 +70,6 @@ class InvoiceController extends Controller
 
                 $usr_has_inv_pos = new UserHasInvoicePosition;
                 $usr_has_inv_pos->user_id = request()->invoicePositions[$i]["studentIDs"][$j];
-                //$usr_has_inv_pos->comment = request()->invoicePositions[$i]["studentAnnotations"][$j];
                 $usr_has_inv_pos->amount = request()->invoicePositions[$i]["studentAmounts"][$j];
                 $usr_has_inv_pos->invoice_position_id = $inv_pos->id;
                 $usr_has_inv_pos->save();

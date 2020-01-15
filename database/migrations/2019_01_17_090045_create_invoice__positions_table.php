@@ -21,6 +21,7 @@ class CreateInvoicePositionsTable extends Migration
             $table->boolean('paid_by_teacher');
             $table->string('iban')->nullable();
             $table->integer('document_number');
+            $table->string('annotation');
             $table->timestamps();
         });
     }

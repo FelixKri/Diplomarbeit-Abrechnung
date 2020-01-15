@@ -33,7 +33,7 @@
     <p>Position wurde von Lehrpersonal/Abrechner bezahlt, überweisen auf IBAN: {{$position->iban}}</p>
     @endif
     <p>Anmerkungen zur Position:</p>
-    <p style="font-family: 'Courier New', Courier, monospace">Anmerkungen müssen erst gespeichert werden damit sie hier angezeigt werden können</p>
+    <p style="font-family: 'Courier New', Courier, monospace">{{$position->annotation}}</p>
     <table style="width: 100%;">
         <tr>
             <th>ID</th>

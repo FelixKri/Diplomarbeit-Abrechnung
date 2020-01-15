@@ -29,6 +29,9 @@
                         name="iban"
                         v-model="position.iban"
                     />
+                    <ul v-if="errors['invoicePositions.'.concat(this.position.id-1,'.iban')]" class="alert alert-danger" style="margin: 1em 0;">
+                        <li v-for="error in errors['invoicePositions.'.concat(this.position.id-1,'.iban')]" v-bind:key="error.id">{{error}}</li>
+                    </ul>
                 </div>
                 <div class="form-group">
                     <label for="billnumber">BelegNr</label>
@@ -38,6 +41,9 @@
                         placeholder="Belegnummer"
                         v-model="position.document_number"
                     />
+                    <ul v-if="errors['invoicePositions.'.concat(this.position.id-1,'.belegNr')]" class="alert alert-danger" style="margin: 1em 0;">
+                        <li v-for="error in errors['invoicePositions.'.concat(this.position.id-1,'.belegNr')]" v-bind:key="error.id">{{error}}</li>
+                    </ul>
                 </div>
             </div>
             <div class="col-sm">
@@ -49,6 +55,9 @@
                         rows="5"
                         v-model="position.annotation"
                     ></textarea>
+                    <ul v-if="errors['invoicePositions.'.concat(this.position.id-1,'.annotation')]" class="alert alert-danger" style="margin: 1em 0;">
+                        <li v-for="error in errors['invoicePositions.'.concat(this.position.id-1,'.annotation')]" v-bind:key="error.id">{{error}}</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -173,20 +182,17 @@
 export default {
     created: function() {
         console.log("Component created: InvoicePosition");
+        alert('invoicePositions.'.concat(this.position.id-1,'.belegNr'));
     },
     data: function() {
         return {
-            // amount: 0,
-            // annotation: "",
-            // belegNr: 0,
-            errors: {},
             groups: [],
             groupLength: 0,
             amount_st: 0,
             type: false
         };
     },
-    props: ["position"],
+    props: ["position", "errors"],
     methods: {
         getStudents: function()
         {
