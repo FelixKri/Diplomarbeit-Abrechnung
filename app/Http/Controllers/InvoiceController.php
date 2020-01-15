@@ -59,7 +59,7 @@ class InvoiceController extends Controller
 
                 $usr_has_inv_pos = new UserHasInvoicePosition;
                 $usr_has_inv_pos->user_id = request()->invoicePositions[$i]["studentIDs"][$j];
-                $usr_has_inv_pos->comment = request()->invoicePositions[$i]["studentAnnotations"][$j];
+                //$usr_has_inv_pos->comment = request()->invoicePositions[$i]["studentAnnotations"][$j];
                 $usr_has_inv_pos->amount = request()->invoicePositions[$i]["studentAmounts"][$j];
                 $usr_has_inv_pos->invoice_position_id = $inv_pos->id;
                 $usr_has_inv_pos->save();

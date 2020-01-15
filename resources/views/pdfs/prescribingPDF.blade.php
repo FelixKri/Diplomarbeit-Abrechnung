@@ -10,11 +10,11 @@
 <table style="width: 90%; border: none;">
     <tr>
         <td style="border: none;">Datum der Erstellung:</td>
-        <td style="border: none;">{{$prescribing->date}}</td>
+        <td style="border: none;">{{date('d.m.Y', strtotime($prescribing->date))}}</td>
     </tr>
     <tr>
         <td style="border: none;">Spätest gewünschtes Einzahlungsdatum:</td>
-        <td style="border: none;">{{$prescribing->due_until}}</td>
+        <td style="border: none;">{{date('d.m.Y', strtotime($prescribing->due_until))}}</td>
     </tr>
     <tr>
         <td style="border: none;">Grund:</td>
