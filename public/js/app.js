@@ -2706,21 +2706,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       author: "admin",
       date: "",
-      iban: "",
       reason: "",
       annotation: "",
       invoicePositions: [],
-      id: 0
+      id: 0,
+      errors: {}
     };
   },
   methods: {
     addPos: function addPos() {
+<<<<<<< HEAD
       /*
               Aufbau einer invoicePosition:
               {
@@ -2737,6 +2737,8 @@ __webpack_require__.r(__webpack_exports__);
                   global schüler hinzufügen button: Schüler werden allen Rechnungspos hinzugefügt
                   wenn neue Rechnungspos geöffnet wird: Prompt ob neu oder aus prescribing
           */
+=======
+>>>>>>> 100ad5337dada143f3098dc3b8b96e9d4f3117e3
       var name = prompt("Namen der Rechnungspos eingeben", "");
 
       if (name != null) {
@@ -2752,9 +2754,10 @@ __webpack_require__.r(__webpack_exports__);
           id: id,
           name: name,
           document_number: "",
-          amount: 0,
           annotation: "",
+          amount: 0,
           paidByTeacher: false,
+          iban: "",
           students: []
         };
         this.invoicePositions.push(position);
@@ -2763,22 +2766,23 @@ __webpack_require__.r(__webpack_exports__);
     store: function store() {
       var that = this;
       var invoicePositionsStripped = [];
+      alert("loda");
       this.invoicePositions.forEach(function (position) {
         invoicePositionsStripped.push({
           "id": position.id,
           "name": position.name,
           "amount": position.amount,
           "annotation": position.annotation,
-          "belegNr": position.belegNr,
+          "belegNr": position.document_number,
           "paidByTeacher": position.paidByTeacher,
+          "iban": position.iban,
           "studentIDs": [],
-          "studentAmounts": [],
-          "studentAnnotations": []
+          "studentAmounts": []
         });
+        console.log(invoicePositionsStripped);
         position.students.forEach(function (student) {
           invoicePositionsStripped[position.id - 1].studentIDs.push(student.id);
           invoicePositionsStripped[position.id - 1].studentAmounts.push(student.amount);
-          invoicePositionsStripped[position.id - 1].studentAnnotations.push(student.annotation);
         });
       });
       console.log(invoicePositionsStripped);
@@ -2791,18 +2795,17 @@ __webpack_require__.r(__webpack_exports__);
         dataType: "json",
         data: {
           "author": that.author,
-          "iban": that.iban,
           "date": that.date,
           "reason": that.reason,
+          "annotation": that.annotation,
           "invoicePositions": invoicePositionsStripped
         },
         success: function success(response) {
+          alert("loda");
           console.log(response);
           alert("Erfolgreich gespeichert!");
         },
         error: function error(xhr, status, _error) {
-          alert(xhr.responseText);
-          console.log(xhr.responseText);
           var respJson = JSON.parse(xhr.responseText);
           that.errors = respJson.errors;
         }
@@ -3060,23 +3063,117 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     console.log("Component created: InvoicePosition");
+    alert("invoicePositions.".concat(this.position.id - 1, ".belegNr"));
   },
   data: function data() {
     return {
-      // amount: 0,
-      // annotation: "",
-      // belegNr: 0,
-      errors: {},
       groups: [],
       groupLength: 0,
       amount_st: 0,
       type: false
     };
   },
-  props: ["position"],
+  computed: {
+    totalAmountComputed: function totalAmountComputed() {
+      var totalAmt = 0;
+      this.position.students.forEach(function (student) {
+        totalAmt += Number(student.amount);
+      });
+      this.position.amount = totalAmt;
+      return totalAmt;
+    }
+  },
+  props: ["position", "errors"],
   methods: {
     getStudents: function getStudents() {
       return this.position.students;
@@ -3465,6 +3562,10 @@ __webpack_require__.r(__webpack_exports__);
           that.errors = respJson.errors;
         }
       });
+    },
+    print: function print() {
+      this.store();
+      window.location.href = '/prescribing/download/' + this.prescribing.id; //Todo: Sende Request an PDF Generator Funktion im BackEnd
     }
   }
 });
@@ -40099,7 +40200,21 @@ var render = function() {
               _vm.reason = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _vm.errors.reason
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.reason, function(error) {
+                return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+              }),
+              0
+            )
+          : _vm._e()
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group" }, [
@@ -40130,7 +40245,21 @@ var render = function() {
               _vm.date = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _vm.errors.date
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.date, function(error) {
+                return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+              }),
+              0
+            )
+          : _vm._e()
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group" }, [
@@ -40165,39 +40294,6 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "iban" } }, [
-          _vm._v("IBAN (falls notwendig)")
-        ]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.iban,
-              expression: "iban"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: {
-            type: "text",
-            id: "iban",
-            placeholder: "IBAN",
-            name: "iban"
-          },
-          domProps: { value: _vm.iban },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.iban = $event.target.value
-            }
-          }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
         _c("label", { attrs: { for: "annotation" } }, [_vm._v("Anmerkungen")]),
         _vm._v(" "),
         _c("textarea", {
@@ -40220,7 +40316,21 @@ var render = function() {
               _vm.annotation = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _vm.errors.annotation
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.annotation, function(error) {
+                return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+              }),
+              0
+            )
+          : _vm._e()
       ]),
       _vm._v(" "),
       _c("div", {}, [
@@ -40270,7 +40380,7 @@ var render = function() {
           _vm._l(_vm.invoicePositions, function(pos) {
             return _c("invoice-position", {
               key: pos.id,
-              attrs: { position: pos }
+              attrs: { position: pos, errors: _vm.errors }
             })
           }),
           1
@@ -40429,19 +40539,19 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.position.amount,
-                  expression: "position.amount"
+                  value: _vm.totalAmountComputed,
+                  expression: "totalAmountComputed"
                 }
               ],
               staticClass: "form-control",
-              attrs: { type: "number", placeholder: "Betrag" },
-              domProps: { value: _vm.position.amount },
+              attrs: { type: "number", placeholder: "Betrag", disabled: "" },
+              domProps: { value: _vm.totalAmountComputed },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.$set(_vm.position, "amount", $event.target.value)
+                  _vm.totalAmountComputed = $event.target.value
                 }
               }
             })
@@ -40490,6 +40600,66 @@ var render = function() {
           _c("span", [_vm._v("Von Lehrpersonal bezhalt")]),
           _vm._v(" "),
           _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "iban" } }, [
+              _vm._v("IBAN (falls notwendig)")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.position.iban,
+                  expression: "position.iban"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                id: "iban",
+                placeholder: "IBAN",
+                name: "iban"
+              },
+              domProps: { value: _vm.position.iban },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.position, "iban", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.errors[
+              "invoicePositions.".concat(this.position.id - 1, ".iban")
+            ]
+              ? _c(
+                  "ul",
+                  {
+                    staticClass: "alert alert-danger",
+                    staticStyle: { margin: "1em 0" }
+                  },
+                  _vm._l(
+                    _vm.errors[
+                      "invoicePositions.".concat(this.position.id - 1, ".iban")
+                    ],
+                    function(error) {
+                      return _c("li", { key: error.id }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(error) +
+                            "\n                    "
+                        )
+                      ])
+                    }
+                  ),
+                  0
+                )
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
             _c("label", { attrs: { for: "billnumber" } }, [_vm._v("BelegNr")]),
             _vm._v(" "),
             _c("input", {
@@ -40512,7 +40682,37 @@ var render = function() {
                   _vm.$set(_vm.position, "document_number", $event.target.value)
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.errors[
+              "invoicePositions.".concat(this.position.id - 1, ".belegNr")
+            ]
+              ? _c(
+                  "ul",
+                  {
+                    staticClass: "alert alert-danger",
+                    staticStyle: { margin: "1em 0" }
+                  },
+                  _vm._l(
+                    _vm.errors[
+                      "invoicePositions.".concat(
+                        this.position.id - 1,
+                        ".belegNr"
+                      )
+                    ],
+                    function(error) {
+                      return _c("li", { key: error.id }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(error) +
+                            "\n                    "
+                        )
+                      ])
+                    }
+                  ),
+                  0
+                )
+              : _vm._e()
           ])
         ]),
         _vm._v(" "),
@@ -40542,7 +40742,37 @@ var render = function() {
                   _vm.$set(_vm.position, "annotation", $event.target.value)
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.errors[
+              "invoicePositions.".concat(this.position.id - 1, ".annotation")
+            ]
+              ? _c(
+                  "ul",
+                  {
+                    staticClass: "alert alert-danger",
+                    staticStyle: { margin: "1em 0" }
+                  },
+                  _vm._l(
+                    _vm.errors[
+                      "invoicePositions.".concat(
+                        this.position.id - 1,
+                        ".annotation"
+                      )
+                    ],
+                    function(error) {
+                      return _c("li", { key: error.id }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(error) +
+                            "\n                    "
+                        )
+                      ])
+                    }
+                  ),
+                  0
+                )
+              : _vm._e()
           ])
         ])
       ]),
@@ -40819,7 +41049,7 @@ var render = function() {
     _c("h1", [_vm._v("Vorschreibungs Ansicht:")]),
     _vm._v(" "),
     _c("p", [
-      _vm._v("\n        Ursprünglicher Author:\n        "),
+      _vm._v("\n        Ursprünglicher Autor:\n        "),
       _c("span", { staticStyle: { "font-weight": "bold" } }, [
         _vm._v(_vm._s(_vm.prescribing.author.username))
       ])
@@ -41168,7 +41398,7 @@ var render = function() {
     _c("input", {
       staticClass: "btn btn-primary",
       attrs: { type: "button", value: "Drucken" },
-      on: { click: _vm.store }
+      on: { click: _vm.print }
     })
   ])
 }

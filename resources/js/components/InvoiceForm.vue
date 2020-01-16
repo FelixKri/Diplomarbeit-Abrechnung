@@ -12,6 +12,9 @@
                     name="reason"
                     v-model="reason"
                 />
+                <ul v-if="errors.reason" class="alert alert-danger" style="margin: 1em 0;">
+                    <li v-for="error in errors.reason" v-bind:key="error.id">{{error}}</li>
+                </ul>
             </div>
             <div class="form-group">
                 <label for="date">Datum</label>
@@ -23,6 +26,9 @@
                     name="date"
                     v-model="date"
                 />
+                <ul v-if="errors.date" class="alert alert-danger" style="margin: 1em 0;">
+                    <li v-for="error in errors.date" v-bind:key="error.id">{{error}}</li>
+                </ul>
             </div>
             <div class="form-group">
                 <label for="author">Abrechner</label>
@@ -36,17 +42,6 @@
                 />
             </div>
             <div class="form-group">
-                <label for="iban">IBAN (falls notwendig)</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="iban"
-                    placeholder="IBAN"
-                    name="iban"
-                    v-model="iban"
-                />
-            </div>
-            <div class="form-group">
                 <label for="annotation">Anmerkungen</label>
                 <textarea
                     class="form-control"
@@ -54,6 +49,9 @@
                     rows="5"
                     v-model="annotation"
                 ></textarea>
+                <ul v-if="errors.annotation" class="alert alert-danger" style="margin: 1em 0;">
+                    <li v-for="error in errors.annotation" v-bind:key="error.id">{{error}}</li>
+                </ul>
             </div>
 
             <div class="">
@@ -82,6 +80,7 @@
                         v-for="pos in invoicePositions"
                         v-bind:key="pos.id"
                         :position="pos"
+                        :errors="errors"
                     ></invoice-position>
                 </div>
             </div>
@@ -102,32 +101,15 @@ export default {
         return {
             author: "admin",
             date: "",
-            iban: "",
             reason: "",
             annotation: "",
             invoicePositions: [],
-            id: 0
+            id: 0,
+            errors: {},
         };
     },
     methods: {
         addPos: function() {
-            /*
-                    Aufbau einer invoicePosition:
-                    {
-                        id: 1,
-                        name: "Skikurs",
-                        students: [
-                            {object} <- id, lastname, firstname, group, amount, annotation
-                            {object}
-                            {object}
-                            ...
-                        ]
-                    }
-
-                    Feature Ideen:
-                        global schüler hinzufügen button: Schüler werden allen Rechnungspos hinzugefügt
-                        wenn neue Rechnungspos geöffnet wird: Prompt ob neu oder aus prescribing
-                */
             var name = prompt("Namen der Rechnungspos eingeben", "");
             if(name != null){
                 while(name === "" || this.invoicePositions.filter(e => e.name === name).length > 0){
@@ -140,11 +122,13 @@ export default {
                     id: id,
                     name: name,
                     document_number: "",
-                    amount: 0,
                     annotation: "",
+                    amount: 0,
                     paidByTeacher: false,
+                    iban: "",
                     students: []
                 };
+
                 this.invoicePositions.push(position);
             }
             
@@ -153,18 +137,24 @@ export default {
         store: function() {
             var that = this;
             var invoicePositionsStripped = [];
+
+
+            alert("loda");
+
             this.invoicePositions.forEach(function(position) {
                 invoicePositionsStripped.push({
                     "id": position.id,
                     "name": position.name,
                     "amount": position.amount,
                     "annotation": position.annotation,
-                    "belegNr": position.belegNr,
+                    "belegNr": position.document_number,
                     "paidByTeacher": position.paidByTeacher,
+                    "iban": position.iban,
                     "studentIDs": [],
                     "studentAmounts": [],
-                    "studentAnnotations": []
                 });
+
+                console.log(invoicePositionsStripped);
 
                 position.students.forEach(function(student) {
                     invoicePositionsStripped[position.id - 1].studentIDs.push(
@@ -174,10 +164,6 @@ export default {
                     invoicePositionsStripped[
                         position.id - 1
                     ].studentAmounts.push(student.amount);
-
-                    invoicePositionsStripped[
-                        position.id - 1
-                    ].studentAnnotations.push(student.annotation);
                 });
             });
 
@@ -192,18 +178,17 @@ export default {
                 dataType: "json",
                 data: {
                     "author": that.author,
-                    "iban": that.iban,
                     "date": that.date,
                     "reason": that.reason,
+                    "annotation": that.annotation,
                     "invoicePositions": invoicePositionsStripped
                 },
                 success: function(response) {
+                    alert("loda")
                     console.log(response);
                     alert("Erfolgreich gespeichert!");
                 },
                 error: function(xhr, status, error) {
-                    alert(xhr.responseText);
-                    console.log(xhr.responseText);
                     var respJson = JSON.parse(xhr.responseText);
                     that.errors = respJson.errors;
                 }

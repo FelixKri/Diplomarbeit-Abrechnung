@@ -15,10 +15,48 @@
                         type="number"
                         class="form-control"
                         placeholder="Betrag"
-                        v-model="position.amount"
+                        v-model="totalAmountComputed"
+                        disabled
                     />
                 </div>
-                <input type="checkbox" v-model="position.paidByTeacher"><span>Von Lehrpersonal bezhalt</span>
+                <input type="checkbox" v-model="position.paidByTeacher" /><span
+                    >Von Lehrpersonal bezhalt</span
+                >
+                <div class="form-group">
+                    <label for="iban">IBAN (falls notwendig)</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="iban"
+                        placeholder="IBAN"
+                        name="iban"
+                        v-model="position.iban"
+                    />
+                    <ul
+                        v-if="
+                            errors[
+                                'invoicePositions.'.concat(
+                                    this.position.id - 1,
+                                    '.iban'
+                                )
+                            ]
+                        "
+                        class="alert alert-danger"
+                        style="margin: 1em 0;"
+                    >
+                        <li
+                            v-for="error in errors[
+                                'invoicePositions.'.concat(
+                                    this.position.id - 1,
+                                    '.iban'
+                                )
+                            ]"
+                            v-bind:key="error.id"
+                        >
+                            {{ error }}
+                        </li>
+                    </ul>
+                </div>
                 <div class="form-group">
                     <label for="billnumber">BelegNr</label>
                     <input
@@ -27,6 +65,30 @@
                         placeholder="Belegnummer"
                         v-model="position.document_number"
                     />
+                    <ul
+                        v-if="
+                            errors[
+                                'invoicePositions.'.concat(
+                                    this.position.id - 1,
+                                    '.belegNr'
+                                )
+                            ]
+                        "
+                        class="alert alert-danger"
+                        style="margin: 1em 0;"
+                    >
+                        <li
+                            v-for="error in errors[
+                                'invoicePositions.'.concat(
+                                    this.position.id - 1,
+                                    '.belegNr'
+                                )
+                            ]"
+                            v-bind:key="error.id"
+                        >
+                            {{ error }}
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="col-sm">
@@ -38,6 +100,30 @@
                         rows="5"
                         v-model="position.annotation"
                     ></textarea>
+                    <ul
+                        v-if="
+                            errors[
+                                'invoicePositions.'.concat(
+                                    this.position.id - 1,
+                                    '.annotation'
+                                )
+                            ]
+                        "
+                        class="alert alert-danger"
+                        style="margin: 1em 0;"
+                    >
+                        <li
+                            v-for="error in errors[
+                                'invoicePositions.'.concat(
+                                    this.position.id - 1,
+                                    '.annotation'
+                                )
+                            ]"
+                            v-bind:key="error.id"
+                        >
+                            {{ error }}
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -133,7 +219,8 @@
         ></add-person-modal>
         <add-from-prescribing-modal
             v-on:addstudents="addStudents"
-            :id="position.id">
+            :id="position.id"
+        >
         </add-from-prescribing-modal>
         <table class="table">
             <thead>
@@ -162,31 +249,44 @@
 export default {
     created: function() {
         console.log("Component created: InvoicePosition");
+        alert("invoicePositions.".concat(this.position.id - 1, ".belegNr"));
     },
     data: function() {
         return {
-            // amount: 0,
-            // annotation: "",
-            // belegNr: 0,
-            errors: {},
             groups: [],
             groupLength: 0,
             amount_st: 0,
             type: false
         };
     },
-    props: ["position"],
+    computed: {
+        totalAmountComputed: function() {
+
+            let totalAmt = 0;
+
+            
+
+            this.position.students.forEach(student => {
+                totalAmt += Number(student.amount);
+            });
+
+            this.position.amount = totalAmt;
+
+            return totalAmt;
+        }
+    },
+    props: ["position", "errors"],
     methods: {
-        getStudents: function()
-        {
+        getStudents: function() {
             return this.position.students;
         },
         addStudents: function(studentsDom) {
-
-            if(this.position.students == null)
-                    this.position.students = studentsDom;
-                else
-                    this.position.students = this.position.students.concat(studentsDom);
+            if (this.position.students == null)
+                this.position.students = studentsDom;
+            else
+                this.position.students = this.position.students.concat(
+                    studentsDom
+                );
 
             //console.log("Added students. Students:");
             //console.log(this.position.students);
@@ -300,7 +400,6 @@ export default {
             }
         },
         removeStudent: function(id) {
-
             var result = this.position.students.filter(obj => {
                 if (obj.id === id) {
                     obj.checked = false;

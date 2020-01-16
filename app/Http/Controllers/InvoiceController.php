@@ -22,9 +22,18 @@ class InvoiceController extends Controller
         $validator = Validator::make(request()->all(), [
             'date' => 'date|required',
             'author' => 'required|string',
-            'iban' => 'iban',
             'reason' => 'required|string',
             'annotation' => 'string|max:255',
+            'invoicePositions' => 'required|array|min:1',
+            'invoicePositions.*.name' => "required|string",
+            'invoicePositions.*.amount' => "required|integer",
+            'invoicePositions.*.annotation' => "string",
+            'invoicePositions.*.belegNr' => "required",
+            'invoicePositions.*.iban' => "required_if:invoicePositions.*.paidByTeacher,true",
+            'invoicePositions.*.studentIDs' => "required|array|min:1",
+            'invoicePositions.*.studentIDs.*' => "integer",
+            'invoicePositions.*.studentAmounts' => "required|array|min:1",
+            'invoicePositions.*.studentAmounts.*' => "integer",
         ]);
 
         if ($validator->fails()) {
@@ -34,15 +43,15 @@ class InvoiceController extends Controller
         $inv = new Invoice;
         $inv->date = request()->date;
         $inv->author_id = FosUser::where('username', request()->author)->first()->id;
-        $inv->iban = request()->iban;
         $inv->reason = request()->reason;
         $inv->total_amount = 100; //TODO: Total Amount berechnen
-        $inv->annotation = "test";
+        $inv->annotation = request()->annotation;
         $inv->save();
 
         
         for ($i=0; $i < sizeof(request()->invoicePositions); $i++) { 
             $paidByTeacher = false;
+            
             if(request()->invoicePositions[$i]['paidByTeacher'] === "true"){
                 $paidByTeacher = true;
             }
@@ -51,15 +60,16 @@ class InvoiceController extends Controller
             $inv_pos->name = request()->invoicePositions[$i]['name'];
             $inv_pos->invoice_id = $inv->id;
             $inv_pos->paid_by_teacher = $paidByTeacher;
+            $inv_pos->iban = request()->invoicePositions[$i]['iban'];
             $inv_pos->document_number = request()->invoicePositions[$i]["belegNr"];
-            $inv_pos->total_amount = 100; //TODO: Total Amount berechnen
+            $inv_pos->annotation = request()->invoicePositions[$i]["annotation"];
+            $inv_pos->total_amount = request()->invoicePositions[$i]["amount"];
             $inv_pos->save();
             
             for ($j=0; $j < sizeof(request()->invoicePositions[$i]["studentIDs"]); $j++){
 
                 $usr_has_inv_pos = new UserHasInvoicePosition;
                 $usr_has_inv_pos->user_id = request()->invoicePositions[$i]["studentIDs"][$j];
-                $usr_has_inv_pos->comment = request()->invoicePositions[$i]["studentAnnotations"][$j];
                 $usr_has_inv_pos->amount = request()->invoicePositions[$i]["studentAmounts"][$j];
                 $usr_has_inv_pos->invoice_position_id = $inv_pos->id;
                 $usr_has_inv_pos->save();
