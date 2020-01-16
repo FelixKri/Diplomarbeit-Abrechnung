@@ -2674,6 +2674,15 @@ __webpack_require__.r(__webpack_exports__);
       errors: {}
     };
   },
+  computed: {
+    totalAmountComputed: function totalAmountComputed() {
+      var totalAmt = 0;
+      this.invoicePositions.forEach(function (position) {
+        totalAmt += position.amount;
+      });
+      return totalAmt;
+    }
+  },
   methods: {
     addPos: function addPos() {
       var name = prompt("Namen der Rechnungspos eingeben", "");
@@ -2703,7 +2712,7 @@ __webpack_require__.r(__webpack_exports__);
     store: function store() {
       var that = this;
       var invoicePositionsStripped = [];
-      alert("loda");
+      var totalAmountRequest = 0;
       this.invoicePositions.forEach(function (position) {
         invoicePositionsStripped.push({
           "id": position.id,
@@ -2716,13 +2725,13 @@ __webpack_require__.r(__webpack_exports__);
           "studentIDs": [],
           "studentAmounts": []
         });
-        console.log(invoicePositionsStripped);
+        totalAmountRequest += position.amount;
         position.students.forEach(function (student) {
           invoicePositionsStripped[position.id - 1].studentIDs.push(student.id);
           invoicePositionsStripped[position.id - 1].studentAmounts.push(student.amount);
         });
       });
-      console.log(invoicePositionsStripped);
+      alert(totalAmountRequest);
       $.ajax({
         headers: {
           "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -2735,6 +2744,7 @@ __webpack_require__.r(__webpack_exports__);
           "date": that.date,
           "reason": that.reason,
           "annotation": that.annotation,
+          "totalAmount": totalAmountRequest,
           "invoicePositions": invoicePositionsStripped
         },
         success: function success(response) {

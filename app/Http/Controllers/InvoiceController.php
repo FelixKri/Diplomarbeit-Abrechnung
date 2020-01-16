@@ -44,7 +44,7 @@ class InvoiceController extends Controller
         $inv->date = request()->date;
         $inv->author_id = FosUser::where('username', request()->author)->first()->id;
         $inv->reason = request()->reason;
-        $inv->total_amount = 100; //TODO: Total Amount berechnen
+        $inv->total_amount = request()->totalAmount;
         $inv->annotation = request()->annotation;
         $inv->save();
 

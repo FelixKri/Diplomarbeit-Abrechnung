@@ -108,6 +108,17 @@ export default {
             errors: {},
         };
     },
+    computed:{
+        totalAmountComputed: function(){
+            let totalAmt = 0;
+
+            this.invoicePositions.forEach(function(position){
+                totalAmt += position.amount;
+            });
+
+            return totalAmt;
+        }
+    },
     methods: {
         addPos: function() {
             var name = prompt("Namen der Rechnungspos eingeben", "");
@@ -137,9 +148,7 @@ export default {
         store: function() {
             var that = this;
             var invoicePositionsStripped = [];
-
-
-            alert("loda");
+            var totalAmountRequest = 0;
 
             this.invoicePositions.forEach(function(position) {
                 invoicePositionsStripped.push({
@@ -154,7 +163,7 @@ export default {
                     "studentAmounts": [],
                 });
 
-                console.log(invoicePositionsStripped);
+                totalAmountRequest += position.amount;
 
                 position.students.forEach(function(student) {
                     invoicePositionsStripped[position.id - 1].studentIDs.push(
@@ -167,7 +176,7 @@ export default {
                 });
             });
 
-            console.log(invoicePositionsStripped);
+            alert(totalAmountRequest);
 
             $.ajax({
                 headers: {
@@ -181,6 +190,7 @@ export default {
                     "date": that.date,
                     "reason": that.reason,
                     "annotation": that.annotation,
+                    "totalAmount": totalAmountRequest,
                     "invoicePositions": invoicePositionsStripped
                 },
                 success: function(response) {
