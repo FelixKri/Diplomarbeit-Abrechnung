@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Auth\Authenticatable as AuthenticableTrait;
 
-class fosUser extends Model
+class fosUser extends Model implements Authenticatable
 {
+    use AuthenticableTrait;
+
     protected $table = 'fos_user'; 
     public $timestamps = false;
 

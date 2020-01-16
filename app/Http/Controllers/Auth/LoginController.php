@@ -44,21 +44,19 @@ class LoginController extends Controller
         return 'username';
     }
 
-    protected function validateLogin(Request $request)
+    public function login(Request $request)
     {
-        $messages = [
-            'identity.required' => 'Email or username cannot be empty',
-            'email.exists' => 'Email or username already registered',
-            'username.exists' => 'Username is already registered',
-            'password.required' => 'Password cannot be empty',
-        ];
+        if(!auth()->attempt(request(['username','password']))){
 
-        $request->validate([
-            'identity' => 'required|string',
-            'password' => 'required|string',
-            'email' => 'string|exists:users',
-            'username' => 'string|exists:users',
-        ], $messages);
+            return redirect('/login')->withErrors([
+
+                'message' => 'Please check your credentials and try again!'
+
+            ]);
+
+        }
+
+        return redirect('/');
     }
 
 }
