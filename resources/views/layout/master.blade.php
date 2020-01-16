@@ -13,7 +13,9 @@
 </head>
 <body>
     <div id="app">
+        @include('layout.navbar')
         @yield('content')
+        @include('layout.footer')
     </div>
     
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
