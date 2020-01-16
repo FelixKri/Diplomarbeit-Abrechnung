@@ -1920,7 +1920,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       studentsLoaded: [],
-      studentsLoadedLength: 0 //studentsLoaded: this.$parent.studentsLoaded,
+      studentsLoadedLength: 0,
+      students: [] //studentsLoaded: this.$parent.studentsLoaded,
       //studentsDom: this.$parent.studentsDom,
       //studentsLoadedLength: this.$parent.studentsLoadedLength
 
@@ -1928,38 +1929,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: ["id"],
   methods: {
-    /*
-    getStudentAfterId: function(id) {
-      /*
-       * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet
-       
-        for (var i = 0; i < studentsLoadedLength; i++) {
-        if (studentsLoaded[i]["id"] == id) return studentsLoaded[i];
-      }
-        //Fatal error, id not found
-      console.log(
-        "Error: could not find id: '" + id + "' in getStudentAfterId"
-      );
-    },*/
-
-    /*getStudentIndexAfterId: function(id) {
-      /*
-       * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet
-       
-      //No way around it, count studentsDom
-      var studentsDom = this.$parent.studentsDom;
-      var count = 0;
-      for (var thing in studentsDom) {
-        count++;
-      }
-        for (var i = 0; i < count; i++) {
-        if (studentsDom[i]["id"] == id) return i;
-      }
-        //Fatal error, id not found
-      console.log(
-        "Error: could not find id: '" + id + "' in getStudentIndexAfterId"
-      );
-    },*/
     getGroupName: function getGroupName(groupId) {
       for (var i = 0; i < this.$parent.groupLength; i++) {
         if (this.$parent.groups[i]["id"] == groupId) return this.$parent.groups[i]["name"];
@@ -1968,41 +1937,7 @@ __webpack_require__.r(__webpack_exports__);
 
       return "Unbekannt";
     },
-
-    /*cbClicked: function(id) {
-      /*
-       *  Wird ausgelöst wenn der Status des Checkmarks neben einem Schüler verändert wird.
-       *  Fügt hinzu/entfernt den jeweiligen Schüler aus dem StudentsDOM Array
-       */
-
-    /*
-    if ($("#" + id + "i" + this.id)[0].checked) {
-      //Checked
-      this.$parent.studentsDom.push(this.getStudentAfterId(id));
-    } else {
-      //unchecked
-      //find out what index to splice
-      this.$parent.studentsDom.splice(this.getStudentIndexAfterId(id));
-    }
-    
-    },*/
     getStudentsList: function getStudentsList() {
-      /*
-       * Sendet eine POST Request an /getUsers mit den gesetzten Filtern und erhält die Ausgewählten Schüler zurück.
-       */
-
-      /*
-      var cbs = [];
-         if (this.$parent.students > 0)
-       {
-         for(var i = 0; i < this.$parent.students.length;i++)
-         {
-           //console.log("Getting cb:");
-           //console.log("'" + (studentsLoaded[i]["id"] + 'i' + this.id) + "'");
-           cbs.push($("#" + this.studentsLoaded[i]["id"] + 'i' + this.id));
-         }
-       }
-       */
       var that = this;
       $.ajax({
         headers: {
@@ -2027,17 +1962,18 @@ __webpack_require__.r(__webpack_exports__);
           var studentsAlreadyIn = []; //console.log("Students loaded length: " + that.studentsLoadedLength);
 
           for (var j = 0; j < that.studentsLoadedLength; j++) {
-            var thing = that.studentsLoaded[j]; //Check if in parent.students
+            var thing = that.studentsLoaded[j];
+            var parentStudents = that.$parent.getStudents(); //Check if in parent.students
 
-            if (that.$parent.getStudents() != null) {
+            if (parentStudents != null) {
               var studentsCount = 0;
 
-              for (var s in that.$parent.getStudents()) {
+              for (var s in parentStudents) {
                 studentsCount++;
               }
 
               for (var i = 0; i < studentsCount; i++) {
-                var student = that.$parent.getStudents()[i];
+                var student = parentStudents[i];
 
                 if (student["id"] == thing["id"]) {
                   //Add to array
@@ -2048,18 +1984,11 @@ __webpack_require__.r(__webpack_exports__);
           }
 
           that.$nextTick(function () {
-            //console.log("Already in students: ");
-            //console.log(studentsAlreadyIn);
             for (var i = 0; i < studentsAlreadyIn.length; i++) {
-              var num = studentsAlreadyIn[i]; //console.log("Found already added student id: " + num);
-              //console.log("getting: " + "#" + num + "i" + that.id);
-
-              var cb = $("#" + num + "i" + that.id)[0]; //cnsole.log("cb:");
-              //console.log(cb);
-
+              var num = studentsAlreadyIn[i];
+              var cb = $("#" + num + "i" + that.id)[0];
               cb.checked = true;
-              cb.disabled = true; //that.$("#" + student["id"])[0]["checked"] = true;
-              //that.$("#" + student["id"])[0]["disabled"] = true;
+              cb.disabled = true;
             }
           });
         }
@@ -2495,7 +2424,12 @@ __webpack_require__.r(__webpack_exports__);
   props: ["position"],
   methods: {
     getStudents: function getStudents() {
-      return this.position.user_has_invoice_position;
+      //Make array of real students
+      var studentsArray = [];
+      this.position.user_has_invoice_position.forEach(function (student) {
+        studentsArray.push(student["user"]);
+      });
+      return studentsArray;
     },
     addStudents: function addStudents(studentsDom) {
       if (this.position.user_has_invoice_position == null) this.position.user_has_invoice_position = studentsDom;else this.position.user_has_invoice_position = this.position.user_has_invoice_position.concat(studentsDom); //console.log("Added students. Students:");
@@ -2586,14 +2520,15 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     removeStudent: function removeStudent(id) {
-      var result = this.position.user_has_invoice_position.filter(function (obj) {
-        if (obj.id === id) {
-          obj.checked = false;
+      this.position.user_has_invoice_position = this.position.user_has_invoice_position.filter(function (obj) {
+        if (obj.user.id === id) {
+          obj.user.checked = false;
+          return false;
+        } else {
+          return true;
         }
       });
-      this.position.user_has_invoice_position = this.position.user_has_invoice_position.filter(function (el) {
-        return el.id !== id;
-      });
+      console.log(this.position.user_has_invoice_position);
     }
   }
 });
@@ -2720,25 +2655,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     addPos: function addPos() {
-<<<<<<< HEAD
-      /*
-              Aufbau einer invoicePosition:
-              {
-                  id: 1,
-                  name: "Skikurs",
-                  students: [
-                      {object} <- id, lastname, firstname, group, amount, annotation
-                      {object}
-                      {object}
-                      ...
-                  ]
-              }
-                Feature Ideen:
-                  global schüler hinzufügen button: Schüler werden allen Rechnungspos hinzugefügt
-                  wenn neue Rechnungspos geöffnet wird: Prompt ob neu oder aus prescribing
-          */
-=======
->>>>>>> 100ad5337dada143f3098dc3b8b96e9d4f3117e3
       var name = prompt("Namen der Rechnungspos eingeben", "");
 
       if (name != null) {
@@ -3236,11 +3152,11 @@ __webpack_require__.r(__webpack_exports__);
       var value = parseFloat(this.amount_st);
 
       if (this.type == "overwrite") {
-        this.position.students.forEach(function (student) {
+        this.students.forEach(function (student) {
           student.amount = value;
         });
       } else {
-        this.position.students.forEach(function (student) {
+        this.students.forEach(function (student) {
           student.amount += value;
         });
       }

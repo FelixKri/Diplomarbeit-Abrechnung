@@ -55,7 +55,7 @@
             </div>
             <hr>
             
-            <button class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#addUser_1'" type=button>Person(n) hinzufügen</button>
+            <button class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#addUser_1'" type="button">Person(n) hinzufügen</button>
 
             <add-person-modal v-on:addstudents="addStudents" :id="1"></add-person-modal>
             

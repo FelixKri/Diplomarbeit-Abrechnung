@@ -89,6 +89,7 @@ export default {
     return {
       studentsLoaded: [],
       studentsLoadedLength: 0,
+      students: []
       //studentsLoaded: this.$parent.studentsLoaded,
       //studentsDom: this.$parent.studentsDom,
       //studentsLoadedLength: this.$parent.studentsLoadedLength
@@ -96,41 +97,6 @@ export default {
   },
   props: ["id"],
   methods: {
-    /*
-    getStudentAfterId: function(id) {
-      /*
-       * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet
-       
-
-      for (var i = 0; i < studentsLoadedLength; i++) {
-        if (studentsLoaded[i]["id"] == id) return studentsLoaded[i];
-      }
-
-      //Fatal error, id not found
-      console.log(
-        "Error: could not find id: '" + id + "' in getStudentAfterId"
-      );
-    },*/
-    /*getStudentIndexAfterId: function(id) {
-      /*
-       * Helper Function, wird für das Hinzufügen oder Entfernen von Schülern aus dem StudentsDOM Array verwendet
-       
-      //No way around it, count studentsDom
-      var studentsDom = this.$parent.studentsDom;
-      var count = 0;
-      for (var thing in studentsDom) {
-        count++;
-      }
-
-      for (var i = 0; i < count; i++) {
-        if (studentsDom[i]["id"] == id) return i;
-      }
-
-      //Fatal error, id not found
-      console.log(
-        "Error: could not find id: '" + id + "' in getStudentIndexAfterId"
-      );
-    },*/
     getGroupName: function(groupId) {
       for (var i = 0; i < this.$parent.groupLength; i++) {
         if (this.$parent.groups[i]["id"] == groupId)
@@ -139,41 +105,8 @@ export default {
       //Should not get here, pretty much an error
       return "Unbekannt";
     },
-    /*cbClicked: function(id) {
-      /*
-       *  Wird ausgelöst wenn der Status des Checkmarks neben einem Schüler verändert wird.
-       *  Fügt hinzu/entfernt den jeweiligen Schüler aus dem StudentsDOM Array
-       */
-
-      /*
-      if ($("#" + id + "i" + this.id)[0].checked) {
-        //Checked
-        this.$parent.studentsDom.push(this.getStudentAfterId(id));
-      } else {
-        //unchecked
-        //find out what index to splice
-        this.$parent.studentsDom.splice(this.getStudentIndexAfterId(id));
-      }
-      
-    },*/
     getStudentsList: function() {
-      /*
-       * Sendet eine POST Request an /getUsers mit den gesetzten Filtern und erhält die Ausgewählten Schüler zurück.
-       */
-       /*
-       var cbs = [];
-
-        if (this.$parent.students > 0)
-        {
-          for(var i = 0; i < this.$parent.students.length;i++)
-          {
-            //console.log("Getting cb:");
-            //console.log("'" + (studentsLoaded[i]["id"] + 'i' + this.id) + "'");
-            cbs.push($("#" + this.studentsLoaded[i]["id"] + 'i' + this.id));
-          }
-        }
-        */
-
+      
       var that = this;
       $.ajax({
         headers: {
@@ -203,17 +136,18 @@ export default {
         for(var j = 0;j < that.studentsLoadedLength;j++)
         {
           var thing = that.studentsLoaded[j];
+          var parentStudents = that.$parent.getStudents();
           //Check if in parent.students
-          if(that.$parent.getStudents() != null)
+          if(parentStudents != null)
           {
             var studentsCount = 0;
 
-            for(var s in that.$parent.getStudents())
+            for(var s in parentStudents)
               studentsCount++;
 
             for(var i = 0;i < studentsCount;i++)
             {
-              var student = that.$parent.getStudents()[i];
+              var student = parentStudents[i];
 
               if(student["id"] == thing["id"])
               {
@@ -226,26 +160,14 @@ export default {
 
         that.$nextTick(() => 
           {
-            //console.log("Already in students: ");
-            //console.log(studentsAlreadyIn);
-
             for(var i = 0;i < studentsAlreadyIn.length;i++)
             {
               var num = studentsAlreadyIn[i];
 
-              //console.log("Found already added student id: " + num);
-
-              //console.log("getting: " + "#" + num + "i" + that.id);
-
               var cb = $("#" + num + "i" + that.id)[0];
 
-              //cnsole.log("cb:");
-              //console.log(cb);
-                    
               cb.checked = true;
               cb.disabled = true;
-              //that.$("#" + student["id"])[0]["checked"] = true;
-              //that.$("#" + student["id"])[0]["disabled"] = true;
             }
           });
 
