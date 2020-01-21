@@ -179,7 +179,14 @@ export default {
     methods: {
         getStudents: function()
         {
-            return this.position.user_has_invoice_position;
+            //Make array of real students
+            var studentsArray = [];
+
+            this.position.user_has_invoice_position.forEach(function(student){
+                studentsArray.push(student["user"]);
+            });
+
+            return studentsArray;
         },
         addStudents: function(studentsDom) {
 
@@ -301,15 +308,19 @@ export default {
         },
         removeStudent: function(id) {
 
-            var result = this.position.user_has_invoice_position.filter(obj => {
-                if (obj.id === id) {
-                    obj.checked = false;
+            this.position.user_has_invoice_position = this.position.user_has_invoice_position.filter(obj => {
+                if (obj.user.id === id) {
+                    obj.user.checked = false;
+                    return false;
+                }
+                else
+                {
+                    return true;
                 }
             });
 
-            this.position.user_has_invoice_position = this.position.user_has_invoice_position.filter(
-                el => el.id !== id
-            );
+            console.log(this.position.user_has_invoice_position);
+
         }
     }
 };

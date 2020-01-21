@@ -361,11 +361,11 @@ export default {
             let value = parseFloat(this.amount_st);
 
             if (this.type == "overwrite") {
-                this.position.students.forEach(function(student) {
+                this.students.forEach(function(student) {
                     student.amount = value;
                 });
             } else {
-                this.position.students.forEach(function(student) {
+                this.students.forEach(function(student) {
                     student.amount += value;
                 });
             }
