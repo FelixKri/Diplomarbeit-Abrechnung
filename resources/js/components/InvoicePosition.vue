@@ -248,8 +248,6 @@
 <script>
 export default {
     created: function() {
-        console.log("Component created: InvoicePosition");
-        alert("invoicePositions.".concat(this.position.id - 1, ".belegNr"));
     },
     data: function() {
         return {
@@ -263,8 +261,6 @@ export default {
         totalAmountComputed: function() {
 
             let totalAmt = 0;
-
-            
 
             this.position.students.forEach(student => {
                 totalAmt += Number(student.amount);

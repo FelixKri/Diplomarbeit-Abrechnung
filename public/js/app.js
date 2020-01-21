@@ -2731,7 +2731,6 @@ __webpack_require__.r(__webpack_exports__);
           invoicePositionsStripped[position.id - 1].studentAmounts.push(student.amount);
         });
       });
-      alert(totalAmountRequest);
       $.ajax({
         headers: {
           "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -2748,7 +2747,6 @@ __webpack_require__.r(__webpack_exports__);
           "invoicePositions": invoicePositionsStripped
         },
         success: function success(response) {
-          alert("loda");
           console.log(response);
           alert("Erfolgreich gespeichert!");
         },
@@ -3098,10 +3096,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  created: function created() {
-    console.log("Component created: InvoicePosition");
-    alert("invoicePositions.".concat(this.position.id - 1, ".belegNr"));
-  },
+  created: function created() {},
   data: function data() {
     return {
       groups: [],

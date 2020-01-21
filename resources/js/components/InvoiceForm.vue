@@ -176,8 +176,6 @@ export default {
                 });
             });
 
-            alert(totalAmountRequest);
-
             $.ajax({
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -194,7 +192,6 @@ export default {
                     "invoicePositions": invoicePositionsStripped
                 },
                 success: function(response) {
-                    alert("loda")
                     console.log(response);
                     alert("Erfolgreich gespeichert!");
                 },
