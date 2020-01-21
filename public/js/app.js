@@ -2388,7 +2388,37 @@ __webpack_require__.r(__webpack_exports__);
       return studentsArray;
     },
     addStudents: function addStudents(studentsDom) {
-      if (this.position.user_has_invoice_position == null) this.position.user_has_invoice_position = studentsDom;else this.position.user_has_invoice_position = this.position.user_has_invoice_position.concat(studentsDom); //console.log("Added students. Students:");
+      console.log("Before addStudents: ");
+      console.log(this.position.user_has_invoice_position); //StudentsDom is pure students, so make them a viable position
+
+      var positions = [];
+      var today = new Date();
+      var year = today.getFullYear();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1;
+      var hh = today.getHours();
+      var m = today.getMinutes();
+      var s = today.getSeconds();
+      var currentDate = year + "-" + mm + "-" + dd + " " + hh + ":" + m + ":" + s;
+      var that = this;
+      studentsDom.forEach(function (student) {
+        var position = {
+          id: 0,
+          invoice_position_id: that.position.id,
+          comment: null,
+          amount: 0,
+          user: student,
+          created_at: currentDate,
+          updated_at: currentDate,
+          user_id: student.id
+        };
+        console.log("Position");
+        console.log(position);
+        positions.push(position);
+      });
+      if (this.position.user_has_invoice_position == null) this.position.user_has_invoice_position = positions;else this.position.user_has_invoice_position = this.position.user_has_invoice_position.concat(positions);
+      console.log("After addStudents: ");
+      console.log(this.position.user_has_invoice_position); //console.log("Added students. Students:");
       //console.log(this.position.students);
     },
     splitEveryone: function splitEveryone() {
