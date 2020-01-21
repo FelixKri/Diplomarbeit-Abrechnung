@@ -2,6 +2,7 @@
 <div class="container">
         <form>
             <h1>Neue Vorschreibung erstellen</h1>
+            <h1>{{totalAmountComputed}}</h1>
             <div class="form-group">
                 <label for="title">Titel: </label> 
                 <input type="text" name="title" class="form-control" id="" v-model="title">
@@ -16,6 +17,7 @@
                     <li v-for="error in errors.author" v-bind:key="error.id">{{error}}</li>
                 </ul>
             </div>
+            
             <div class="form-group">
                 <label for="date">Datum der Vorschreibung: </label> 
                 <input type="date" name="date" id="" v-model="date" class="form-control">
@@ -105,6 +107,17 @@
                 errors: {},
                 groups: [],
                 groupLength: 0
+            }
+        },
+        computed: {
+            totalAmountComputed: function(){
+                let totalAmt = 0;
+
+                this.students.forEach(function(student){
+                    totalAmt += student.amount;
+                });
+
+                return totalAmt;
             }
         },
         methods: {

@@ -24,6 +24,7 @@ class CreatePrescribingSuggestionsTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->integer('author_id');
+            $table->integer('total_amount');
             $table->timestamps();
         });
     }
