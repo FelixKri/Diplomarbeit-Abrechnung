@@ -17,8 +17,6 @@ Route::get('/', function () {
     return dd(App\FosUser::take(20)->get());
 });
 
-Route::get('/testroute', 'PDFController@dowloadTestPDF');
-
 Route::get('/prescribing/new', 'PrescribingController@create');
 Route::post('/prescribing/new', 'PrescribingController@store');
 Route::get('/prescribing/list', 'PrescribingController@show');
@@ -26,6 +24,10 @@ Route::get('/prescribing/list/getPrescribings', 'PrescribingController@getPrescr
 Route::get('/prescribing/view/{id}', 'PrescribingController@showDetail');
 Route::get('/prescribing/view/getPrescribing/{id}', 'PrescribingController@getPrescribingById');
 Route::post('/prescribing/update', 'PrescribingController@update');
+
+Route::post('/prescribing/setApproved/{id}', 'PrescribingController@setApproved');
+Route::post('/prescribing/setFinished/{id}', 'PrescribingController@setFinished');
+Route::post('/prescribing/reject/{id}', 'PrescribingController@reject');
 
 Route::get('/invoice/new', 'InvoiceController@create');
 Route::post('/invoice/new', 'InvoiceController@store');

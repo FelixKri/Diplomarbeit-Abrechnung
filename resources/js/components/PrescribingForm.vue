@@ -2,7 +2,6 @@
 <div class="container">
         <form>
             <h1>Neue Vorschreibung erstellen</h1>
-            <h1>{{totalAmountComputed}}</h1>
             <div class="form-group">
                 <label for="title">Titel: </label> 
                 <input type="text" name="title" class="form-control" id="" v-model="title">
@@ -55,6 +54,10 @@
                     <li v-for="error in errors.description" v-bind:key="error.id">{{error}}</li>
                 </ul>
             </div>
+            <div class="form-group">
+                <label for="description">Gesamtbetrag: </label> 
+                <input type="text" name="totalAmount" id="" class="form-control" v-model="totalAmountComputed" disabled> 
+            </div>
             <hr>
             
             <button class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#addUser_1'" type="button">Person(n) hinzufügen</button>
@@ -63,7 +66,8 @@
             
             <student-list-table></student-list-table>
 
-            <input type="button" value="Speichern" class="btn btn-success" @click="store">
+            <input type="button" value="Speichern" class="btn btn-primary" @click="store">
+            <input type="button" value="Freigeben" class="btn btn-success" @click="release" :disabled="id == null">
         </form>
     </div>
 </template>
@@ -96,6 +100,7 @@
         },
         data: function () {
             return {
+                id: null,
                 title: "",
                 author: "admin",
                 date: "",
@@ -114,7 +119,7 @@
                 let totalAmt = 0;
 
                 this.students.forEach(function(student){
-                    totalAmt += student.amount;
+                    totalAmt += Number(student.amount);
                 });
 
                 return totalAmt;
@@ -155,18 +160,32 @@
                         "description": that.description,
                         "students": studentIds,
                         "amount": studentAmounts,
-                        "annotation": studentAnnotations
+                        "annotation": studentAnnotations,
+                        "totalAmount": that.totalAmountComputed,
                     },
                     success: function (response) {
                         console.log(response);
                         alert("Erfolgreich gespeichert");
-                        window.location = "/";
+                        that.id = response;
+                        //window.location = "/";
+                        //disable Speicherbutton
                     },
                     error: function(xhr, status, error) {
                         var respJson = JSON.parse(xhr.responseText);
                         that.errors = respJson.errors;
                     }
                 });
+            },
+            release: function(){
+                axios
+                    .post("/prescribing/setFinished/" + this.id)
+                    .then(response => {
+                        console.log(response)
+                        alert("Erfolgreich freigegeben")
+                    })
+                    .catch(error => console.log(error));
+
+                    //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
             },
             addStudents: function(studentsDom)
             {

@@ -44,8 +44,11 @@ class PrescribingController extends Controller
 
         $presc = New PrescribingSuggestion();
         $presc->date = request()->date;
+        $presc->total_amount = request()->totalAmount;
         $presc->due_until = request()->due_until;
-        $presc->reason_id = Reason::where('title', request()->reason)->first()->id;
+        if(request()->reason){
+            $presc->reason_id = Reason::where('title', request()->reason)->first()->id;
+        }
         $presc->reason_suggestion = request()->reason_suggestion;
         $presc->title = request()->title;
         $presc->description = request()->description;
@@ -61,7 +64,7 @@ class PrescribingController extends Controller
             $user_has_presc->save();
         }
 
-        return response()->json(['success' => 'success'], 200);
+        return response()->json($presc->id, 200);
     }
 
     public function update(){
@@ -104,10 +107,36 @@ class PrescribingController extends Controller
             $user_has_presc->save();
         }
 
-        return response()->json(["success" => request()->all()], 200);
+        return response()->json($presc->id, 200);
     }
 
-    public function destroy(){
+    public function setApproved($id){
+        $p = PrescribingSuggestion::find($id);
+        $p->finished = false;
+        $p->approved = true;
+        $p->save();
+
+        return response()->json("success", 200);
+    }
+
+    public function setFinished($id){
+        $p = PrescribingSuggestion::find($id);
+        $p->finished = true;
+        $p->approved = false;
+        $p->save();
+
+        return response()->json("success", 200);
+    }
+
+    public function reject($id){
+
+    }
+
+    public function release($id){
+
+    }
+
+    public function destroy($id){
         
     }
 

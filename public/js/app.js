@@ -3115,7 +3115,7 @@ __webpack_require__.r(__webpack_exports__);
        */
       alert("Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " + this.amount_st);
       var number_of_students = 0;
-      this.data.students.forEach(function (student) {
+      this.position.students.forEach(function (student) {
         if (student.checked) {
           number_of_students++;
         }
@@ -3143,11 +3143,11 @@ __webpack_require__.r(__webpack_exports__);
       var value = parseFloat(this.amount_st);
 
       if (this.type == "overwrite") {
-        this.students.forEach(function (student) {
+        this.position.students.forEach(function (student) {
           student.amount = value;
         });
       } else {
-        this.students.forEach(function (student) {
+        this.position.students.forEach(function (student) {
           student.amount += value;
         });
       }
@@ -3162,13 +3162,13 @@ __webpack_require__.r(__webpack_exports__);
       if (this.type == "overwrite") {
         this.position.students.forEach(function (student) {
           if (student.checked) {
-            student.amount = value;
+            student.amount = Number(value);
           }
         });
       } else {
         this.position.students.forEach(function (student) {
           if (student.checked) {
-            student.amount += value;
+            student.amount += Number(value);
           }
         });
       }
@@ -3223,6 +3223,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3473,6 +3479,20 @@ __webpack_require__.r(__webpack_exports__);
     print: function print() {
       this.store();
       window.location.href = '/prescribing/download/' + this.prescribing.id; //Todo: Sende Request an PDF Generator Funktion im BackEnd
+    },
+    release: function release() {
+      axios.post("/prescribing/setApproved/" + this.id).then(function (response) {
+        return console.log(response);
+      }).catch(function (error) {
+        return console.log(error);
+      });
+    },
+    reject: function reject() {
+      axios.post("/prescribing/reject/" + this.id).then(function (response) {
+        return console.log(response);
+      }).catch(function (error) {
+        return console.log(error);
+      });
     }
   }
 });
@@ -3488,6 +3508,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
 //
 //
 //
@@ -3579,6 +3603,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      id: null,
       title: "",
       author: "admin",
       date: "",
@@ -3596,7 +3621,7 @@ __webpack_require__.r(__webpack_exports__);
     totalAmountComputed: function totalAmountComputed() {
       var totalAmt = 0;
       this.students.forEach(function (student) {
-        totalAmt += student.amount;
+        totalAmt += Number(student.amount);
       });
       return totalAmt;
     }
@@ -3633,18 +3658,28 @@ __webpack_require__.r(__webpack_exports__);
           "description": that.description,
           "students": studentIds,
           "amount": studentAmounts,
-          "annotation": studentAnnotations
+          "annotation": studentAnnotations,
+          "totalAmount": that.totalAmountComputed
         },
         success: function success(response) {
           console.log(response);
           alert("Erfolgreich gespeichert");
-          window.location = "/";
+          that.id = response; //window.location = "/";
+          //disable Speicherbutton
         },
         error: function error(xhr, status, _error) {
           var respJson = JSON.parse(xhr.responseText);
           that.errors = respJson.errors;
         }
       });
+    },
+    release: function release() {
+      axios.post("/prescribing/setFinished/" + this.id).then(function (response) {
+        console.log(response);
+        alert("Erfolgreich freigegeben");
+      }).catch(function (error) {
+        return console.log(error);
+      }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
     },
     addStudents: function addStudents(studentsDom) {
       //Todo check for duplicates
@@ -41509,15 +41544,21 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("input", {
-      staticClass: "btn btn-success",
+      staticClass: "btn btn-primary",
       attrs: { type: "button", value: "Änderungen Speichern" },
       on: { click: _vm.store }
     }),
     _vm._v(" "),
     _c("input", {
       staticClass: "btn btn-success",
-      attrs: { type: "button", value: "Änderungen Speichern und Freigeben" },
-      on: { click: _vm.store }
+      attrs: { type: "button", value: "Freigeben" },
+      on: { click: _vm.release }
+    }),
+    _vm._v(" "),
+    _c("input", {
+      staticClass: "btn btn-danger",
+      attrs: { type: "button", value: "Zurückweisen" },
+      on: { click: _vm.reject }
     }),
     _vm._v(" "),
     _c("input", {
@@ -41573,8 +41614,6 @@ var render = function() {
       "form",
       [
         _c("h1", [_vm._v("Neue Vorschreibung erstellen")]),
-        _vm._v(" "),
-        _c("h1", [_vm._v(_vm._s(_vm.totalAmountComputed))]),
         _vm._v(" "),
         _c("div", { staticClass: "form-group" }, [
           _c("label", { attrs: { for: "title" } }, [_vm._v("Titel: ")]),
@@ -41881,6 +41920,34 @@ var render = function() {
             : _vm._e()
         ]),
         _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "description" } }, [
+            _vm._v("Gesamtbetrag: ")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.totalAmountComputed,
+                expression: "totalAmountComputed"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text", name: "totalAmount", id: "", disabled: "" },
+            domProps: { value: _vm.totalAmountComputed },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.totalAmountComputed = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
         _c("hr"),
         _vm._v(" "),
         _c(
@@ -41904,9 +41971,19 @@ var render = function() {
         _c("student-list-table"),
         _vm._v(" "),
         _c("input", {
-          staticClass: "btn btn-success",
+          staticClass: "btn btn-primary",
           attrs: { type: "button", value: "Speichern" },
           on: { click: _vm.store }
+        }),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "btn btn-success",
+          attrs: {
+            type: "button",
+            value: "Freigeben",
+            disabled: _vm.id == null
+          },
+          on: { click: _vm.release }
         })
       ],
       1
@@ -41965,11 +42042,21 @@ var render = function() {
             _vm._v(" "),
             p.finished
               ? _c("td", [
-                  _vm._v("\n                Abgeschlossen\n            ")
+                  _c("span", { staticClass: "badge badge-primary" }, [
+                    _vm._v("Freigabe steht aus")
+                  ])
                 ])
               : p.approved
-              ? _c("td", [_vm._v("\n                Genehmigt\n            ")])
-              : _c("td", [_vm._v("\n                Offen\n            ")])
+              ? _c("td", [
+                  _c("span", { staticClass: "badge badge-success" }, [
+                    _vm._v("Genehmigt")
+                  ])
+                ])
+              : _c("td", [
+                  _c("span", { staticClass: "badge badge-danger" }, [
+                    _vm._v("Offen")
+                  ])
+                ])
           ]
         )
       }),
@@ -42221,7 +42308,7 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
-        attrs: { type: "number", name: "amount[]" },
+        attrs: { type: "", name: "amount[]" },
         domProps: { value: _vm.student.amount },
         on: {
           input: function($event) {

@@ -18,13 +18,13 @@
                 <td>{{p.description}}</td>
                 <td>{{p.due_until}}</td>
                 <td v-if="p.finished">
-                    Abgeschlossen
+                    <span class="badge badge-primary">Freigabe steht aus</span>
                 </td>
                 <td v-else-if="p.approved">
-                    Genehmigt
+                    <span class="badge badge-success">Genehmigt</span>
                 </td>
                 <td v-else>
-                    Offen
+                    <span class="badge badge-danger">Offen</span>
                 </td>
             </tr>
         </tbody>
@@ -51,7 +51,7 @@ export default {
         },
         redirectToPrescribing: function(id){
             window.location.href = '/prescribing/view/'+id;
-        }
+        },
     }
 };
 </script>
