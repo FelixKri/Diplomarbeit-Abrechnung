@@ -110,6 +110,12 @@
                     v-bind:key="pos.id"
                     :position="pos"
                 ></invoice-detail-position>
+                <input
+                type="button"
+                value="Änderungen speichern"
+                class="btn btn-success"
+                @click="store()"
+            />
             </div>
         </div>
     </div>
@@ -136,16 +142,33 @@ export default {
         },
         store: function() {
             var that = this;
-            var studentIds = [];
-            var studentAmounts = [];
-            var studentAnnotations = [];
-            var positionIds = [];
+            var invoicePositionsStripped = [];
+            var totalAmountRequest = 0;
 
-            this.prescribing.positions.forEach(function(position) {
-                positionIds.push(position.id);
-                studentIds.push(position.user_id);
-                studentAmounts.push(position.amount);
-                studentAnnotations.push(position.annotation);
+            this.invoicePositions.forEach(function(position) {
+                invoicePositionsStripped.push({
+                    "id": invoice.position.id,
+                    "name": invoice.position.name,
+                    "amount": invoice.position.amount,
+                    "annotation": invoice.position.annotation,
+                    "belegNr": invoice.position.document_number,
+                    "paidByTeacher": invoice.position.paidByTeacher,
+                    "iban": invoice.position.iban,
+                    "studentIDs": [],
+                    "studentAmounts": [],
+                });
+
+                totalAmountRequest += invoice.position.amount;
+
+                invoice.position.students.forEach(function(student) {
+                    invoicePositionsStripped[invoice.position.id - 1].studentIDs.push(
+                        student.id
+                    );
+
+                    invoicePositionsStripped[
+                        invoice.position.id - 1
+                    ].studentAmounts.push(student.amount);
+                });
             });
 
             $.ajax({
@@ -153,25 +176,21 @@ export default {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
                 },
                 type: "POST",
-                url: "/prescribing/update",
+                url: "/invoice/update",
                 dataType: "json",
                 data: {
-                    id: that.prescribing.id,
-                    title: that.prescribing.title,
-                    author: that.prescribing.author.username,
-                    date: that.prescribing.created_at,
-                    due_until: that.prescribing.due_until,
-                    reason_suggestion: that.prescribing.reason_suggestion,
-                    reason: that.prescribing.reason.title,
-                    description: that.prescribing.description,
-                    students: studentIds,
-                    amount: studentAmounts,
-                    annotation: studentAnnotations,
-                    positionIds: positionIds
+                    "id": that.invoice.id,
+                    "author": that.author,
+                    "date": that.date,
+                    "reason": that.reason,
+                    "annotation": that.annotation,
+                    "totalAmount": totalAmountRequest,
+                    "invoicePositions": invoicePositionsStripped
                 },
                 success: function(response) {
+                    //alert("loda")
                     console.log(response);
-                    alert("Erfolgreich gespeichert");
+                    alert("Erfolgreich gespeichert!");
                 },
                 error: function(xhr, status, error) {
                     var respJson = JSON.parse(xhr.responseText);

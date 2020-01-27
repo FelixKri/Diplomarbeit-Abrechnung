@@ -189,10 +189,6 @@ export default {
             return studentsArray;
         },
         addStudents: function(studentsDom) {
-
-            console.log("Before addStudents: ");
-            console.log(this.position.user_has_invoice_position);
-
             //StudentsDom is pure students, so make them a viable position
             var positions = [];
 
@@ -220,9 +216,6 @@ export default {
                     user_id: student.id
                     };
 
-                    console.log("Position");
-                    console.log(position);
-
                     positions.push(position);
             });
 
@@ -231,10 +224,6 @@ export default {
                 else
                     this.position.user_has_invoice_position = this.position.user_has_invoice_position.concat(positions);
 
-            console.log("After addStudents: ");
-            console.log(this.position.user_has_invoice_position);
-            //console.log("Added students. Students:");
-            //console.log(this.position.students);
         },
         splitEveryone: function() {
             /**
@@ -356,8 +345,6 @@ export default {
                     return true;
                 }
             });
-
-            console.log(this.position.user_has_invoice_position);
 
         }
     }

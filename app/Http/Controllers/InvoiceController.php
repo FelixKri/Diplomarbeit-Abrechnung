@@ -17,6 +17,92 @@ class InvoiceController extends Controller
         return view('invoice.create');
     }
 
+    public function update(){
+        $validator = Validator::make(request()->all(), [
+            'date' => 'date|required',
+            'author' => 'required|string',
+            'reason' => 'required|string',
+            'annotation' => 'string|max:255',
+            'invoicePositions' => 'required|array|min:1',
+            'invoicePositions.*.name' => "required|string",
+            'invoicePositions.*.amount' => "required|integer",
+            'invoicePositions.*.annotation' => "string",
+            'invoicePositions.*.belegNr' => "required",
+            'invoicePositions.*.iban' => "required_if:invoicePositions.*.paidByTeacher,true",
+            'invoicePositions.*.studentIDs' => "required|array|min:1",
+            'invoicePositions.*.studentIDs.*' => "integer",
+            'invoicePositions.*.studentAmounts' => "required|array|min:1",
+            'invoicePositions.*.studentAmounts.*' => "integer",
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 401);
+        }
+
+        //Update invoice
+        $invoice = Invoice::where('id', request()->id)->first();
+
+        if($invoice == null){
+            return response()->json(['errors' => "Invoice not found"], 401);
+        }
+
+        $inv->date = request()->date;
+        $inv->author_id = FosUser::where('username', request()->author)->first()->id;
+        $inv->reason = request()->reason;
+        $inv->total_amount = request()->totalAmount;
+        $inv->annotation = request()->annotation;
+        $invoice->save();
+
+        //Update all invPos
+
+        //$invPoses = InvoicePosition::where('invoice_id', $invoice->id)->get();
+
+        for ($i=0; $i < sizeof(request()->invoicePositions); $i++) { 
+            $paidByTeacher = false;
+            
+            if(request()->invoicePositions[$i]['paidByTeacher'] === "true"){
+                $paidByTeacher = true;
+            }
+
+            //Check if this invPos already exists
+            $invPos = InvoicePosition::where('invoice_id', $invoice->id)->first();
+
+            if($invPos == null)
+            {
+                //Create new
+                $invPos = new InvoicePosition;
+            }
+
+            $invPos->name = request()->invoicePositions[$i]['name'];
+            $invPos->invoice_id = $invoice->id;
+            $invPos->paid_by_teacher = $paidByTeacher;
+            $invPos->iban = request()->invoicePositions[$i]['iban'];
+            $invPos->document_number = request()->invoicePositions[$i]["belegNr"];
+            $invPos->annotation = request()->invoicePositions[$i]["annotation"];
+            $invPos->total_amount = request()->invoicePositions[$i]["amount"];
+            $invPos->save();
+            
+            for ($j=0; $j < sizeof(request()->invoicePositions[$i]["studentIDs"]); $j++){
+
+                $usr_has_inv_pos = UserHasInvoicePosition::where('invoice_position_id', $invPos->id)->where('user_id', request()->invoicePositions[$i]["studentIDs"][$j])->first();
+
+                if($usr_has_inv_pos == null)
+                {
+                    $usr_has_inv_pos = new UserHasInvoicePosition;
+                }
+
+                $usr_has_inv_pos->user_id = request()->invoicePositions[$i]["studentIDs"][$j];
+                $usr_has_inv_pos->amount = request()->invoicePositions[$i]["studentAmounts"][$j];
+                $usr_has_inv_pos->invoice_position_id = $invPos->id;
+                $usr_has_inv_pos->save();
+            }
+            
+        }
+        
+        
+        return response()->json(['success' => 'success'], 200);
+    }
+
     public function store(){
         
         $validator = Validator::make(request()->all(), [
@@ -97,10 +183,6 @@ class InvoiceController extends Controller
 
     public function showDetail($id){
         return view('invoice.detailView', compact('id'));
-    }
-
-    public function update(){
-
     }
 
     public function destroy(){

@@ -2167,6 +2167,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   mounted: function mounted() {
@@ -2190,40 +2196,46 @@ __webpack_require__.r(__webpack_exports__);
     },
     store: function store() {
       var that = this;
-      var studentIds = [];
-      var studentAmounts = [];
-      var studentAnnotations = [];
-      var positionIds = [];
-      this.prescribing.positions.forEach(function (position) {
-        positionIds.push(position.id);
-        studentIds.push(position.user_id);
-        studentAmounts.push(position.amount);
-        studentAnnotations.push(position.annotation);
+      var invoicePositionsStripped = [];
+      var totalAmountRequest = 0;
+      this.invoicePositions.forEach(function (position) {
+        invoicePositionsStripped.push({
+          "id": invoice.position.id,
+          "name": invoice.position.name,
+          "amount": invoice.position.amount,
+          "annotation": invoice.position.annotation,
+          "belegNr": invoice.position.document_number,
+          "paidByTeacher": invoice.position.paidByTeacher,
+          "iban": invoice.position.iban,
+          "studentIDs": [],
+          "studentAmounts": []
+        });
+        totalAmountRequest += invoice.position.amount;
+        invoice.position.students.forEach(function (student) {
+          invoicePositionsStripped[invoice.position.id - 1].studentIDs.push(student.id);
+          invoicePositionsStripped[invoice.position.id - 1].studentAmounts.push(student.amount);
+        });
       });
       $.ajax({
         headers: {
           "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
         },
         type: "POST",
-        url: "/prescribing/update",
+        url: "/invoice/update",
         dataType: "json",
         data: {
-          id: that.prescribing.id,
-          title: that.prescribing.title,
-          author: that.prescribing.author.username,
-          date: that.prescribing.created_at,
-          due_until: that.prescribing.due_until,
-          reason_suggestion: that.prescribing.reason_suggestion,
-          reason: that.prescribing.reason.title,
-          description: that.prescribing.description,
-          students: studentIds,
-          amount: studentAmounts,
-          annotation: studentAnnotations,
-          positionIds: positionIds
+          "id": that.invoice.id,
+          "author": that.author,
+          "date": that.date,
+          "reason": that.reason,
+          "annotation": that.annotation,
+          "totalAmount": totalAmountRequest,
+          "invoicePositions": invoicePositionsStripped
         },
         success: function success(response) {
+          //alert("loda")
           console.log(response);
-          alert("Erfolgreich gespeichert");
+          alert("Erfolgreich gespeichert!");
         },
         error: function error(xhr, status, _error) {
           var respJson = JSON.parse(xhr.responseText);
@@ -2432,9 +2444,7 @@ __webpack_require__.r(__webpack_exports__);
       return studentsArray;
     },
     addStudents: function addStudents(studentsDom) {
-      console.log("Before addStudents: ");
-      console.log(this.position.user_has_invoice_position); //StudentsDom is pure students, so make them a viable position
-
+      //StudentsDom is pure students, so make them a viable position
       var positions = [];
       var today = new Date();
       var year = today.getFullYear();
@@ -2456,14 +2466,9 @@ __webpack_require__.r(__webpack_exports__);
           updated_at: currentDate,
           user_id: student.id
         };
-        console.log("Position");
-        console.log(position);
         positions.push(position);
       });
       if (this.position.user_has_invoice_position == null) this.position.user_has_invoice_position = positions;else this.position.user_has_invoice_position = this.position.user_has_invoice_position.concat(positions);
-      console.log("After addStudents: ");
-      console.log(this.position.user_has_invoice_position); //console.log("Added students. Students:");
-      //console.log(this.position.students);
     },
     splitEveryone: function splitEveryone() {
       /**
@@ -2558,7 +2563,6 @@ __webpack_require__.r(__webpack_exports__);
           return true;
         }
       });
-      console.log(this.position.user_has_invoice_position);
     }
   }
 });
@@ -2757,7 +2761,7 @@ __webpack_require__.r(__webpack_exports__);
           "invoicePositions": invoicePositionsStripped
         },
         success: function success(response) {
-          alert("loda");
+          //alert("loda")
           console.log(response);
           alert("Erfolgreich gespeichert!");
         },
@@ -39720,13 +39724,25 @@ var render = function() {
       _c(
         "div",
         { staticClass: "tab-content", attrs: { id: "nav-tabContent" } },
-        _vm._l(_vm.invoice.positions, function(pos) {
-          return _c("invoice-detail-position", {
-            key: pos.id,
-            attrs: { position: pos }
+        [
+          _vm._l(_vm.invoice.positions, function(pos) {
+            return _c("invoice-detail-position", {
+              key: pos.id,
+              attrs: { position: pos }
+            })
+          }),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "btn btn-success",
+            attrs: { type: "button", value: "Änderungen speichern" },
+            on: {
+              click: function($event) {
+                return _vm.store()
+              }
+            }
           })
-        }),
-        1
+        ],
+        2
       )
     ])
   ])

@@ -194,7 +194,7 @@ export default {
                     "invoicePositions": invoicePositionsStripped
                 },
                 success: function(response) {
-                    alert("loda")
+                    //alert("loda")
                     console.log(response);
                     alert("Erfolgreich gespeichert!");
                 },
