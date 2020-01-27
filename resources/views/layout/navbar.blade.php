@@ -11,8 +11,8 @@
             Vorschreibungen
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Erstellen</a>
-            <a class="dropdown-item" href="#">Listansicht</a>
+            <a class="dropdown-item" href="/prescribing/new">Erstellen</a>
+            <a class="dropdown-item" href="/prescribing/list">Listansicht</a>
           </div>
         </li>
         <li class="nav-item dropdown">
@@ -20,8 +20,8 @@
               Abrechnungen
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Erstellen</a>
-              <a class="dropdown-item" href="#">Listansicht</a>
+              <a class="dropdown-item" href="/invoice/new">Erstellen</a>
+              <a class="dropdown-item" href="/invoice/list">Listansicht</a>
             </div>
           </li>
       </ul>

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 */
 
 Route::get('/', function () {
-    return dd(App\FosUser::take(20)->get());
+    return view('index');
 });
 
 Route::get('/prescribing/new', 'PrescribingController@create');
@@ -41,6 +41,7 @@ Route::get('/invoice/download/{id}', 'PDFController@downloadInvoiceById');
 Route::get('/prescribing/download/{id}', 'PDFController@downloadPrescribingById');
 
 Route::post('/getUsers','AjaxController@getUsers');  //Sollte Get request sein
+Route::get('/user/getById/{id}', 'AjaxController@getUserById');
 Route::post('/getAllGroups','AjaxController@getAllGroups'); // Method: POST Name: GETAllGroups *** Das sollte eine get request sein, man gettet ja was
 Route::get('/getReasons', 'AjaxController@getReasons');
 

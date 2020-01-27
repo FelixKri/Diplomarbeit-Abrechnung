@@ -123,6 +123,8 @@
                 </li>
             </ul>
         </div>
+        <button class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#addUser_1'" type="button">Person(n) hinzufügen</button>
+        <add-person-modal v-on:addstudents="addStudents" :id="1"></add-person-modal>
         <hr />
         <table class="table">
             <thead>
@@ -205,6 +207,9 @@ export default {
                 .get("/prescribing/view/getPrescribing/" + id)
                 .then(response => (this.prescribing = response.data))
                 .catch(error => console.log(error));
+        },
+        addStudents: function(){
+
         },
         store: function() {
             var that = this;

@@ -362,6 +362,7 @@ export default {
 
             if (this.type == "overwrite") {
                 this.position.students.forEach(function(student) {
+                    //this.$set(student, "amount", value);
                     student.amount = value;
                 });
             } else {

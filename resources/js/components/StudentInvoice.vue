@@ -8,7 +8,7 @@
     <td>{{student.first_name}}</td>
     <td>{{getGroupName(student.group_id)}}</td>
     <td>
-      <input type="" name="amount[]" class="form-control" v-model="student.amount" />
+      <input type="" name="" class="form-control" v-model="student.amount" />
     </td>
     <td @click="removeStudent();" ><i class="fas fa-user-minus" ></i></td>
   </tr>
