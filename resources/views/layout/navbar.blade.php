@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Vorschreibungs- und Abrechnungssystem</a>
+    <a class="navbar-brand" href="/">Vorschreibungs- und Abrechnungssystem</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -11,8 +11,8 @@
             Vorschreibungen
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Erstellen</a>
-            <a class="dropdown-item" href="#">Listansicht</a>
+            <a class="dropdown-item" href="/prescribing/new">Erstellen</a>
+            <a class="dropdown-item" href="/prescribing/list">Listansicht</a>
           </div>
         </li>
         <li class="nav-item dropdown">
@@ -20,8 +20,8 @@
               Abrechnungen
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Erstellen</a>
-              <a class="dropdown-item" href="#">Listansicht</a>
+              <a class="dropdown-item" href="/invoice/new">Erstellen</a>
+              <a class="dropdown-item" href="/invoice/list">Listansicht</a>
             </div>
           </li>
       </ul>

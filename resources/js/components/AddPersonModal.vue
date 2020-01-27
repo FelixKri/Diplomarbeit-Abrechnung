@@ -177,7 +177,7 @@ export default {
     },
     addStudents: function() {
       /*
-        Triggert die funktion addStudents in app.js(?)
+        Triggert die funktion addStudents in app.js
       */
       
       var eventStudents = [];
@@ -204,7 +204,7 @@ export default {
       $("#classFilter" + this.id)[0]["value"] = "";
 
       this.getStudentsList();
-      //Todo show message like "Users added" ?
+      //TODO: show message like "Users added" ?
     },
     resetFilter: function() {
       $("#nameFilter" + this.id)[0]["value"] = "";

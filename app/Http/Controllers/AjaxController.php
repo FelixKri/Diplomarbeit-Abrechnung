@@ -22,6 +22,16 @@ class AjaxController extends Controller
 		return Group::All()->sortByDesc('id');
 	}
 
+	public function getUserById($id){
+		$u = FosUser::find($id);
+
+		$u["amount"] = 0;
+		$u["annotation"] = "";
+		$u["checked"] = null;
+
+		return response()->json($u, 200);
+	}
+
     public function getUsers()
     {
         //Only show first 50 to not cause lag, more at once would be unwise

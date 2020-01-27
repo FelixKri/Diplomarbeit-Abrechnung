@@ -248,8 +248,6 @@
 <script>
 export default {
     created: function() {
-        console.log("Component created: InvoicePosition");
-        alert("invoicePositions.".concat(this.position.id - 1, ".belegNr"));
     },
     data: function() {
         return {
@@ -263,8 +261,6 @@ export default {
         totalAmountComputed: function() {
 
             let totalAmt = 0;
-
-            
 
             this.position.students.forEach(student => {
                 totalAmt += Number(student.amount);
@@ -330,7 +326,7 @@ export default {
             );
 
             let number_of_students = 0;
-            this.data.students.forEach(function(student) {
+            this.position.students.forEach(function(student) {
                 if (student.checked) {
                     number_of_students++;
                 }
@@ -365,11 +361,12 @@ export default {
             let value = parseFloat(this.amount_st);
 
             if (this.type == "overwrite") {
-                this.students.forEach(function(student) {
+                this.position.students.forEach(function(student) {
+                    //this.$set(student, "amount", value);
                     student.amount = value;
                 });
             } else {
-                this.students.forEach(function(student) {
+                this.position.students.forEach(function(student) {
                     student.amount += value;
                 });
             }
@@ -388,13 +385,13 @@ export default {
             if (this.type == "overwrite") {
                 this.position.students.forEach(function(student) {
                     if (student.checked) {
-                        student.amount = value;
+                        student.amount = Number(value);
                     }
                 });
             } else {
                 this.position.students.forEach(function(student) {
                     if (student.checked) {
-                        student.amount += value;
+                        student.amount += Number(value);
                     }
                 });
             }

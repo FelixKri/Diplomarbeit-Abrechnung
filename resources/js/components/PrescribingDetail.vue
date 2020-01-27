@@ -123,6 +123,8 @@
                 </li>
             </ul>
         </div>
+        <button class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#addUser_1'" type="button">Person(n) hinzufügen</button>
+        <add-person-modal v-on:addstudents="addStudents" :id="1"></add-person-modal>
         <hr />
         <table class="table">
             <thead>
@@ -163,14 +165,20 @@
         <input
             type="button"
             value="Änderungen Speichern"
-            class="btn btn-success"
+            class="btn btn-primary"
             @click="store"
         />
         <input
             type="button"
-            value="Änderungen Speichern und Freigeben"
+            value="Freigeben"
             class="btn btn-success"
-            @click="store"
+            @click="release"
+        />
+        <input
+            type="button"
+            value="Zurückweisen"
+            class="btn btn-danger"
+            @click="reject"
         />
         <input
             type="button"
@@ -199,6 +207,9 @@ export default {
                 .get("/prescribing/view/getPrescribing/" + id)
                 .then(response => (this.prescribing = response.data))
                 .catch(error => console.log(error));
+        },
+        addStudents: function(){
+
         },
         store: function() {
             var that = this;
@@ -250,6 +261,18 @@ export default {
 
             window.location.href = '/prescribing/download/'+this.prescribing.id;
             //Todo: Sende Request an PDF Generator Funktion im BackEnd
+        },
+        release: function(){
+            axios
+                .post("/prescribing/setApproved/" + this.id)
+                .then(response => console.log(response))
+                .catch(error => console.log(error));
+        },
+        reject: function(){
+            axios
+                .post("/prescribing/reject/" + this.id)
+                .then(response => console.log(response))
+                .catch(error => console.log(error));
         }
     }
 };

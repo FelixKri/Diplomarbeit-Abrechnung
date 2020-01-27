@@ -8,7 +8,7 @@ use App\UserHasPrescribingSuggestion;
 
 class PrescribingSuggestion extends Model
 {
-    protected $fillable = ['date', 'due_until', 'reason_id', 'reason_suggestion', 'finished', 'approved', 'title', 'description', 'author_id'];
+    protected $fillable = ['date', 'due_until', 'reason_id', 'reason_suggestion', 'finished', 'approved', 'title', 'description', 'author_id', 'total_amount'];
 
     public function author(){
         return $this->belongsTo(FosUser::class, 'author_id', 'id');

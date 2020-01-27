@@ -39,22 +39,31 @@ export default {
     props: ["id"],
     data: function() {
         return {
-            prescribings: []
+            prescribings: null,
         };
     },
     methods: {
         copyStudentsToInvoicePosition: function(positions){
 
             var students = [];
+            /*
+            for (let index = 0; index < positions.length; index++) {
+                axios
+                    .get("/user/getById/" + positions[index].user_id)
+                    .then(response =>(students.push(response.data)))
+                    .catch(error => console.log(error));
+            }
+            */
             positions.forEach(pos => {
                 students.push(pos.user);
             });
 
             students.forEach(st => {
-                st.amount = 0;
-                st.checked = false;
+                st.amount = null;
+                st.checked = null;
             });
 
+            console.log("AddStudentsFromPrescribing");
             console.log(students);
             this.$emit("addstudents", students);
         }

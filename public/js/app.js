@@ -1806,19 +1806,29 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id"],
   data: function data() {
     return {
-      prescribings: []
+      prescribings: null
     };
   },
   methods: {
     copyStudentsToInvoicePosition: function copyStudentsToInvoicePosition(positions) {
       var students = [];
+      /*
+      for (let index = 0; index < positions.length; index++) {
+          axios
+              .get("/user/getById/" + positions[index].user_id)
+              .then(response =>(students.push(response.data)))
+              .catch(error => console.log(error));
+      }
+      */
+
       positions.forEach(function (pos) {
         students.push(pos.user);
       });
       students.forEach(function (st) {
-        st.amount = 0;
-        st.checked = false;
+        st.amount = null;
+        st.checked = null;
       });
+      console.log("AddStudentsFromPrescribing");
       console.log(students);
       this.$emit("addstudents", students);
     }
@@ -1996,7 +2006,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     addStudents: function addStudents() {
       /*
-        Triggert die funktion addStudents in app.js(?)
+        Triggert die funktion addStudents in app.js
       */
       var eventStudents = [];
 
@@ -2015,7 +2025,7 @@ __webpack_require__.r(__webpack_exports__);
 
       $("#nameFilter" + this.id)[0]["value"] = "";
       $("#classFilter" + this.id)[0]["value"] = "";
-      this.getStudentsList(); //Todo show message like "Users added" ?
+      this.getStudentsList(); //TODO: show message like "Users added" ?
     },
     resetFilter: function resetFilter() {
       $("#nameFilter" + this.id)[0]["value"] = "";
@@ -2744,7 +2754,6 @@ __webpack_require__.r(__webpack_exports__);
           invoicePositionsStripped[position.id - 1].studentAmounts.push(student.amount);
         });
       });
-      alert(totalAmountRequest);
       $.ajax({
         headers: {
           "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -2761,7 +2770,6 @@ __webpack_require__.r(__webpack_exports__);
           "invoicePositions": invoicePositionsStripped
         },
         success: function success(response) {
-          //alert("loda")
           console.log(response);
           alert("Erfolgreich gespeichert!");
         },
@@ -3111,10 +3119,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  created: function created() {
-    console.log("Component created: InvoicePosition");
-    alert("invoicePositions.".concat(this.position.id - 1, ".belegNr"));
-  },
+  created: function created() {},
   data: function data() {
     return {
       groups: [],
@@ -3168,7 +3173,7 @@ __webpack_require__.r(__webpack_exports__);
        */
       alert("Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " + this.amount_st);
       var number_of_students = 0;
-      this.data.students.forEach(function (student) {
+      this.position.students.forEach(function (student) {
         if (student.checked) {
           number_of_students++;
         }
@@ -3196,11 +3201,12 @@ __webpack_require__.r(__webpack_exports__);
       var value = parseFloat(this.amount_st);
 
       if (this.type == "overwrite") {
-        this.students.forEach(function (student) {
+        this.position.students.forEach(function (student) {
+          //this.$set(student, "amount", value);
           student.amount = value;
         });
       } else {
-        this.students.forEach(function (student) {
+        this.position.students.forEach(function (student) {
           student.amount += value;
         });
       }
@@ -3215,13 +3221,13 @@ __webpack_require__.r(__webpack_exports__);
       if (this.type == "overwrite") {
         this.position.students.forEach(function (student) {
           if (student.checked) {
-            student.amount = value;
+            student.amount = Number(value);
           }
         });
       } else {
         this.position.students.forEach(function (student) {
           if (student.checked) {
-            student.amount += value;
+            student.amount += Number(value);
           }
         });
       }
@@ -3459,6 +3465,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   mounted: function mounted() {
@@ -3480,6 +3494,7 @@ __webpack_require__.r(__webpack_exports__);
         return console.log(error);
       });
     },
+    addStudents: function addStudents() {},
     store: function store() {
       var that = this;
       var studentIds = [];
@@ -3526,6 +3541,20 @@ __webpack_require__.r(__webpack_exports__);
     print: function print() {
       this.store();
       window.location.href = '/prescribing/download/' + this.prescribing.id; //Todo: Sende Request an PDF Generator Funktion im BackEnd
+    },
+    release: function release() {
+      axios.post("/prescribing/setApproved/" + this.id).then(function (response) {
+        return console.log(response);
+      }).catch(function (error) {
+        return console.log(error);
+      });
+    },
+    reject: function reject() {
+      axios.post("/prescribing/reject/" + this.id).then(function (response) {
+        return console.log(response);
+      }).catch(function (error) {
+        return console.log(error);
+      });
     }
   }
 });
@@ -3541,6 +3570,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3630,6 +3665,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      id: null,
       title: "",
       author: "admin",
       date: "",
@@ -3642,6 +3678,15 @@ __webpack_require__.r(__webpack_exports__);
       groups: [],
       groupLength: 0
     };
+  },
+  computed: {
+    totalAmountComputed: function totalAmountComputed() {
+      var totalAmt = 0;
+      this.students.forEach(function (student) {
+        totalAmt += Number(student.amount);
+      });
+      return totalAmt;
+    }
   },
   methods: {
     getStudents: function getStudents() {
@@ -3675,18 +3720,28 @@ __webpack_require__.r(__webpack_exports__);
           "description": that.description,
           "students": studentIds,
           "amount": studentAmounts,
-          "annotation": studentAnnotations
+          "annotation": studentAnnotations,
+          "totalAmount": that.totalAmountComputed
         },
         success: function success(response) {
           console.log(response);
           alert("Erfolgreich gespeichert");
-          window.location = "/";
+          that.id = response; //window.location = "/";
+          //disable Speicherbutton
         },
         error: function error(xhr, status, _error) {
           var respJson = JSON.parse(xhr.responseText);
           that.errors = respJson.errors;
         }
       });
+    },
+    release: function release() {
+      axios.post("/prescribing/setFinished/" + this.id).then(function (response) {
+        console.log(response);
+        alert("Erfolgreich freigegeben");
+      }).catch(function (error) {
+        return console.log(error);
+      }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
     },
     addStudents: function addStudents(studentsDom) {
       //Todo check for duplicates
@@ -41017,362 +41072,407 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("h1", [_vm._v("Vorschreibungs Ansicht:")]),
-    _vm._v(" "),
-    _c("p", [
-      _vm._v("\n        Ursprünglicher Autor:\n        "),
-      _c("span", { staticStyle: { "font-weight": "bold" } }, [
-        _vm._v(_vm._s(_vm.prescribing.author.username))
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "title" } }, [_vm._v("Titel: ")]),
+  return _c(
+    "div",
+    { staticClass: "container" },
+    [
+      _c("h1", [_vm._v("Vorschreibungs Ansicht:")]),
       _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.prescribing.title,
-            expression: "prescribing.title"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { type: "text", name: "title", id: "" },
-        domProps: { value: _vm.prescribing.title },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.prescribing, "title", $event.target.value)
-          }
-        }
-      }),
-      _vm._v(" "),
-      _vm.errors.title
-        ? _c(
-            "ul",
-            {
-              staticClass: "alert alert-danger",
-              staticStyle: { margin: "1em 0" }
-            },
-            _vm._l(_vm.errors.title, function(error) {
-              return _c("li", { key: error.id }, [
-                _vm._v("\n                " + _vm._s(error) + "\n            ")
-              ])
-            }),
-            0
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "date" } }, [
-        _vm._v("Datum der Vorschreibung: ")
+      _c("p", [
+        _vm._v("\n        Ursprünglicher Autor:\n        "),
+        _c("span", { staticStyle: { "font-weight": "bold" } }, [
+          _vm._v(_vm._s(_vm.prescribing.author.username))
+        ])
       ]),
       _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.prescribing.created_at,
-            expression: "prescribing.created_at"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { type: "text", name: "date", id: "" },
-        domProps: { value: _vm.prescribing.created_at },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.prescribing, "created_at", $event.target.value)
-          }
-        }
-      }),
-      _vm._v(" "),
-      _vm.errors.date
-        ? _c(
-            "ul",
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "title" } }, [_vm._v("Titel: ")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
             {
-              staticClass: "alert alert-danger",
-              staticStyle: { margin: "1em 0" }
-            },
-            _vm._l(_vm.errors.date, function(error) {
-              return _c("li", { key: error.id }, [
-                _vm._v("\n                " + _vm._s(error) + "\n            ")
-              ])
-            }),
-            0
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "due_until" } }, [
-        _vm._v("Spätestens gewünschtes Einzahlungsdatum:\n        ")
+              name: "model",
+              rawName: "v-model",
+              value: _vm.prescribing.title,
+              expression: "prescribing.title"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "text", name: "title", id: "" },
+          domProps: { value: _vm.prescribing.title },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.prescribing, "title", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.errors.title
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.title, function(error) {
+                return _c("li", { key: error.id }, [
+                  _vm._v(
+                    "\n                " + _vm._s(error) + "\n            "
+                  )
+                ])
+              }),
+              0
+            )
+          : _vm._e()
       ]),
       _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.prescribing.due_until,
-            expression: "prescribing.due_until"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { type: "", name: "due_until" },
-        domProps: { value: _vm.prescribing.due_until },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.prescribing, "due_until", $event.target.value)
-          }
-        }
-      }),
-      _vm._v(" "),
-      _vm.errors.due_until
-        ? _c(
-            "ul",
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "date" } }, [
+          _vm._v("Datum der Vorschreibung: ")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
             {
-              staticClass: "alert alert-danger",
-              staticStyle: { margin: "1em 0" }
-            },
-            _vm._l(_vm.errors.due_until, function(error) {
-              return _c("li", { key: error.id }, [
-                _vm._v("\n                " + _vm._s(error) + "\n            ")
-              ])
-            }),
-            0
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "reason_suggestion" } }, [
-        _vm._v("Grundvorschlag: ")
+              name: "model",
+              rawName: "v-model",
+              value: _vm.prescribing.created_at,
+              expression: "prescribing.created_at"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "text", name: "date", id: "" },
+          domProps: { value: _vm.prescribing.created_at },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.prescribing, "created_at", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.errors.date
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.date, function(error) {
+                return _c("li", { key: error.id }, [
+                  _vm._v(
+                    "\n                " + _vm._s(error) + "\n            "
+                  )
+                ])
+              }),
+              0
+            )
+          : _vm._e()
       ]),
       _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.prescribing.reason_suggestion,
-            expression: "prescribing.reason_suggestion"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { type: "text", name: "reason_suggestion" },
-        domProps: { value: _vm.prescribing.reason_suggestion },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.prescribing, "reason_suggestion", $event.target.value)
-          }
-        }
-      }),
-      _vm._v(" "),
-      _vm.errors.reason_suggestion
-        ? _c(
-            "ul",
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "due_until" } }, [
+          _vm._v("Spätestens gewünschtes Einzahlungsdatum:\n        ")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
             {
-              staticClass: "alert alert-danger",
-              staticStyle: { margin: "1em 0" }
-            },
-            _vm._l(_vm.errors.reason_suggestion, function(error) {
-              return _c("li", { key: error.id }, [
-                _vm._v("\n                " + _vm._s(error) + "\n            ")
-              ])
-            }),
-            0
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "reason" } }, [_vm._v("Grund")]),
-      _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.prescribing.reason.title,
-            expression: "prescribing.reason.title"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { disabled: "", type: "text" },
-        domProps: { value: _vm.prescribing.reason.title },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
+              name: "model",
+              rawName: "v-model",
+              value: _vm.prescribing.due_until,
+              expression: "prescribing.due_until"
             }
-            _vm.$set(_vm.prescribing.reason, "title", $event.target.value)
+          ],
+          staticClass: "form-control",
+          attrs: { type: "", name: "due_until" },
+          domProps: { value: _vm.prescribing.due_until },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.prescribing, "due_until", $event.target.value)
+            }
           }
-        }
-      }),
-      _vm._v(" "),
-      _vm.errors.reason
-        ? _c(
-            "ul",
-            {
-              staticClass: "alert alert-danger",
-              staticStyle: { margin: "1em 0" }
-            },
-            _vm._l(_vm.errors.reason, function(error) {
-              return _c("li", { key: error.id }, [
-                _vm._v("\n                " + _vm._s(error) + "\n            ")
-              ])
-            }),
-            0
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "description" } }, [
-        _vm._v("Beschreibung: ")
+        }),
+        _vm._v(" "),
+        _vm.errors.due_until
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.due_until, function(error) {
+                return _c("li", { key: error.id }, [
+                  _vm._v(
+                    "\n                " + _vm._s(error) + "\n            "
+                  )
+                ])
+              }),
+              0
+            )
+          : _vm._e()
       ]),
       _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.prescribing.description,
-            expression: "prescribing.description"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { type: "text", name: "description", id: "" },
-        domProps: { value: _vm.prescribing.description },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.prescribing, "description", $event.target.value)
-          }
-        }
-      }),
-      _vm._v(" "),
-      _vm.errors.description
-        ? _c(
-            "ul",
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "reason_suggestion" } }, [
+          _vm._v("Grundvorschlag: ")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
             {
-              staticClass: "alert alert-danger",
-              staticStyle: { margin: "1em 0" }
-            },
-            _vm._l(_vm.errors.description, function(error) {
-              return _c("li", { key: error.id }, [
-                _vm._v("\n                " + _vm._s(error) + "\n            ")
-              ])
-            }),
-            0
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("hr"),
-    _vm._v(" "),
-    _c("table", { staticClass: "table" }, [
-      _vm._m(0),
+              name: "model",
+              rawName: "v-model",
+              value: _vm.prescribing.reason_suggestion,
+              expression: "prescribing.reason_suggestion"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "text", name: "reason_suggestion" },
+          domProps: { value: _vm.prescribing.reason_suggestion },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(
+                _vm.prescribing,
+                "reason_suggestion",
+                $event.target.value
+              )
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.errors.reason_suggestion
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.reason_suggestion, function(error) {
+                return _c("li", { key: error.id }, [
+                  _vm._v(
+                    "\n                " + _vm._s(error) + "\n            "
+                  )
+                ])
+              }),
+              0
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "reason" } }, [_vm._v("Grund")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.prescribing.reason.title,
+              expression: "prescribing.reason.title"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { disabled: "", type: "text" },
+          domProps: { value: _vm.prescribing.reason.title },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.prescribing.reason, "title", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.errors.reason
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.reason, function(error) {
+                return _c("li", { key: error.id }, [
+                  _vm._v(
+                    "\n                " + _vm._s(error) + "\n            "
+                  )
+                ])
+              }),
+              0
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "description" } }, [
+          _vm._v("Beschreibung: ")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.prescribing.description,
+              expression: "prescribing.description"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "text", name: "description", id: "" },
+          domProps: { value: _vm.prescribing.description },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.prescribing, "description", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.errors.description
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.description, function(error) {
+                return _c("li", { key: error.id }, [
+                  _vm._v(
+                    "\n                " + _vm._s(error) + "\n            "
+                  )
+                ])
+              }),
+              0
+            )
+          : _vm._e()
+      ]),
       _vm._v(" "),
       _c(
-        "tbody",
-        _vm._l(_vm.prescribing.positions, function(position) {
-          return _c("tr", { key: position.id }, [
-            _c("td", [_vm._v(_vm._s(position.user.last_name))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(position.user.first_name))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(position.user.group.name))]),
-            _vm._v(" "),
-            _c("td", [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: position.amount,
-                    expression: "position.amount"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { type: "number" },
-                domProps: { value: position.amount },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+        "button",
+        {
+          staticClass: "btn btn-primary btn-sm",
+          attrs: {
+            "data-toggle": "modal",
+            "data-target": "#addUser_1",
+            type: "button"
+          }
+        },
+        [_vm._v("Person(n) hinzufügen")]
+      ),
+      _vm._v(" "),
+      _c("add-person-modal", {
+        attrs: { id: 1 },
+        on: { addstudents: _vm.addStudents }
+      }),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("table", { staticClass: "table" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.prescribing.positions, function(position) {
+            return _c("tr", { key: position.id }, [
+              _c("td", [_vm._v(_vm._s(position.user.last_name))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(position.user.first_name))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(position.user.group.name))]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: position.amount,
+                      expression: "position.amount"
                     }
-                    _vm.$set(position, "amount", $event.target.value)
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("td", [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: position.annotation,
-                    expression: "position.annotation"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { type: "text", placeholder: "Optionale Anmerkung" },
-                domProps: { value: position.annotation },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "number" },
+                  domProps: { value: position.amount },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(position, "amount", $event.target.value)
                     }
-                    _vm.$set(position, "annotation", $event.target.value)
                   }
-                }
-              })
+                })
+              ]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: position.annotation,
+                      expression: "position.annotation"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", placeholder: "Optionale Anmerkung" },
+                  domProps: { value: position.annotation },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(position, "annotation", $event.target.value)
+                    }
+                  }
+                })
+              ])
             ])
-          ])
-        }),
-        0
-      )
-    ]),
-    _vm._v(" "),
-    _c("input", {
-      staticClass: "btn btn-success",
-      attrs: { type: "button", value: "Änderungen Speichern" },
-      on: { click: _vm.store }
-    }),
-    _vm._v(" "),
-    _c("input", {
-      staticClass: "btn btn-success",
-      attrs: { type: "button", value: "Änderungen Speichern und Freigeben" },
-      on: { click: _vm.store }
-    }),
-    _vm._v(" "),
-    _c("input", {
-      staticClass: "btn btn-primary",
-      attrs: { type: "button", value: "Drucken" },
-      on: { click: _vm.print }
-    })
-  ])
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "btn btn-primary",
+        attrs: { type: "button", value: "Änderungen Speichern" },
+        on: { click: _vm.store }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "btn btn-success",
+        attrs: { type: "button", value: "Freigeben" },
+        on: { click: _vm.release }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "btn btn-danger",
+        attrs: { type: "button", value: "Zurückweisen" },
+        on: { click: _vm.reject }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "btn btn-primary",
+        attrs: { type: "button", value: "Drucken" },
+        on: { click: _vm.print }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -41726,6 +41826,34 @@ var render = function() {
             : _vm._e()
         ]),
         _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "description" } }, [
+            _vm._v("Gesamtbetrag: ")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.totalAmountComputed,
+                expression: "totalAmountComputed"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text", name: "totalAmount", id: "", disabled: "" },
+            domProps: { value: _vm.totalAmountComputed },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.totalAmountComputed = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
         _c("hr"),
         _vm._v(" "),
         _c(
@@ -41749,9 +41877,19 @@ var render = function() {
         _c("student-list-table"),
         _vm._v(" "),
         _c("input", {
-          staticClass: "btn btn-success",
+          staticClass: "btn btn-primary",
           attrs: { type: "button", value: "Speichern" },
           on: { click: _vm.store }
+        }),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "btn btn-success",
+          attrs: {
+            type: "button",
+            value: "Freigeben",
+            disabled: _vm.id == null
+          },
+          on: { click: _vm.release }
         })
       ],
       1
@@ -41810,11 +41948,21 @@ var render = function() {
             _vm._v(" "),
             p.finished
               ? _c("td", [
-                  _vm._v("\n                Abgeschlossen\n            ")
+                  _c("span", { staticClass: "badge badge-primary" }, [
+                    _vm._v("Freigabe steht aus")
+                  ])
                 ])
               : p.approved
-              ? _c("td", [_vm._v("\n                Genehmigt\n            ")])
-              : _c("td", [_vm._v("\n                Offen\n            ")])
+              ? _c("td", [
+                  _c("span", { staticClass: "badge badge-success" }, [
+                    _vm._v("Genehmigt")
+                  ])
+                ])
+              : _c("td", [
+                  _c("span", { staticClass: "badge badge-danger" }, [
+                    _vm._v("Offen")
+                  ])
+                ])
           ]
         )
       }),
@@ -42066,7 +42214,7 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
-        attrs: { type: "number", name: "amount[]" },
+        attrs: { type: "", name: "" },
         domProps: { value: _vm.student.amount },
         on: {
           input: function($event) {
