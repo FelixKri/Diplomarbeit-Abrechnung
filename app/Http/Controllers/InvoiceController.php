@@ -56,11 +56,11 @@ class InvoiceController extends Controller
             return response()->json(['errors' => "Invoice not found"], 401);
         }
 
-        $inv->date = request()->date;
-        $inv->author_id = FosUser::where('username', request()->author)->first()->id;
-        $inv->reason = request()->reason;
-        $inv->total_amount = request()->totalAmount;
-        $inv->annotation = request()->annotation;
+        $invoice->date = request()->date;
+        $invoice->author_id = FosUser::where('username', request()->author)->first()->id;
+        $invoice->reason = request()->reason;
+        $invoice->total_amount = request()->totalAmount;
+        $invoice->annotation = request()->annotation;
         $invoice->save();
 
         //Update all invPos
