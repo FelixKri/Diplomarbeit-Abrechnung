@@ -27,7 +27,7 @@ class AjaxController extends Controller
 
 		$u["amount"] = 0;
 		$u["annotation"] = "";
-		$u["checked"] = null;
+		$u["checked"] = false;
 
 		return response()->json($u, 200);
 	}

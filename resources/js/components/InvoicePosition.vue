@@ -44,7 +44,7 @@
                         class="alert alert-danger"
                         style="margin: 1em 0;"
                     >
-                        <li
+                        <span
                             v-for="error in errors[
                                 'invoicePositions.'.concat(
                                     this.position.id - 1,
@@ -54,7 +54,8 @@
                             v-bind:key="error.id"
                         >
                             {{ error }}
-                        </li>
+                            <br>
+                        </span>
                     </ul>
                 </div>
                 <div class="form-group">
@@ -77,7 +78,7 @@
                         class="alert alert-danger"
                         style="margin: 1em 0;"
                     >
-                        <li
+                        <span
                             v-for="error in errors[
                                 'invoicePositions.'.concat(
                                     this.position.id - 1,
@@ -87,7 +88,8 @@
                             v-bind:key="error.id"
                         >
                             {{ error }}
-                        </li>
+                            <br>
+                        </span>
                     </ul>
                 </div>
             </div>
@@ -112,7 +114,7 @@
                         class="alert alert-danger"
                         style="margin: 1em 0;"
                     >
-                        <li
+                        <span
                             v-for="error in errors[
                                 'invoicePositions.'.concat(
                                     this.position.id - 1,
@@ -122,7 +124,8 @@
                             v-bind:key="error.id"
                         >
                             {{ error }}
-                        </li>
+                            <br>
+                        </span>
                     </ul>
                 </div>
             </div>
@@ -277,6 +280,9 @@ export default {
             return this.position.students;
         },
         addStudents: function(studentsDom) {
+
+            console.log(studentsDom);
+
             if (this.position.students == null)
                 this.position.students = studentsDom;
             else

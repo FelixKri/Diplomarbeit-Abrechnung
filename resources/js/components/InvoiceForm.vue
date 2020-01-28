@@ -13,7 +13,7 @@
                     v-model="reason"
                 />
                 <ul v-if="errors.reason" class="alert alert-danger" style="margin: 1em 0;">
-                    <li v-for="error in errors.reason" v-bind:key="error.id">{{error}}</li>
+                    <span v-for="error in errors.reason" v-bind:key="error.id">{{error}}<br></span>
                 </ul>
             </div>
             <div class="form-group">
@@ -27,7 +27,7 @@
                     v-model="date"
                 />
                 <ul v-if="errors.date" class="alert alert-danger" style="margin: 1em 0;">
-                    <li v-for="error in errors.date" v-bind:key="error.id">{{error}}</li>
+                    <span v-for="error in errors.date" v-bind:key="error.id">{{error}}<br></span>
                 </ul>
             </div>
             <div class="form-group">
@@ -50,7 +50,7 @@
                     v-model="annotation"
                 ></textarea>
                 <ul v-if="errors.annotation" class="alert alert-danger" style="margin: 1em 0;">
-                    <li v-for="error in errors.annotation" v-bind:key="error.id">{{error}}</li>
+                    <span v-for="error in errors.annotation" v-bind:key="error.id">{{error}}<br></span>
                 </ul>
             </div>
 

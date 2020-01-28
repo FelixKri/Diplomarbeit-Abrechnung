@@ -1768,24 +1768,40 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     copyStudentsToInvoicePosition: function copyStudentsToInvoicePosition(positions) {
       var students = [];
-      /*
-      for (let index = 0; index < positions.length; index++) {
-          axios
-              .get("/user/getById/" + positions[index].user_id)
-              .then(response =>(students.push(response.data)))
-              .catch(error => console.log(error));
+
+      for (var index = 0; index < positions.length; index++) {
+        axios.get("/user/getById/" + positions[index].user_id).then(function (response) {
+          return students.push(response.data);
+        }).catch(function (error) {
+          return console.log(error);
+        });
       }
-      */
 
       positions.forEach(function (pos) {
         students.push(pos.user);
       });
       students.forEach(function (st) {
-        st.amount = null;
-        st.checked = null;
+        st.amount = 0;
+        st.checked = false;
       });
-      console.log("AddStudentsFromPrescribing");
-      console.log(students);
+      /*
+      positions.forEach(pos => {
+          $.ajax({
+              headers: {
+                  "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+              },
+              type: "get",
+              url: "/user/getById/" + pos.user_id,
+              dataType: "json",
+              data: {
+              },
+               success: function(response) {
+                  students.push(response);
+              }
+          });
+      });
+      */
+
       this.$emit("addstudents", students);
     }
   }
@@ -1858,6 +1874,48 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log("Component mounted: AddPersonModal");
@@ -1871,8 +1929,7 @@ __webpack_require__.r(__webpack_exports__);
       dataType: "json",
       data: {},
       success: function success(response) {
-        that.$parent.groups = response; //console.log(that.$parent.groups);
-
+        that.$parent.groups = response;
         var count = 0;
 
         for (var thing in that.$parent.groups) {
@@ -1887,10 +1944,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       studentsLoaded: [],
       studentsLoadedLength: 0,
-      students: [] //studentsLoaded: this.$parent.studentsLoaded,
-      //studentsDom: this.$parent.studentsDom,
-      //studentsLoadedLength: this.$parent.studentsLoadedLength
-
+      students: []
     };
   },
   props: ["id"],
@@ -1898,8 +1952,7 @@ __webpack_require__.r(__webpack_exports__);
     getGroupName: function getGroupName(groupId) {
       for (var i = 0; i < this.$parent.groupLength; i++) {
         if (this.$parent.groups[i]["id"] == groupId) return this.$parent.groups[i]["name"];
-      } //Should not get here, pretty much an error
-
+      }
 
       return "Unbekannt";
     },
@@ -1925,7 +1978,7 @@ __webpack_require__.r(__webpack_exports__);
           }
 
           that.studentsLoadedLength = count;
-          var studentsAlreadyIn = []; //console.log("Students loaded length: " + that.studentsLoadedLength);
+          var studentsAlreadyIn = [];
 
           for (var j = 0; j < that.studentsLoadedLength; j++) {
             var thing = that.studentsLoaded[j];
@@ -1968,20 +2021,18 @@ __webpack_require__.r(__webpack_exports__);
 
       for (var i = 0; i < this.studentsLoadedLength; i++) {
         var student = this.studentsLoaded[i];
-        var cb = $("#" + student["id"] + 'i' + this.id);
+        var cb = $("#" + student["id"] + "i" + this.id);
 
         if (cb[0].checked && !cb[0].disabled) {
           eventStudents.push(student);
         }
       }
 
-      console.log("Emitting addstudents event");
-      console.log(eventStudents);
-      this.$emit("addstudents", eventStudents); //Reset filters and clear everything else
+      this.$emit("addstudents", eventStudents); //Reset filters
 
       $("#nameFilter" + this.id)[0]["value"] = "";
       $("#classFilter" + this.id)[0]["value"] = "";
-      this.getStudentsList(); //TODO: show message like "Users added" ?
+      this.getStudentsList();
     },
     resetFilter: function resetFilter() {
       $("#nameFilter" + this.id)[0]["value"] = "";
@@ -1989,14 +2040,12 @@ __webpack_require__.r(__webpack_exports__);
       this.getStudentsList();
     },
     selectAll: function selectAll() {
-      //DON'T USE FOREACH IT DOESNT WORK
       for (var i = 0; i < this.studentsLoadedLength; i++) {
         var student = this.studentsLoaded[i];
         $("#" + student.id + "i" + this.id)[0].checked = true;
       }
     },
     selectNone: function selectNone() {
-      //DON'T USE FOREACH IT DOESNT WORK
       for (var i = 0; i < this.studentsLoadedLength; i++) {
         var student = this.studentsLoaded[i];
         $("#" + student.id + "i" + this.id)[0].checked = false;
@@ -3070,6 +3119,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {},
   data: function data() {
@@ -3096,6 +3148,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.position.students;
     },
     addStudents: function addStudents(studentsDom) {
+      console.log(studentsDom);
       if (this.position.students == null) this.position.students = studentsDom;else this.position.students = this.position.students.concat(studentsDom); //console.log("Added students. Students:");
       //console.log(this.position.students);
     },
@@ -39586,7 +39639,11 @@ var render = function() {
                         attrs: { type: "button" },
                         on: { click: _vm.resetFilter }
                       },
-                      [_vm._v("Filter löschen")]
+                      [
+                        _vm._v(
+                          "\n                                Filter löschen\n                            "
+                        )
+                      ]
                     )
                   ])
                 ])
@@ -39600,7 +39657,7 @@ var render = function() {
                   staticClass: "btn btn-default",
                   attrs: { type: "button", "data-dismiss": "modal" }
                 },
-                [_vm._v("Schließen")]
+                [_vm._v("\n                    Schließen\n                ")]
               ),
               _vm._v(" "),
               _c(
@@ -39610,7 +39667,7 @@ var render = function() {
                   attrs: { type: "button", "data-dismiss": "modal" },
                   on: { click: _vm.addStudents }
                 },
-                [_vm._v("Hinzufügen")]
+                [_vm._v("\n                    Hinzufügen\n                ")]
               )
             ]),
             _vm._v(" "),
@@ -39622,7 +39679,11 @@ var render = function() {
                   attrs: { type: "button" },
                   on: { click: _vm.selectAll }
                 },
-                [_vm._v("Alle auswählen")]
+                [
+                  _vm._v(
+                    "\n                    Alle auswählen\n                "
+                  )
+                ]
               ),
               _vm._v(" "),
               _c(
@@ -39632,7 +39693,11 @@ var render = function() {
                   attrs: { type: "button" },
                   on: { click: _vm.selectNone }
                 },
-                [_vm._v("Keinen auswählen")]
+                [
+                  _vm._v(
+                    "\n                    Keinen auswählen\n                "
+                  )
+                ]
               )
             ]),
             _vm._v(" "),
@@ -39648,7 +39713,7 @@ var render = function() {
                     }
                   }),
                   _vm._v(
-                    "\n        " +
+                    "\n                " +
                       _vm._s(
                         student["first_name"] +
                           " " +
@@ -39656,7 +39721,7 @@ var render = function() {
                           " | " +
                           _vm.getGroupName(student["group_id"])
                       ) +
-                      "\n      "
+                      "\n            "
                   )
                 ]
               )
@@ -39682,7 +39747,7 @@ var staticRenderFns = [
           staticClass: "close",
           attrs: { type: "button", "data-dismiss": "modal" }
         },
-        [_vm._v("×")]
+        [_vm._v("\n                    ×\n                ")]
       )
     ])
   }
@@ -40384,7 +40449,10 @@ var render = function() {
                 staticStyle: { margin: "1em 0" }
               },
               _vm._l(_vm.errors.reason, function(error) {
-                return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+                return _c("span", { key: error.id }, [
+                  _vm._v(_vm._s(error)),
+                  _c("br")
+                ])
               }),
               0
             )
@@ -40429,7 +40497,10 @@ var render = function() {
                 staticStyle: { margin: "1em 0" }
               },
               _vm._l(_vm.errors.date, function(error) {
-                return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+                return _c("span", { key: error.id }, [
+                  _vm._v(_vm._s(error)),
+                  _c("br")
+                ])
               }),
               0
             )
@@ -40500,7 +40571,10 @@ var render = function() {
                 staticStyle: { margin: "1em 0" }
               },
               _vm._l(_vm.errors.annotation, function(error) {
-                return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+                return _c("span", { key: error.id }, [
+                  _vm._v(_vm._s(error)),
+                  _c("br")
+                ])
               }),
               0
             )
@@ -40819,12 +40893,13 @@ var render = function() {
                       "invoicePositions.".concat(this.position.id - 1, ".iban")
                     ],
                     function(error) {
-                      return _c("li", { key: error.id }, [
+                      return _c("span", { key: error.id }, [
                         _vm._v(
                           "\n                        " +
                             _vm._s(error) +
-                            "\n                    "
-                        )
+                            "\n                        "
+                        ),
+                        _c("br")
                       ])
                     }
                   ),
@@ -40875,12 +40950,13 @@ var render = function() {
                       )
                     ],
                     function(error) {
-                      return _c("li", { key: error.id }, [
+                      return _c("span", { key: error.id }, [
                         _vm._v(
                           "\n                        " +
                             _vm._s(error) +
-                            "\n                    "
-                        )
+                            "\n                        "
+                        ),
+                        _c("br")
                       ])
                     }
                   ),
@@ -40935,12 +41011,13 @@ var render = function() {
                       )
                     ],
                     function(error) {
-                      return _c("li", { key: error.id }, [
+                      return _c("span", { key: error.id }, [
                         _vm._v(
                           "\n                        " +
                             _vm._s(error) +
-                            "\n                    "
-                        )
+                            "\n                        "
+                        ),
+                        _c("br")
                       ])
                     }
                   ),
@@ -41700,10 +41777,16 @@ var render = function() {
                   staticClass: "alert alert-danger",
                   staticStyle: { margin: "1em 0" }
                 },
-                _vm._l(_vm.errors.title, function(error) {
-                  return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
-                }),
-                0
+                [
+                  _vm._l(_vm.errors.title, function(error) {
+                    return _c("span", { key: error.id }, [
+                      _vm._v(_vm._s(error)),
+                      _c("br")
+                    ])
+                  }),
+                  _c("br")
+                ],
+                2
               )
             : _vm._e()
         ]),
@@ -41741,7 +41824,10 @@ var render = function() {
                   staticStyle: { margin: "1em 0" }
                 },
                 _vm._l(_vm.errors.author, function(error) {
-                  return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+                  return _c("span", { key: error.id }, [
+                    _vm._v(_vm._s(error)),
+                    _c("br")
+                  ])
                 }),
                 0
               )
@@ -41783,7 +41869,10 @@ var render = function() {
                   staticStyle: { margin: "1em 0" }
                 },
                 _vm._l(_vm.errors.date, function(error) {
-                  return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+                  return _c("span", { key: error.id }, [
+                    _vm._v(_vm._s(error)),
+                    _c("br")
+                  ])
                 }),
                 0
               )
@@ -41825,7 +41914,10 @@ var render = function() {
                   staticStyle: { margin: "1em 0" }
                 },
                 _vm._l(_vm.errors.due_until, function(error) {
-                  return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+                  return _c("span", { key: error.id }, [
+                    _vm._v(_vm._s(error)),
+                    _c("br")
+                  ])
                 }),
                 0
               )
@@ -41867,7 +41959,10 @@ var render = function() {
                   staticStyle: { margin: "1em 0" }
                 },
                 _vm._l(_vm.errors.reason_suggestion, function(error) {
-                  return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+                  return _c("span", { key: error.id }, [
+                    _vm._v(_vm._s(error)),
+                    _c("br")
+                  ])
                 }),
                 0
               )
@@ -41924,7 +42019,10 @@ var render = function() {
                   staticStyle: { margin: "1em 0" }
                 },
                 _vm._l(_vm.errors.reason, function(error) {
-                  return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+                  return _c("span", { key: error.id }, [
+                    _vm._v(_vm._s(error)),
+                    _c("br")
+                  ])
                 }),
                 0
               )
@@ -41966,7 +42064,10 @@ var render = function() {
                   staticStyle: { margin: "1em 0" }
                 },
                 _vm._l(_vm.errors.description, function(error) {
-                  return _c("li", { key: error.id }, [_vm._v(_vm._s(error))])
+                  return _c("span", { key: error.id }, [
+                    _vm._v(_vm._s(error)),
+                    _c("br")
+                  ])
                 }),
                 0
               )
