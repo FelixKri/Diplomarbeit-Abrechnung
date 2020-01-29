@@ -114,7 +114,7 @@
                 type="button"
                 value="Änderungen speichern"
                 class="btn btn-success"
-                @click="store()"
+                v-on:click="store()"
             />
             </div>
         </div>
@@ -141,35 +141,43 @@ export default {
                 .catch(error => console.log(error));
         },
         store: function() {
-            var that = this;
+
             var invoicePositionsStripped = [];
             var totalAmountRequest = 0;
 
-            this.invoicePositions.forEach(function(position) {
+            this.invoice.positions.forEach(function(position) {
+                
+                console.log("position:");
+                console.log(position);
+
                 invoicePositionsStripped.push({
-                    "id": invoice.position.id,
-                    "name": invoice.position.name,
-                    "amount": invoice.position.amount,
-                    "annotation": invoice.position.annotation,
-                    "belegNr": invoice.position.document_number,
-                    "paidByTeacher": invoice.position.paidByTeacher,
-                    "iban": invoice.position.iban,
+                    "id": position.id,
+                    "name": position.name,
+                    "amount": position.total_amount,
+                    "annotation": position.annotation,
+                    "belegNr": position.document_number,
+                    "paidByTeacher": position.paid_by_teacher,
+                    "iban": position.iban,
                     "studentIDs": [],
                     "studentAmounts": [],
                 });
 
-                totalAmountRequest += invoice.position.amount;
+                totalAmountRequest += position.total_amount;
 
-                invoice.position.students.forEach(function(student) {
-                    invoicePositionsStripped[invoice.position.id - 1].studentIDs.push(
+                position.user_has_invoice_position.forEach(function(student) {
+                    invoicePositionsStripped[position.id - 1].studentIDs.push(
                         student.id
                     );
 
                     invoicePositionsStripped[
-                        invoice.position.id - 1
+                        position.id - 1
                     ].studentAmounts.push(student.amount);
                 });
             });
+
+            var that = this;
+            console.log("InvoicePositionsStripped:");
+            console.log(invoicePositionsStripped);
 
             $.ajax({
                 headers: {
@@ -180,10 +188,10 @@ export default {
                 dataType: "json",
                 data: {
                     "id": that.invoice.id,
-                    "author": that.author,
-                    "date": that.date,
-                    "reason": that.reason,
-                    "annotation": that.annotation,
+                    "author": "admin",
+                    "date": that.invoice.date,
+                    "reason": that.invoice.reason,
+                    "annotation": that.invoice.annotation,
                     "totalAmount": totalAmountRequest,
                     "invoicePositions": invoicePositionsStripped
                 },
@@ -195,6 +203,8 @@ export default {
                 error: function(xhr, status, error) {
                     var respJson = JSON.parse(xhr.responseText);
                     that.errors = respJson.errors;
+                    console.log(errors);
+                    alert(errors);
                 }
             });
         }

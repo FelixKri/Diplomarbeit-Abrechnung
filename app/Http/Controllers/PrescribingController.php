@@ -17,6 +17,10 @@ class PrescribingController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        /*$this->middleware('auth', ['except' => [
+            'store',
+            'update'
+        ]]);*/
     }
     
     public function create(){

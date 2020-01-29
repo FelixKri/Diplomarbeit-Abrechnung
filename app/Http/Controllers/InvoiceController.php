@@ -17,7 +17,8 @@ class InvoiceController extends Controller
     {
         $this->middleware('auth');
         /*$this->middleware('auth', ['except' => [
-            'show'
+            'update',
+            'store'
         ]]);*/
     }
 
@@ -26,6 +27,7 @@ class InvoiceController extends Controller
     }
 
     public function update(){
+
         $validator = Validator::make(request()->all(), [
             'date' => 'date|required',
             'author' => 'required|string',
@@ -61,12 +63,12 @@ class InvoiceController extends Controller
 
         $invoice->save();
 
-        UpdateInvPoses($invoice, request());
+        $this->UpdateInvPoses($invoice, request());
         
         return response()->json(['success' => 'success'], 200);
     }
 
-    private function UpdateInvPoses($invoice, $request)
+    public function UpdateInvPoses($invoice, $request)
     {
         //Get all old InvPoses
         $invPoses = InvoicePosition::where('invoice_id', $invoice->id)->get();
@@ -95,7 +97,7 @@ class InvoiceController extends Controller
                     //$invPoses[$j]->updated_at = date();
                     $invPoses[$j]->save();
 
-                    UpdateUserHasInvPos($invPoses[$j], $request);
+                    $this->UpdateUserHasInvPos($invPoses[$j], $request, $i);
 
                     break;
                 }
@@ -133,17 +135,94 @@ class InvoiceController extends Controller
         }
 
         //Check for deleted invoicePositions and delete them
-        
+        //They are in database but not in request
+        $invPoses = InvoicePosition::where('invoice_id', $invoice->id)->get();
 
+        for($i = 0;$i < sizeof($invPoses);$i++)
+        {
+            $exists = false;
+            //Look if they are in request
+            for($j=0;$j < sizeof($request->invoicePositions);$j++)
+            {
+                if($request->invoicePositions[$j]["id"] == $invPoses[$i]["id"])
+                {
+                    $exists = true;
+                    break;
+                }
+            }
+
+            if(!$exists)
+            {
+                //Delete them AND the corresponding userHasInvPoses
+                $userHasInvPoses = UserHasInvoicePosition::where('invoice_position_id', $invPoses[$i]["id"])->get();
+
+                for($j=0;$j < sizeof($userHasInvPoses);$j++)
+                {
+                    $userHasInvPoses[$j]->delete();
+                }
+
+                $invPoses[$i]->delete();
+            }
+        }
     }
 
-    private function UpdateUserHasInvPos($invpos, $request)
+    private function UpdateUserHasInvPos($invpos, $request, $i)
     {
-        for ($k=0; $k < sizeof(request()->invoicePositions[$i]["studentIDs"]); $k++){
-            $usr_has_inv_pos = new UserHasInvoicePosition;
-            $usr_has_inv_pos->invoice_position_id = $inv_pos->id;
-            $usr_has_inv_pos->save();
+        $userHasInvPoses = UserHasInvoicePosition::where('invoice_position_id', $invpos["id"])->get();
+
+        for ($k=0; $k < sizeof($request->invoicePositions[$i]["studentIDs"]); $k++){
+            
+            //Search if it already exists and needs to be updated
+            $found = false;
+            for($l=0;$l < sizeof($userHasInvPoses);$l++)
+            {
+                
+                if($userHasInvPoses[$l]["user_id"] == $request->invoicePositions[$i]["studentIDs"][$k])
+                {
+                    //Same user_id, update it
+                    $userHasInvPoses[$l]->amount = $request->invoicePositions[$i]["studentAmounts"][$k];
+                    $userHasInvPoses[$l]->save();
+
+                    $found = true;
+                    break;
+                }
+            }
+
+            if(!$found)
+            {
+                //Create new one
+                $usr_has_inv_pos = new UserHasInvoicePosition;
+                $usr_has_inv_pos->user_id = $request->invoicePositions[$i]["studentIDs"][$k];
+                $usr_has_inv_pos->amount = $request->invoicePositions[$i]["studentAmounts"][$k];
+                $usr_has_inv_pos->invoice_position_id = $invpos->id;
+                $usr_has_inv_pos->save();
+            }
         }
+
+        //Check if users got deleted aka they have a userHasInvPos in database but not in request
+        $userHasInvPoses = UserHasInvoicePosition::where('invoice_position_id', $invpos["id"])->get();
+
+        for($j=0;$j < sizeof($userHasInvPoses);$j++)
+        {
+            //Check if their student id exists in request
+            $exists = false;
+
+            for($k=0;$k < sizeof($request->invoicePositions[$i]["studentIDs"]);$k++)
+            {
+                if($request->invoicePositions[$i]["studentIDs"][$k] == $userHasInvPoses[$j]["user_id"])
+                {
+                    $exists = true;
+                    break;
+                }
+            }
+
+            if(!$exists)
+            {
+                //Does not exist, delete it
+                $userHasInvPoses[$j]->delete();
+            }
+        }
+
     }
 
     public function store(){
