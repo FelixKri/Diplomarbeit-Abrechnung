@@ -46,25 +46,42 @@ export default {
         copyStudentsToInvoicePosition: function(positions){
 
             var students = [];
-            /*
+            
             for (let index = 0; index < positions.length; index++) {
                 axios
                     .get("/user/getById/" + positions[index].user_id)
                     .then(response =>(students.push(response.data)))
                     .catch(error => console.log(error));
             }
-            */
+            
             positions.forEach(pos => {
                 students.push(pos.user);
             });
 
             students.forEach(st => {
-                st.amount = null;
-                st.checked = null;
+                st.amount = 0;
+                st.checked = false;
             });
 
-            console.log("AddStudentsFromPrescribing");
-            console.log(students);
+            /*
+            positions.forEach(pos => {
+                $.ajax({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                    },
+                    type: "get",
+                    url: "/user/getById/" + pos.user_id,
+                    dataType: "json",
+                    data: {
+                    },
+
+                    success: function(response) {
+                        students.push(response);
+                    }
+                });
+            });
+            */
+            
             this.$emit("addstudents", students);
         }
     }

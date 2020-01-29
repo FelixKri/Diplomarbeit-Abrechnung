@@ -16,6 +16,9 @@ class InvoiceController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        /*$this->middleware('auth', ['except' => [
+            'show'
+        ]]);*/
     }
 
     public function create(){
@@ -54,7 +57,8 @@ class InvoiceController extends Controller
         $invoice->reason = request()->reason;
         $invoice->total_amount = request()->totalAmount;
         $invoice->annotation = request()->annotation;
-        $invoice->updated_at = date();
+        //$invoice->updated_at = date();
+
         $invoice->save();
 
         UpdateInvPoses($invoice, request());
@@ -88,7 +92,7 @@ class InvoiceController extends Controller
                     $invPoses[$j]->document_number = $request->invoicePositions[$i]["belegNr"];
                     $invPoses[$j]->annotation = $request->invoicePositions[$i]["annotation"];
                     $invPoses[$j]->total_amount = $request->invoicePositions[$i]["amount"];
-                    $invPoses[$j]->updated_at = date();
+                    //$invPoses[$j]->updated_at = date();
                     $invPoses[$j]->save();
 
                     UpdateUserHasInvPos($invPoses[$j], $request);
@@ -144,22 +148,33 @@ class InvoiceController extends Controller
 
     public function store(){
         
-        $validator = Validator::make(request()->all(), [
+        $rules = [
             'date' => 'date|required',
             'author' => 'required|string',
             'reason' => 'required|string',
-            'annotation' => 'string|max:255',
             'invoicePositions' => 'required|array|min:1',
             'invoicePositions.*.name' => "required|string",
             'invoicePositions.*.amount' => "required|integer",
-            'invoicePositions.*.annotation' => "string",
+            'invoicePositions.*.annotation' => "",
             'invoicePositions.*.belegNr' => "required",
             'invoicePositions.*.iban' => "required_if:invoicePositions.*.paidByTeacher,true",
             'invoicePositions.*.studentIDs' => "required|array|min:1",
             'invoicePositions.*.studentIDs.*' => "integer",
             'invoicePositions.*.studentAmounts' => "required|array|min:1",
             'invoicePositions.*.studentAmounts.*' => "integer",
-        ]);
+        ];
+
+        $messages = [
+            'required'    => 'Das Feld muss ausgefüllt werden.',
+            'after' => 'Das Feld muss nach dem heutigen Tag liegen',
+            'date' => 'Das Feld muss ein gültiges Datum enthalten',
+            'required_without' => "Bitte entweder einen Grund oder Grundvorschlag auswählen",
+            'min' => 'Bitte mindestens einen Schüler zur Vorschreibung hinufügen',
+            'required_if' => 'Bitte einen IBan für die Überweisung angeben',
+        ];
+        
+
+        $validator = Validator::make(request()->all(), $rules, $messages);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 401);
