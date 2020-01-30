@@ -45,6 +45,8 @@ Route::get('/user/getById/{id}', 'AjaxController@getUserById');
 Route::post('/getAllGroups','AjaxController@getAllGroups'); // Method: POST Name: GETAllGroups *** Das sollte eine get request sein, man gettet ja was
 Route::get('/getReasons', 'AjaxController@getReasons');
 
+//DEBUG?
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Auth::routes(['register' => false]);
 

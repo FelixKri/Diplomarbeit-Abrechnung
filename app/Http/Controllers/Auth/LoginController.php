@@ -59,4 +59,18 @@ class LoginController extends Controller
         return redirect('/');
     }
 
+    protected function authenticated(Request $request, $user)
+    {
+        if (strpos($user->roles, "ROLE_ADMIN") == -1) {
+            
+            Auth::logout();
+
+            return redirect('/login')->withErrors([
+
+                'message' => 'Please check your credentials and try again!'
+
+            ]);
+        }
+    }
+
 }

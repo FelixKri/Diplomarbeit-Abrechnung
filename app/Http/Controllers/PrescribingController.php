@@ -14,8 +14,17 @@ use Illuminate\Support\Facades\Validator;
 
 class PrescribingController extends Controller
 {
-    public function create()
+    public function __construct()
     {
+        $this->middleware('auth');
+        /*$this->middleware('auth', ['except' => [
+            'store',
+            'update'
+        ]]);*/
+    }
+    
+    public function create(){
+
         $reasons = Reason::all();
         return view('prescribing.create', compact("reasons"));
     }
