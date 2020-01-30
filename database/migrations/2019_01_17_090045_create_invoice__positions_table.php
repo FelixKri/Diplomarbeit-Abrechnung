@@ -33,7 +33,7 @@ false, 'a:1:{i:0;s:10:"ROLE_ADMIN";}', false);
             $table->boolean('paid_by_teacher');
             $table->string('iban')->nullable();
             $table->integer('document_number');
-            $table->string('annotation');
+            $table->string('annotation')->nullable();
             $table->timestamps();
         });
     }

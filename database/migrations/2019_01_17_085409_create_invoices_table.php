@@ -17,7 +17,7 @@ class CreateInvoicesTable extends Migration
             $table->increments('id');
             $table->string('reason');
             $table->integer('author_id');
-            $table->text('annotation');
+            $table->text('annotation')->nullable();
             $table->boolean('approved')->default($value = false);
             $table->boolean('saved')->default($value = false);
             $table->float('total_amount', 8, 2);
