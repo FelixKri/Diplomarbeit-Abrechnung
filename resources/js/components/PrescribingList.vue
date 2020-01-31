@@ -18,10 +18,10 @@
                 <td>{{p.description}}</td>
                 <td>{{p.due_until}}</td>
                 <td v-if="p.finished">
-                    <span class="badge badge-primary">Freigabe steht aus</span>
+                    <span class="badge badge-primary">Von Lehrer Freigegeben</span>
                 </td>
                 <td v-else-if="p.approved">
-                    <span class="badge badge-success">Genehmigt</span>
+                    <span class="badge badge-success">Von Sekretariat Genehmigt</span>
                 </td>
                 <td v-else>
                     <span class="badge badge-danger">Offen</span>

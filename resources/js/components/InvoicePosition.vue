@@ -1,11 +1,13 @@
 <template>
-    <div
+    <div style="position: relative;"
         class="tab-pane fade show"
         :id="'nav-' + position.name"
         role="tabpanel"
         :aria-labelledby="'nav-' + position.name + '-tab'"
     >
-        <h2>{{ position.name }}</h2>
+        <h2 style="">{{ position.name }}</h2>
+
+        <button type="button" style="position: absolute; right: 0px; top: 0px;" class="btn btn-danger" @click="removeInvoicePosition">Position entfernen</button>
 
         <div class="row">
             <div class="col-sm">
@@ -22,8 +24,8 @@
                 <input type="checkbox" v-model="position.paidByTeacher" /><span
                     >Von Lehrpersonal bezhalt</span
                 >
-                <div class="form-group">
-                    <label for="iban">IBAN (falls notwendig)</label>
+                <div class="form-group" v-if="position.paidByTeacher">
+                    <label for="iban">IBAN</label>
                     <input
                         type="text"
                         class="form-control"
@@ -276,6 +278,10 @@ export default {
     },
     props: ["position", "errors"],
     methods: {
+        removeInvoicePosition: function(){
+            //ToDo: Event triggern
+            this.$emit("removeInvoicePosition", this.position.id);
+        },
         getStudents: function() {
             return this.position.students;
         },

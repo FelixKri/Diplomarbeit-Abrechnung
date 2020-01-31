@@ -3,9 +3,7 @@
         <h1>Vorschreibungs Ansicht:</h1>
         <p>
             Ursprünglicher Autor:
-            <span style="font-weight: bold">{{
-                prescribing.author.username
-            }}</span>
+            <span style="font-weight: bold">{{ prescribing.author }}</span>
         </p>
         <div class="form-group">
             <label for="title">Titel: </label>
@@ -32,7 +30,7 @@
                 type="text"
                 name="date"
                 id=""
-                v-model="prescribing.created_at"
+                v-model="prescribing.date"
                 class="form-control"
             />
             <ul
@@ -88,12 +86,23 @@
         </div>
         <div class="form-group">
             <label for="reason">Grund</label>
-            <input
-                disabled
-                type="text"
-                v-model="prescribing.reason.title"
+            <select
+                name="reason"
+                id=""
                 class="form-control"
-            />
+                v-model="prescribing.reason"
+            >
+                <option
+                    value=""
+                    >
+                </option>
+                <option
+                    v-for="reason in reasons"
+                    :value="reason"
+                    v-bind:key="reason.id"
+                    >{{ reason }}</option
+                >
+            </select>
             <ul
                 v-if="errors.reason"
                 class="alert alert-danger"
@@ -123,8 +132,18 @@
                 </li>
             </ul>
         </div>
-        <button class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#addUser_1'" type="button">Person(n) hinzufügen</button>
-        <add-person-modal v-on:addstudents="addStudents" :id="1"></add-person-modal>
+        <button
+            class="btn btn-primary btn-sm"
+            data-toggle="modal"
+            :data-target="'#addUser_1'"
+            type="button"
+        >
+            Person(n) hinzufügen
+        </button>
+        <add-person-modal
+            v-on:addstudents="addStudents"
+            :id="1"
+        ></add-person-modal>
         <hr />
         <table class="table">
             <thead>
@@ -194,23 +213,60 @@ export default {
     props: ["id"],
     mounted() {
         this.getPrescribing(this.id);
+        this.getAllReasons();
     },
     data() {
         return {
-            prescribing: null,
+            prescribingRequested: null,
+            prescribing: {
+                id: null,
+                title: "",
+                date: null,
+                due_until: null,
+                reason_suggestion: "",
+                reason: "",
+                description: "",
+                positions: null,
+                author: ""
+            },
+            reasons: null,
             errors: {}
         };
     },
     methods: {
-        getPrescribing: function(id) {
+        getAllReasons: function() {
             axios
-                .get("/prescribing/view/getPrescribing/" + id)
-                .then(response => (this.prescribing = response.data))
+                .get("/getReasons")
+                .then(response => (this.reasons = response.data))
                 .catch(error => console.log(error));
         },
-        addStudents: function(){
-
+        getPrescribing: function(id) {
+            (async () => {
+                let apiRes = null;
+                try {
+                    apiRes = await axios.get(
+                        "/prescribing/view/getPrescribing/" + id
+                    );
+                } catch (err) {
+                    apiRes = err.response;
+                } finally {
+                    this.prescribingRequested = apiRes.data;
+                    this.prescribing.title = this.prescribingRequested.title;
+                    this.prescribing.date = this.prescribingRequested.date;
+                    this.prescribing.due_until = this.prescribingRequested.due_until;
+                    this.prescribing.reason_suggestion = this.prescribingRequested.reason_suggestion;
+                    if(this.prescribingRequested.reason){
+                        this.prescribing.reason = this.prescribingRequested.reason.title;
+                    }
+                        
+                    this.prescribing.description = this.prescribingRequested.description;
+                    this.prescribing.positions = this.prescribingRequested.positions;
+                    this.prescribing.author = this.prescribingRequested.author.username;
+                    this.prescribing.id = this.prescribingRequested.id;
+                }
+            })();
         },
+        addStudents: function() {},
         store: function() {
             var that = this;
             var studentIds = [];
@@ -235,20 +291,25 @@ export default {
                 data: {
                     id: that.prescribing.id,
                     title: that.prescribing.title,
-                    author: that.prescribing.author.username,
-                    date: that.prescribing.created_at,
+                    author: that.prescribing.author,
+                    date: that.prescribing.date,
                     due_until: that.prescribing.due_until,
                     reason_suggestion: that.prescribing.reason_suggestion,
-                    reason: that.prescribing.reason.title,
+                    reason: that.prescribing.reason,
                     description: that.prescribing.description,
                     students: studentIds,
                     amount: studentAmounts,
                     annotation: studentAnnotations,
-                    positionIds: positionIds,
+                    positionIds: positionIds
                 },
                 success: function(response) {
-                    console.log(response);
                     alert("Erfolgreich gespeichert");
+                    this.errors.author = null;
+                    this.errors.description = null;
+                    this.errors.date = null;
+                    this.errors.due_until = null;
+                    this.errors.reason = null;
+                    this.errors.reason_suggestion = null;
                 },
                 error: function(xhr, status, error) {
                     var respJson = JSON.parse(xhr.responseText);
@@ -256,19 +317,20 @@ export default {
                 }
             });
         },
-        print: function(){
+        print: function() {
             this.store();
 
-            window.location.href = '/prescribing/download/'+this.prescribing.id;
+            window.location.href =
+                "/prescribing/download/" + this.prescribing.id;
             //Todo: Sende Request an PDF Generator Funktion im BackEnd
         },
-        release: function(){
+        release: function() {
             axios
                 .post("/prescribing/setApproved/" + this.id)
                 .then(response => console.log(response))
                 .catch(error => console.log(error));
         },
-        reject: function(){
+        reject: function() {
             axios
                 .post("/prescribing/reject/" + this.id)
                 .then(response => console.log(response))

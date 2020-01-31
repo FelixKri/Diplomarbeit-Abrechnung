@@ -91,13 +91,13 @@ class PrescribingController extends Controller
 
     public function update()
     {
-        $validator = Validator::make(request()->all(), [
+        $rules = array(
             'date' => 'date|required',
             'due_until' => 'date|after:today|required|date_format:Y-m-d',
             'reason' => 'required_without:reason_suggestion',
             'reason_suggestion' => 'required_without:reason',
-            'title' => 'string|required',
-            'description' => 'string|required',
+            'title' => 'required',
+            'description' => 'required',
             'author' => 'required|string',
             'students' => 'required|array|min:1',
             'students.*' => 'required|integer|distinct|min:1',
@@ -105,7 +105,18 @@ class PrescribingController extends Controller
             'amount.*' => 'required|min:1',
             'annotation' => 'required|array',
             'annotation.*' => 'string|nullable'
-        ]);
+        );
+
+        $messages = [
+            'required'    => 'Das Feld muss ausgefüllt werden.',
+            'after' => 'Das Feld muss nach dem heutigen Tag liegen',
+            'date' => 'Das Feld muss ein gültiges Datum enthalten',
+            'required_without' => "Bitte entweder einen Grund oder Grundvorschlag auswählen",
+            'min' => 'Bitte mindestens einen Schüler zur Vorschreibung hinufügen'
+        ];
+        
+
+        $validator = Validator::make(request()->all(), $rules, $messages);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 401);
@@ -114,8 +125,12 @@ class PrescribingController extends Controller
         $presc = PrescribingSuggestion::find(request()->id);
         $presc->date = request()->date;
         $presc->due_until = request()->due_until;
-        $presc->reason_id = Reason::where('title', request()->reason)->first()->id;
-        $presc->reason_suggestion = request()->reason_suggestion;
+        if(request()->reason){
+            $presc->reason_id = Reason::where('title', request()->reason)->first()->id;
+            $presc->reason_suggestion = null;
+        }else{
+            $presc->reason_suggestion = request()->reason_suggestion;
+        }
         $presc->title = request()->title;
         $presc->description = request()->description;
         $presc->author_id = FosUser::where('username', request()->author)->first()->id;

@@ -17,10 +17,10 @@ class CreateInvoicePositionsTable extends Migration
         Place for paste
         
         insert into fos_user (username, username_canonical, email, email_canonical, 
-enabled, salt, password, locked, expired, roles, credentials_expired) 
-values ("TestLehrer1", "TestLehrer1", "testlehrer@gmail.com", "testlehrer@gmail.com", 
-true, "", "$2y$12$k45Uz9i0m7j/mPiE9uaI4OJ6Xcn/kvMPBlxj/yL4ZAEp6kwX6SR22", false, 
-false, 'a:1:{i:0;s:10:"ROLE_ADMIN";}', false);
+        enabled, salt, password, locked, expired, roles, credentials_expired) 
+        values ("TestLehrer1", "TestLehrer1", "testlehrer@gmail.com", "testlehrer@gmail.com", 
+        true, "", "$2y$12$k45Uz9i0m7j/mPiE9uaI4OJ6Xcn/kvMPBlxj/yL4ZAEp6kwX6SR22", false, 
+        false, 'a:1:{i:0;s:10:"ROLE_ADMIN";}', false);
 
         */
 

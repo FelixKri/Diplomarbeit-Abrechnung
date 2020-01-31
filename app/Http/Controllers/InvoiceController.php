@@ -16,10 +16,6 @@ class InvoiceController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        /*$this->middleware('auth', ['except' => [
-            'update',
-            'store'
-        ]]);*/
     }
 
     public function create(){

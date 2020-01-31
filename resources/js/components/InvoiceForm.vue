@@ -81,6 +81,7 @@
                         v-bind:key="pos.id"
                         :position="pos"
                         :errors="errors"
+                        v-on:removeInvoicePosition="removeInvoicePosition($event)"
                     ></invoice-position>
                 </div>
             </div>
@@ -120,6 +121,14 @@ export default {
         }
     },
     methods: {
+        removeInvoicePosition: function(event){
+            alert("loda");
+            console.log(event);
+
+            this.invoicePositions = this.invoicePositions.filter(function( obj ) {
+                return obj.id !== event;
+            });
+        },
         addPos: function() {
             var name = prompt("Namen der Rechnungspos eingeben", "");
             if(name != null){
