@@ -150,6 +150,15 @@ export default {
                 console.log("position:");
                 console.log(position);
 
+                var studentIDs = [];
+                var studentAmounts = [];
+
+                position.user_has_invoice_position.forEach(function(student) {
+                    studentIDs.push(student.user_id);
+
+                    studentAmounts.push(student.amount);
+                });
+
                 invoicePositionsStripped.push({
                     "id": position.id,
                     "name": position.name,
@@ -158,21 +167,13 @@ export default {
                     "belegNr": position.document_number,
                     "paidByTeacher": position.paid_by_teacher,
                     "iban": position.iban,
-                    "studentIDs": [],
-                    "studentAmounts": [],
+                    "studentIDs": studentIDs,
+                    "studentAmounts": studentAmounts,
                 });
 
                 totalAmountRequest += position.total_amount;
 
-                position.user_has_invoice_position.forEach(function(student) {
-                    invoicePositionsStripped[position.id - 1].studentIDs.push(
-                        student.id
-                    );
-
-                    invoicePositionsStripped[
-                        position.id - 1
-                    ].studentAmounts.push(student.amount);
-                });
+                
             });
 
             var that = this;

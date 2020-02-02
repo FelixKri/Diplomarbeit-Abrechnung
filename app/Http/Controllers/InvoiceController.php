@@ -9,6 +9,7 @@ use App\Invoice;
 use App\InvoicePosition;
 use App\UserHasInvoicePosition;
 use App\FosUser;
+use Log;
 
 
 class InvoiceController extends Controller
@@ -45,7 +46,6 @@ class InvoiceController extends Controller
             return response()->json(['errors' => $validator->errors()], 401);
         }
 
-        //Delete old ones and insert new ones
         $invoice = Invoice::where('id', request()->id)->first();
 
         if($invoice == null){
@@ -164,6 +164,8 @@ class InvoiceController extends Controller
 
     private function UpdateUserHasInvPos($invpos, $request, $i)
     {
+        //Log::debug("Updating UserHasInvPoses");
+
         $userHasInvPoses = UserHasInvoicePosition::where('invoice_position_id', $invpos["id"])->get();
 
         for ($k=0; $k < sizeof($request->invoicePositions[$i]["studentIDs"]); $k++){
@@ -188,6 +190,7 @@ class InvoiceController extends Controller
             {
                 //Create new one
                 $usr_has_inv_pos = new UserHasInvoicePosition;
+                //Log::debug("Creating new UserHasInvPos, user_id: ");
                 $usr_has_inv_pos->user_id = $request->invoicePositions[$i]["studentIDs"][$k];
                 $usr_has_inv_pos->amount = $request->invoicePositions[$i]["studentAmounts"][$k];
                 $usr_has_inv_pos->invoice_position_id = $invpos->id;
@@ -305,7 +308,7 @@ class InvoiceController extends Controller
     }
 
     public function getInvoiceById($id){
-        $invoice = Invoice::with('author', 'positions', 'positions.userHasInvoicePosition', 'positions.userHasInvoicePosition.user', 'positions.userHasInvoicePosition.user.group')->find($id);
+        $invoice = Invoice::with('author', 'positions', 'positions.userHasInvoicePosition', 'positions.userHasInvoicePosition.user', 'positions.userHasInvoicePosition.user.group')->find($id);        
 
         return $invoice;
     }
