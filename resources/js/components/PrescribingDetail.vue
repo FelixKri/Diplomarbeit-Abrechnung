@@ -153,6 +153,7 @@
                     <th scope="col">Klasse</th>
                     <th scope="col">Betrag</th>
                     <th scope="col">Anmerkung</th>
+                    <th scope="col">X</th>
                 </tr>
             </thead>
             <tbody>
@@ -164,11 +165,7 @@
                     <td>{{ position.user.first_name }}</td>
                     <td>{{ position.user.group.name }}</td>
                     <td>
-                        <input
-                            type="number"
-                            v-model="position.amount"
-                            class="form-control"
-                        />
+                        <input type="" name="" class="form-control" :value="Math.round((student.amount + Number.EPSILON) * 100) / 100" />
                     </td>
                     <td>
                         <input
@@ -178,6 +175,7 @@
                             placeholder="Optionale Anmerkung"
                         />
                     </td>
+                    <td style="cursor: pointer;" @click="removeStudent(position.id);" ><i class="fas fa-user-minus" ></i></td>
                 </tr>
             </tbody>
         </table>
@@ -267,6 +265,9 @@ export default {
             })();
         },
         addStudents: function() {},
+        removeStudent: function(id){
+            this.prescribing.positions = this.prescribing.positions.filter(el => el.id !== id);
+        },
         store: function() {
             var that = this;
             var studentIds = [];

@@ -8,7 +8,7 @@
     <td>{{student.user.first_name}}</td>
     <td>{{getGroupName(student.user.group_id)}}</td>
     <td>
-      <input type="number" name="amount[]" class="form-control" v-model="student.amount" />
+      <input type="" name="" class="form-control" :value="Math.round((student.amount + Number.EPSILON) * 100) / 100" />
     </td>
     <td @click="removeStudent();" ><i class="fas fa-user-minus" ></i></td>
   </tr>
