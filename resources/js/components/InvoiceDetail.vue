@@ -43,27 +43,9 @@
                 </li>
             </ul>
         </div>
+        
         <div class="form-group">
-            <label for="description">IBAN (optional): </label>
-            <input
-                type="text"
-                name="iban"
-                id=""
-                class="form-control"
-                v-model="invoice.iban"
-            />
-            <ul
-                v-if="errors.iban"
-                class="alert alert-danger"
-                style="margin: 1em 0;"
-            >
-                <li v-for="error in errors.description" v-bind:key="error.id">
-                    {{ error }}
-                </li>
-            </ul>
-        </div>
-        <div class="form-group">
-            <label for="description">Beschreibung: </label>
+            <label for="description">Anmerkungen </label>
             <textarea
                 type="text"
                 name="description"
@@ -109,12 +91,14 @@
                     v-for="pos in invoice.positions"
                     v-bind:key="pos.id"
                     :position="pos"
+                    :errors="errors"
                 ></invoice-detail-position>
+
                 <input
                 type="button"
                 value="Änderungen speichern"
                 class="btn btn-success"
-                v-on:click="store()"
+                @click="store()"
             />
             </div>
         </div>
@@ -147,8 +131,8 @@ export default {
 
             this.invoice.positions.forEach(function(position) {
                 
-                console.log("position:");
-                console.log(position);
+                //console.log("position:");
+                //console.log(position);
 
                 var studentIDs = [];
                 var studentAmounts = [];
@@ -159,13 +143,19 @@ export default {
                     studentAmounts.push(student.amount);
                 });
 
+                //Bypasses paidbyteacher = 0 => becomes undefined and doesnt send per ajax bug
+                var paidByTeacher = false;
+
+                if(position.paidByTeacher == 1)
+                    paidByTeacher = true;
+
                 invoicePositionsStripped.push({
                     "id": position.id,
                     "name": position.name,
                     "amount": position.total_amount,
                     "annotation": position.annotation,
                     "belegNr": position.document_number,
-                    "paidByTeacher": position.paid_by_teacher,
+                    "paidByTeacher": paidByTeacher,
                     "iban": position.iban,
                     "studentIDs": studentIDs,
                     "studentAmounts": studentAmounts,
@@ -177,8 +167,8 @@ export default {
             });
 
             var that = this;
-            console.log("InvoicePositionsStripped:");
-            console.log(invoicePositionsStripped);
+            //console.log("InvoicePositionsStripped:");
+            //console.log(invoicePositionsStripped);
 
             $.ajax({
                 headers: {
@@ -204,8 +194,8 @@ export default {
                 error: function(xhr, status, error) {
                     var respJson = JSON.parse(xhr.responseText);
                     that.errors = respJson.errors;
-                    console.log(errors);
-                    alert(errors);
+                    //console.log(that.errors);
+                    //alert(that.errors);
                 }
             });
         }

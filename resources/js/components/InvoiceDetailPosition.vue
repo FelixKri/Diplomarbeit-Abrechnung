@@ -19,6 +19,47 @@
                     />
                 </div>
                 <input type="checkbox" v-model="position.paidByTeacher"><span>Von Lehrpersonal bezhalt</span>
+
+                <div class="form-group" v-if="position.paidByTeacher">
+                    <label for="iban">IBAN</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="iban"
+                        placeholder="IBAN"
+                        name="iban"
+                        v-model="position.iban"
+                    />
+                    <ul
+                        v-if="
+                            errors[
+                                'invoicePositions.'.concat(
+                                    this.position.id,
+                                    '.iban'
+                                )
+                            ]
+                        "
+                        class="alert alert-danger"
+                        style="margin: 1em 0;"
+                    >
+                        <span
+                            v-bind:key="errors[
+                                'invoicePositions.'.concat(
+                                    this.position.id,
+                                    '.iban'
+                                )
+                            ].id">
+                            {{ errors[
+                                'invoicePositions.'.concat(
+                                    this.position.id,
+                                    '.iban'
+                                )
+                            ] }}
+                            <br>
+                        </span>
+                    </ul>
+                </div>
+
                 <div class="form-group">
                     <label for="billnumber">BelegNr</label>
                     <input
@@ -165,18 +206,17 @@ export default {
     },
     data: function() {
         return {
-            // amount: 0,
-            // annotation: "",
-            // belegNr: 0,
-            errors: {},
             groups: [],
             groupLength: 0,
             amount_st: 0,
             type: false
         };
     },
-    props: ["position"],
+    props: ["position", "errors"],
     methods: {
+        getId: function(){
+            return position.id;
+        },
         getStudents: function()
         {
             //Make array of real students
