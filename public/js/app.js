@@ -3611,8 +3611,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   mounted: function mounted() {
@@ -3700,6 +3698,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     addStudents: function addStudents() {},
+    removeStudent: function removeStudent(id) {
+      this.prescribing.positions = this.prescribing.positions.filter(function (el) {
+        return el.id !== id;
+      });
+    },
     store: function store() {
       var that = this;
       var studentIds = [];
@@ -42483,24 +42486,12 @@ var render = function() {
               _vm._v(" "),
               _c("td", [
                 _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: position.amount,
-                      expression: "position.amount"
-                    }
-                  ],
                   staticClass: "form-control",
-                  attrs: { type: "number" },
-                  domProps: { value: position.amount },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(position, "amount", $event.target.value)
-                    }
+                  attrs: { type: "", name: "" },
+                  domProps: {
+                    value:
+                      Math.round((_vm.student.amount + Number.EPSILON) * 100) /
+                      100
                   }
                 })
               ]),
@@ -42527,7 +42518,20 @@ var render = function() {
                     }
                   }
                 })
-              ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticStyle: { cursor: "pointer" },
+                  on: {
+                    click: function($event) {
+                      return _vm.removeStudent(position.id)
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "fas fa-user-minus" })]
+              )
             ])
           }),
           0
@@ -42576,7 +42580,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Betrag")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Anmerkung")])
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Anmerkung")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("X")])
       ])
     ])
   }
@@ -43182,24 +43188,10 @@ var render = function() {
     _vm._v(" "),
     _c("td", [
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.student.amount,
-            expression: "student.amount"
-          }
-        ],
         staticClass: "form-control",
         attrs: { type: "number", name: "amount[]", id: "" },
-        domProps: { value: _vm.student.amount },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.student, "amount", $event.target.value)
-          }
+        domProps: {
+          value: Math.round((_vm.student.amount + Number.EPSILON) * 100) / 100
         }
       })
     ]),
@@ -43316,24 +43308,10 @@ var render = function() {
     _vm._v(" "),
     _c("td", [
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.student.amount,
-            expression: "student.amount"
-          }
-        ],
         staticClass: "form-control",
         attrs: { type: "", name: "" },
-        domProps: { value: _vm.student.amount },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.student, "amount", $event.target.value)
-          }
+        domProps: {
+          value: Math.round((_vm.student.amount + Number.EPSILON) * 100) / 100
         }
       })
     ]),
@@ -43428,24 +43406,10 @@ var render = function() {
     _vm._v(" "),
     _c("td", [
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.student.amount,
-            expression: "student.amount"
-          }
-        ],
         staticClass: "form-control",
-        attrs: { type: "number", name: "amount[]" },
-        domProps: { value: _vm.student.amount },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.student, "amount", $event.target.value)
-          }
+        attrs: { type: "", name: "" },
+        domProps: {
+          value: Math.round((_vm.student.amount + Number.EPSILON) * 100) / 100
         }
       })
     ]),
