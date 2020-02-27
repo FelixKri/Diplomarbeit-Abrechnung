@@ -2184,22 +2184,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   mounted: function mounted() {
@@ -2225,30 +2209,33 @@ __webpack_require__.r(__webpack_exports__);
       var invoicePositionsStripped = [];
       var totalAmountRequest = 0;
       this.invoice.positions.forEach(function (position) {
-        console.log("position:");
-        console.log(position);
+        //console.log("position:");
+        //console.log(position);
         var studentIDs = [];
         var studentAmounts = [];
         position.user_has_invoice_position.forEach(function (student) {
           studentIDs.push(student.user_id);
           studentAmounts.push(student.amount);
-        });
+        }); //Bypasses paidbyteacher = 0 => becomes undefined and doesnt send per ajax bug
+
+        var paidByTeacher = false;
+        if (position.paidByTeacher == 1) paidByTeacher = true;
         invoicePositionsStripped.push({
           "id": position.id,
           "name": position.name,
           "amount": position.total_amount,
           "annotation": position.annotation,
           "belegNr": position.document_number,
-          "paidByTeacher": position.paid_by_teacher,
+          "paidByTeacher": paidByTeacher,
           "iban": position.iban,
           "studentIDs": studentIDs,
           "studentAmounts": studentAmounts
         });
         totalAmountRequest += position.total_amount;
       });
-      var that = this;
-      console.log("InvoicePositionsStripped:");
-      console.log(invoicePositionsStripped);
+      var that = this; //console.log("InvoicePositionsStripped:");
+      //console.log(invoicePositionsStripped);
+
       $.ajax({
         headers: {
           "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -2272,9 +2259,8 @@ __webpack_require__.r(__webpack_exports__);
         },
         error: function error(xhr, status, _error) {
           var respJson = JSON.parse(xhr.responseText);
-          that.errors = respJson.errors;
-          console.log(errors);
-          alert(errors);
+          that.errors = respJson.errors; //console.log(that.errors);
+          //alert(that.errors);
         }
       });
     }
@@ -2452,24 +2438,64 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     console.log("Component created: InvoicePosition");
   },
   data: function data() {
     return {
-      // amount: 0,
-      // annotation: "",
-      // belegNr: 0,
-      errors: {},
       groups: [],
       groupLength: 0,
       amount_st: 0,
       type: false
     };
   },
-  props: ["position"],
+  props: ["position", "errors"],
   methods: {
+    getId: function getId() {
+      return position.id;
+    },
     getStudents: function getStudents() {
       //Make array of real students
       var studentsArray = [];
@@ -40788,53 +40814,7 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "description" } }, [
-        _vm._v("IBAN (optional): ")
-      ]),
-      _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.invoice.iban,
-            expression: "invoice.iban"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { type: "text", name: "iban", id: "" },
-        domProps: { value: _vm.invoice.iban },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.invoice, "iban", $event.target.value)
-          }
-        }
-      }),
-      _vm._v(" "),
-      _vm.errors.iban
-        ? _c(
-            "ul",
-            {
-              staticClass: "alert alert-danger",
-              staticStyle: { margin: "1em 0" }
-            },
-            _vm._l(_vm.errors.description, function(error) {
-              return _c("li", { key: error.id }, [
-                _vm._v("\n                " + _vm._s(error) + "\n            ")
-              ])
-            }),
-            0
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "description" } }, [
-        _vm._v("Beschreibung: ")
-      ]),
+      _c("label", { attrs: { for: "description" } }, [_vm._v("Anmerkungen ")]),
       _vm._v(" "),
       _c("textarea", {
         directives: [
@@ -40925,7 +40905,7 @@ var render = function() {
           _vm._l(_vm.invoice.positions, function(pos) {
             return _c("invoice-detail-position", {
               key: pos.id,
-              attrs: { position: pos }
+              attrs: { position: pos, errors: _vm.errors }
             })
           }),
           _vm._v(" "),
@@ -41048,6 +41028,80 @@ var render = function() {
             }
           }),
           _c("span", [_vm._v("Von Lehrpersonal bezhalt")]),
+          _vm._v(" "),
+          _vm.position.paidByTeacher
+            ? _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "iban" } }, [_vm._v("IBAN")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.position.iban,
+                      expression: "position.iban"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    id: "iban",
+                    placeholder: "IBAN",
+                    name: "iban"
+                  },
+                  domProps: { value: _vm.position.iban },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.position, "iban", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors[
+                  "invoicePositions.".concat(this.position.id, ".iban")
+                ]
+                  ? _c(
+                      "ul",
+                      {
+                        staticClass: "alert alert-danger",
+                        staticStyle: { margin: "1em 0" }
+                      },
+                      [
+                        _c(
+                          "span",
+                          {
+                            key:
+                              _vm.errors[
+                                "invoicePositions.".concat(
+                                  this.position.id,
+                                  ".iban"
+                                )
+                              ].id
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(
+                                  _vm.errors[
+                                    "invoicePositions.".concat(
+                                      this.position.id,
+                                      ".iban"
+                                    )
+                                  ]
+                                ) +
+                                "\n                        "
+                            ),
+                            _c("br")
+                          ]
+                        )
+                      ]
+                    )
+                  : _vm._e()
+              ])
+            : _vm._e(),
           _vm._v(" "),
           _c("div", { staticClass: "form-group" }, [
             _c("label", { attrs: { for: "billnumber" } }, [_vm._v("BelegNr")]),

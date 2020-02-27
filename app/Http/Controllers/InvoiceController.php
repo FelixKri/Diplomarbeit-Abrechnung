@@ -24,26 +24,77 @@ class InvoiceController extends Controller
     }
 
     public function update(){
+        //Log::debug("Request:");
+        //Log::debug(request());
 
-        $validator = Validator::make(request()->all(), [
+        $rules = [
             'date' => 'date|required',
             'author' => 'required|string',
             'reason' => 'required|string',
-            'annotation' => 'string|max:255',
             'invoicePositions' => 'required|array|min:1',
             'invoicePositions.*.name' => "required|string",
             'invoicePositions.*.amount' => "required|integer",
-            'invoicePositions.*.annotation' => "string",
+            'invoicePositions.*.annotation' => "",
             'invoicePositions.*.belegNr' => "required",
             'invoicePositions.*.iban' => "required_if:invoicePositions.*.paidByTeacher,true",
             'invoicePositions.*.studentIDs' => "required|array|min:1",
             'invoicePositions.*.studentIDs.*' => "integer",
             'invoicePositions.*.studentAmounts' => "required|array|min:1",
             'invoicePositions.*.studentAmounts.*' => "integer",
-        ]);
+        ];
+
+        $messages = [
+            'required'    => 'Das Feld muss ausgefüllt werden.',
+            'after' => 'Das Feld muss nach dem heutigen Tag liegen',
+            'date' => 'Das Feld muss ein gültiges Datum enthalten',
+            'required_without' => "Bitte entweder einen Grund oder Grundvorschlag auswählen",
+            'min' => 'Bitte mindestens einen Schüler zur Vorschreibung hinufügen',
+            'required_if' => 'Bitte einen IBan für die Überweisung angeben',
+        ];
+        
+
+        $validator = Validator::make(request()->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 401);
+
+            $newErrors = [];
+            $errors = $validator->errors();
+
+            $keys = $errors->keys();
+
+            for($i = 0;$i < sizeof($keys);$i++)
+            {
+                $key = $keys[$i];
+
+                $strpos = strpos($key, "invoicePositions.");
+
+                if($strpos === false)
+                {
+                    //Not found
+                }
+                else
+                {
+                    //Cut away invoicePositions.
+                    $keyIndex = str_replace("invoicePositions.", "", $key);
+
+                    //Get the word after the number to know what it was(iban, name ...)
+                    $type = substr($keyIndex, strpos($keyIndex, "."), strlen($keyIndex) - strpos($keyIndex, "."));
+                    //Cut it until next . to get number
+                    $keyIndex = substr($keyIndex, 0, strpos($keyIndex, "."));
+
+                    //Convert to number
+                    $keyIndex = intval($keyIndex);
+
+                    //Get the actual id of the invoicePosition
+                    $newKeyId = request()->invoicePositions[$keyIndex]["id"];
+
+                    $newKey = "invoicePositions." . $newKeyId . $type;
+
+                    $newErrors[$newKey] = $errors->first($key);
+                }
+            }
+
+            return response()->json(['errors' => $newErrors], 401);
         }
 
         $invoice = Invoice::where('id', request()->id)->first();
@@ -61,6 +112,7 @@ class InvoiceController extends Controller
 
         $this->UpdateInvPoses($invoice, request());
         
+        Log::debug("Successfully saved update");
         return response()->json(['success' => 'success'], 200);
     }
 
