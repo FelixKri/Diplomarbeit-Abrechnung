@@ -33,14 +33,14 @@ class InvoiceController extends Controller
             'reason' => 'required|string',
             'invoicePositions' => 'required|array|min:1',
             'invoicePositions.*.name' => "required|string",
-            'invoicePositions.*.amount' => "required|integer",
+            'invoicePositions.*.amount' => "required|numeric",
             'invoicePositions.*.annotation' => "",
             'invoicePositions.*.belegNr' => "required",
             'invoicePositions.*.iban' => "required_if:invoicePositions.*.paidByTeacher,true",
             'invoicePositions.*.studentIDs' => "required|array|min:1",
             'invoicePositions.*.studentIDs.*' => "integer",
             'invoicePositions.*.studentAmounts' => "required|array|min:1",
-            'invoicePositions.*.studentAmounts.*' => "integer",
+            'invoicePositions.*.studentAmounts.*' => "numeric",
         ];
 
         $messages = [
@@ -284,14 +284,14 @@ class InvoiceController extends Controller
             'reason' => 'required|string',
             'invoicePositions' => 'required|array|min:1',
             'invoicePositions.*.name' => "required|string",
-            'invoicePositions.*.amount' => "required|integer",
+            'invoicePositions.*.amount' => "required|numeric",
             'invoicePositions.*.annotation' => "",
             'invoicePositions.*.belegNr' => "required",
             'invoicePositions.*.iban' => "required_if:invoicePositions.*.paidByTeacher,true",
             'invoicePositions.*.studentIDs' => "required|array|min:1",
             'invoicePositions.*.studentIDs.*' => "integer",
             'invoicePositions.*.studentAmounts' => "required|array|min:1",
-            'invoicePositions.*.studentAmounts.*' => "integer",
+            'invoicePositions.*.studentAmounts.*' => "numeric",
         ];
 
         $messages = [

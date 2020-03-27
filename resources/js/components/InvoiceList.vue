@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h1>Liste aller Vorschreibungen: </h1>
+        <h1>Liste aller Abrechnungen: </h1>
         <table class="table">
             <thead>
                 <tr>
