@@ -4,9 +4,20 @@
     }
 </style>
 
+
+
 <h1>{{$invoice->reason}}</h1>
 <p>Ursprünglicher Author: {{$invoice->author->username}}</p>
 <hr>
+@if ($invoice->approved == false)
+    <p style="
+            position: absolute;
+            transform: rotate(60deg);
+            color: gray;
+            font-size: 10em;
+            top: 200px;"
+    > MUSTER <p>
+@endif
 <table style="width: 90%; border: none;">
     <tr>
         <td style="border: none;">Datum der Erstellung:</td>
@@ -34,7 +45,16 @@
     @endif
     <p>Anmerkungen zur Position:</p>
     <p style="font-family: 'Courier New', Courier, monospace">{{$position->annotation}}</p>
-    <table style="width: 100%;">
+    <table style="width: 100%; position: relative;">
+        @if ($invoice->approved == false)
+            <p style="
+                    position: absolute;
+                    transform: rotate(60deg);
+                    color: gray;
+                    font-size: 10em;
+                    top: 200px;"
+            > MUSTER <p>
+        @endif
         <tr>
             <th>ID</th>
             <th>Klasse</th>
@@ -52,5 +72,18 @@
         </tr>
         @endforeach
     </table>
-    
+    <script type="text/php">
+        if (isset($pdf)) {
+            $x = 250;
+            $y = 10;
+            $text = "Seite {PAGE_NUM} von {PAGE_COUNT}";
+            $font = null;
+            $size = 10;
+            $color = array(0,0,0);
+            $word_space = 0.0;  //  default
+            $char_space = 0.0;  //  default
+            $angle = 0.0;   //  default
+            $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
+        }
+    </script>
 @endforeach
