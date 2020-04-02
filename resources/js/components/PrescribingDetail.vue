@@ -11,7 +11,6 @@
                 type="text"
                 name="title"
                 class="form-control"
-                id=""
                 v-model="prescribing.title"
             />
             <ul
@@ -29,7 +28,6 @@
             <input
                 type="text"
                 name="date"
-                id=""
                 v-model="prescribing.date"
                 class="form-control"
             />
@@ -88,7 +86,6 @@
             <label for="reason">Grund</label>
             <select
                 name="reason"
-                id=""
                 class="form-control"
                 v-model="prescribing.reason"
             >
@@ -165,7 +162,7 @@
                     <td>{{ position.user.first_name }}</td>
                     <td>{{ position.user.group.name }}</td>
                     <td>
-                        <input type="" name="" class="form-control" :value="Math.round((student.amount + Number.EPSILON) * 100) / 100" />
+                        <input type="" name="" class="form-control" v-model="position.amount" />
                     </td>
                     <td>
                         <input
@@ -212,6 +209,9 @@ export default {
     mounted() {
         this.getPrescribing(this.id);
         this.getAllReasons();
+
+        console.log("Prescribing:");
+        console.log(this.prescribing);
     },
     data() {
         return {
@@ -327,8 +327,8 @@ export default {
         },
         release: function() {
             axios
-                .post("/prescribing/setApproved/" + this.id)
-                .then(response => console.log(response))
+                .post("/prescribing/release/" + this.id)
+                .then(response => alert(response))
                 .catch(error => console.log(error));
         },
         reject: function() {

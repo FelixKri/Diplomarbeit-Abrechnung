@@ -138,6 +138,8 @@
                 
                 this.students.forEach(function(student) {
                     studentIds.push(student.id);
+                    console.log("Pushing amounts by:");
+                    console.log(student.amount);
                     studentAmounts.push(student.amount);
                     studentAnnotations.push(student.annotation);
                 });

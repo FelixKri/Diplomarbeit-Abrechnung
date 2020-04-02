@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prescribing extends Model
 {
-    protected $table = 'persons'; 
+    protected $table = 'prescribings'; 
     public $timestamps = false;
 
     protected $fillable = [

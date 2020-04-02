@@ -10,7 +10,7 @@
         <td>{{ student.last_name }}</td>
         <td>{{ student.first_name }}</td>
         <td>
-            <input type="number" name="amount[]" id="" class="form-control" :value="Math.round((student.amount + Number.EPSILON) * 100) / 100">
+            <input type="number" name="amount[]" id="" class="form-control" v-model="student.amount">
         </td>
         <td>
             <input type="text" name="annotation[]" id="" class="form-control" v-model="student.annotation">
