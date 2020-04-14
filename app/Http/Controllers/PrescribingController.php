@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Group;
 use App\FosUser;
 use App\PrescribingSuggestion;
+use App\Prescribing;
 use App\UserHasPrescribingSuggestion;
 use App\Reason;
+use Log;
 
 use Illuminate\Support\Facades\Validator;
 
@@ -31,6 +33,9 @@ class PrescribingController extends Controller
 
     public function store()
     {
+
+        Log::debug("Saving prescribing. Request:");
+            Log::debug(request());
 
         $rules = array(
             'date' => 'date|required',
@@ -80,6 +85,10 @@ class PrescribingController extends Controller
         for ($i = 0; $i < sizeof(request()->students); $i++) {
             $user_has_presc = new UserHasPrescribingSuggestion;
             $user_has_presc->user_id = request()->students[$i];
+
+            Log::debug("Saving prescribing for a stundent withamount:");
+            Log::debug(request()->amount[$i]);
+
             $user_has_presc->amount = (float) request()->amount[$i];
             $user_has_presc->annotation = request()->annotation[$i];
             $user_has_presc->prescribing_suggestion_id = $presc->id;
@@ -148,12 +157,31 @@ class PrescribingController extends Controller
         return response()->json($presc->id, 200);
     }
 
-    public function setApproved($id)
+    public function release($id)
     {
-        $p = PrescribingSuggestion::find($id);
-        $p->finished = false;
-        $p->approved = true;
-        $p->save();
+        $ps = PrescribingSuggestion::find($id);
+        $ps->finished = false;
+        $ps->approved = true;
+        $ps->save();
+
+        $now = date("Y-m-d H:i:s");
+
+        $uhps = UserHasPrescribingSuggestion::Where("prescribing_suggestion_id", $ps->id)->get();
+
+        //Make real prescribings
+        for ($i = 0; $i < sizeof($uhps); $i++) {
+
+            $p = new Prescribing();
+            $p->title = $ps->title;
+            $p->value = $uhps[$i]->amount;
+            $p->user_id = $uhps[$i]->user_id;
+            $p->due_until = $ps->due_until;
+            $p->reason_id = $ps->reason_id;
+            $p->finished = false;
+            //Nötig weil der prescribings table keine timestamps hat sondern nur den created_at
+            $p->created_at = $now;
+            $p->save();
+        }
 
         return response()->json("success", 200);
     }
@@ -169,10 +197,6 @@ class PrescribingController extends Controller
     }
 
     public function reject($id)
-    {
-    }
-
-    public function release($id)
     {
     }
 
