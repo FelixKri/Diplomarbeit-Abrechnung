@@ -42653,8 +42653,7 @@ var render = function() {
                   attrs: { type: "", name: "" },
                   domProps: {
                     value:
-                      Math.round((_vm.student.amount + Number.EPSILON) * 100) /
-                      100
+                      Math.round((position.amount + Number.EPSILON) * 100) / 100
                   }
                 })
               ]),

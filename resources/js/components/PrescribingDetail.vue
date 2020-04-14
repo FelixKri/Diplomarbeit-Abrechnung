@@ -165,7 +165,7 @@
                     <td>{{ position.user.first_name }}</td>
                     <td>{{ position.user.group.name }}</td>
                     <td>
-                        <input type="" name="" class="form-control" :value="Math.round((student.amount + Number.EPSILON) * 100) / 100" />
+                        <input type="" name="" class="form-control" :value="Math.round((position.amount + Number.EPSILON) * 100) / 100" />
                     </td>
                     <td>
                         <input
