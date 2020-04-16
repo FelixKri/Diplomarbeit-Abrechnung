@@ -130,12 +130,14 @@
                 value="Freigeben"
                 class="btn btn-success"
                 @click="release()"
+                :disabled="invoice.saved == false"
             />
             <input
             type="button"
             value="Zurückweisen"
             class="btn btn-danger"
             @click="reject"
+            :disabled="invoice.saved == false"
         />
             <input
             type="button"
