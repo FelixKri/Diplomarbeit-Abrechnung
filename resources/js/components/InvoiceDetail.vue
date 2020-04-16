@@ -125,6 +125,12 @@
                 class="btn btn-success"
                 @click="release()"
             />
+            <input
+            type="button"
+            value="Speichern und Drucken"
+            class="btn btn-primary"
+            @click="print"
+        />
             </div>
         </div>
     </div>
@@ -154,6 +160,13 @@ export default {
                 .post("/invoice/release/" + this.id)
                 .then(response => alert(response["data"]))
                 .catch(error => console.log(error));
+        },
+        print: function() {
+            this.store();
+
+            window.location.href =
+                "/invoice/download/" + this.id;
+            //Todo: Sende Request an PDF Generator Funktion im BackEnd
         },
         store: function() {
 

@@ -196,7 +196,7 @@
         />
         <input
             type="button"
-            value="Drucken"
+            value="Speichern und Drucken"
             class="btn btn-primary"
             @click="print"
         />
