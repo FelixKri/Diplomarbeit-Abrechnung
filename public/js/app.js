@@ -3941,6 +3941,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      released: false,
       id: null,
       title: "",
       author: "admin",
@@ -4024,7 +4025,8 @@ __webpack_require__.r(__webpack_exports__);
         alert("Erfolgreich freigegeben");
       }).catch(function (error) {
         return console.log(error);
-      }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+      });
+      this.released = true;
     },
     addStudents: function addStudents(studentsDom) {
       //Todo check for duplicates
@@ -43428,7 +43430,11 @@ var render = function() {
         _vm._v(" "),
         _c("input", {
           staticClass: "btn btn-primary",
-          attrs: { type: "button", value: "Speichern" },
+          attrs: {
+            type: "button",
+            value: "Speichern",
+            disabled: _vm.released == true
+          },
           on: { click: _vm.store }
         }),
         _vm._v(" "),
