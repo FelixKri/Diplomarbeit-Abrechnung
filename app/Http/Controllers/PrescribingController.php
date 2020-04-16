@@ -208,6 +208,13 @@ class PrescribingController extends Controller
 
     public function reject($id)
     {
+        $p = PrescribingSuggestion::find($id);
+        $p->finished = false;
+        $p->approved = false;
+        $p->save();
+
+        return response()->json("Successfully rejected", 200);
+
     }
 
     public function destroy($id)

@@ -2243,6 +2243,10 @@ __webpack_require__.r(__webpack_exports__);
         return console.log(error);
       });
     },
+    print: function print() {
+      this.store();
+      window.location.href = "/invoice/download/" + this.id; //Todo: Sende Request an PDF Generator Funktion im BackEnd
+    },
     store: function store() {
       var invoicePositionsStripped = [];
       var totalAmountRequest = 0;
@@ -41088,6 +41092,12 @@ var render = function() {
                 return _vm.release()
               }
             }
+          }),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "btn btn-primary",
+            attrs: { type: "button", value: "Speichern und Drucken" },
+            on: { click: _vm.print }
           })
         ],
         2
@@ -42968,7 +42978,7 @@ var render = function() {
       _vm._v(" "),
       _c("input", {
         staticClass: "btn btn-primary",
-        attrs: { type: "button", value: "Drucken" },
+        attrs: { type: "button", value: "Speichern und Drucken" },
         on: { click: _vm.print }
       })
     ],

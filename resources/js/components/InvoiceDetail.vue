@@ -120,6 +120,7 @@
                 ></invoice-detail-position>
 
                 <input
+<<<<<<< HEAD
                     type="button"
                     value="Änderungen speichern"
                     class="btn btn-success"
@@ -131,6 +132,25 @@
                     class="btn btn-success"
                     @click="release()"
                 />
+=======
+                type="button"
+                value="Änderungen speichern"
+                class="btn btn-success"
+                @click="store()"
+            />
+            <input
+                type="button"
+                value="Freigeben"
+                class="btn btn-success"
+                @click="release()"
+            />
+            <input
+            type="button"
+            value="Speichern und Drucken"
+            class="btn btn-primary"
+            @click="print"
+        />
+>>>>>>> af0637e092def3c8db83ae452983825c8eda89f5
             </div>
         </div>
     </div>
@@ -160,6 +180,13 @@ export default {
                 .post("/invoice/release/" + this.id)
                 .then(response => alert(response["data"]))
                 .catch(error => console.log(error));
+        },
+        print: function() {
+            this.store();
+
+            window.location.href =
+                "/invoice/download/" + this.id;
+            //Todo: Sende Request an PDF Generator Funktion im BackEnd
         },
         store: function() {
             var invoicePositionsStripped = [];
