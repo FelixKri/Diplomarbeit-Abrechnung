@@ -127,6 +127,12 @@
             />
             <input
             type="button"
+            value="Zurückweisen"
+            class="btn btn-danger"
+            @click="reject"
+        />
+            <input
+            type="button"
             value="Speichern und Drucken"
             class="btn btn-primary"
             @click="print"
@@ -167,6 +173,12 @@ export default {
             window.location.href =
                 "/invoice/download/" + this.id;
             //Todo: Sende Request an PDF Generator Funktion im BackEnd
+        },
+        reject: function() {
+            axios
+                .post("/invoice/reject/" + this.id)
+                .then(response => alert(response["data"]))
+                .catch(error => console.log(error));
         },
         store: function() {
 

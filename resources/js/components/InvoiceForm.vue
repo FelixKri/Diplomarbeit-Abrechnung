@@ -106,6 +106,7 @@
                 class="btn btn-success"
                 @click="store()"
             />
+            <input type="button" value="Freigeben" class="btn btn-success" @click="release" :disabled="id == null">
         </form>
     </div>
 </template>
@@ -120,7 +121,7 @@ export default {
             reason: "",
             annotation: "",
             invoicePositions: [],
-            id: 0,
+            id: null,
             errors: {},
         };
     },
@@ -168,6 +169,17 @@ export default {
             }
             
         },
+        release: function(){
+                axios
+                    .post("/invoice/setFinished/" + this.id)
+                    .then(response => {
+                        console.log(response)
+                        alert("Erfolgreich freigegeben")
+                    })
+                    .catch(error => console.log(error));
+
+                    //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+            },
 
         store: function() {
             var that = this;
@@ -219,6 +231,7 @@ export default {
                 success: function(response) {
                     console.log(response);
                     alert("Erfolgreich gespeichert!");
+                    that.id = response;
                 },
                 error: function(xhr, status, error) {
                     var respJson = JSON.parse(xhr.responseText);

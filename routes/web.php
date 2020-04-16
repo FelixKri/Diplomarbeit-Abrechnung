@@ -24,6 +24,8 @@ Route::get('/invoice/list', 'InvoiceController@show');
 Route::get('/invoice/view/{id}', 'InvoiceController@showDetail');
 Route::post('/invoice/update', 'InvoiceController@update');
 Route::post('/invoice/release/{id}', 'InvoiceController@release');
+Route::post('/invoice/reject/{id}', 'InvoiceController@reject');
+Route::post('/invoice/setFinished/{id}', 'InvoiceController@setFinished');
 Route::get('/invoices/list/getInvoices', 'InvoiceController@getInvoices');
 Route::get('/invoices/view/getInvoice/{id}', 'InvoiceController@getInvoiceById');
 

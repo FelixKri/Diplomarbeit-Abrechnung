@@ -385,7 +385,7 @@ class InvoiceController extends Controller
             
         }
 
-        return response()->json(['success' => 'success'], 200);
+        return response()->json($inv->id, 200);
     }
 
     public function show(){
@@ -409,5 +409,26 @@ class InvoiceController extends Controller
 
     public function destroy(){
             
+    }
+
+    public function setFinished($id)
+    {
+        $i = Invoice::find($id);
+        $i->saved = true;
+        $i->approved = false;
+        $i->save();
+
+        return response()->json("success", 200);
+    }
+
+    public function reject($id)
+    {
+        $i = Invoice::find($id);
+        $i->saved = false;
+        $i->approved = false;
+        $i->save();
+
+        return response()->json("Successfully rejected", 200);
+
     }
 }

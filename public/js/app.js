@@ -2259,6 +2259,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   mounted: function mounted() {
@@ -2290,6 +2296,13 @@ __webpack_require__.r(__webpack_exports__);
     print: function print() {
       this.store();
       window.location.href = "/invoice/download/" + this.id; //Todo: Sende Request an PDF Generator Funktion im BackEnd
+    },
+    reject: function reject() {
+      axios.post("/invoice/reject/" + this.id).then(function (response) {
+        return alert(response["data"]);
+      }).catch(function (error) {
+        return console.log(error);
+      });
     },
     store: function store() {
       var invoicePositionsStripped = [];
@@ -2838,6 +2851,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2847,7 +2861,7 @@ __webpack_require__.r(__webpack_exports__);
       reason: "",
       annotation: "",
       invoicePositions: [],
-      id: 0,
+      id: null,
       errors: {}
     };
   },
@@ -2893,6 +2907,14 @@ __webpack_require__.r(__webpack_exports__);
         this.invoicePositions.push(position);
       }
     },
+    release: function release() {
+      axios.post("/invoice/setFinished/" + this.id).then(function (response) {
+        console.log(response);
+        alert("Erfolgreich freigegeben");
+      }).catch(function (error) {
+        return console.log(error);
+      }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+    },
     store: function store() {
       var that = this;
       var invoicePositionsStripped = [];
@@ -2934,6 +2956,7 @@ __webpack_require__.r(__webpack_exports__);
         success: function success(response) {
           console.log(response);
           alert("Erfolgreich gespeichert!");
+          that.id = response;
         },
         error: function error(xhr, status, _error) {
           var respJson = JSON.parse(xhr.responseText);
@@ -40871,6 +40894,12 @@ var render = function() {
           }),
           _vm._v(" "),
           _c("input", {
+            staticClass: "btn btn-danger",
+            attrs: { type: "button", value: "Zurückweisen" },
+            on: { click: _vm.reject }
+          }),
+          _vm._v(" "),
+          _c("input", {
             staticClass: "btn btn-primary",
             attrs: { type: "button", value: "Speichern und Drucken" },
             on: { click: _vm.print }
@@ -41641,6 +41670,12 @@ var render = function() {
             return _vm.store()
           }
         }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "btn btn-success",
+        attrs: { type: "button", value: "Freigeben", disabled: _vm.id == null },
+        on: { click: _vm.release }
       })
     ])
   ])
@@ -56204,14 +56239,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************************!*\
   !*** ./resources/js/components/InvoiceDetail.vue ***!
   \***************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _InvoiceDetail_vue_vue_type_template_id_12096e83___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./InvoiceDetail.vue?vue&type=template&id=12096e83& */ "./resources/js/components/InvoiceDetail.vue?vue&type=template&id=12096e83&");
 /* harmony import */ var _InvoiceDetail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InvoiceDetail.vue?vue&type=script&lang=js& */ "./resources/js/components/InvoiceDetail.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _InvoiceDetail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _InvoiceDetail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -56241,7 +56277,7 @@ component.options.__file = "resources/js/components/InvoiceDetail.vue"
 /*!****************************************************************************!*\
   !*** ./resources/js/components/InvoiceDetail.vue?vue&type=script&lang=js& ***!
   \****************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
