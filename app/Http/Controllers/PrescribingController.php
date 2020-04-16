@@ -69,7 +69,12 @@ class PrescribingController extends Controller
         }
 
 
-        $presc = new PrescribingSuggestion();
+        if(request()->id == null){
+            $presc = new PrescribingSuggestion();
+        }else{
+            $presc = PrescribingSuggestion::find(request()->id);
+        }
+
         $presc->date = request()->date;
         $presc->total_amount = request()->totalAmount;
         $presc->due_until = request()->due_until;
@@ -82,11 +87,16 @@ class PrescribingController extends Controller
         $presc->author_id = FosUser::where('username', request()->author)->first()->id;
         $presc->save();
 
+        if(request()->id != null){
+            UserHasPrescribingSuggestion::where('prescribing_suggestion_id', request()->id)->delete();
+        }
+
         for ($i = 0; $i < sizeof(request()->students); $i++) {
+            
             $user_has_presc = new UserHasPrescribingSuggestion;
             $user_has_presc->user_id = request()->students[$i];
 
-            Log::debug("Saving prescribing for a stundent withamount:");
+            Log::debug("Saving prescribing for a stundent with amount:");
             Log::debug(request()->amount[$i]);
 
             $user_has_presc->amount = (float) request()->amount[$i];

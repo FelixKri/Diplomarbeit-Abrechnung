@@ -153,6 +153,7 @@
                     url: '/prescribing/new',
                     dataType: 'json',
                     data: {
+                        "id": that.id,
                         "title": that.title,
                         "author": that.author,
                         "date": that.date,
