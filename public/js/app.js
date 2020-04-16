@@ -2228,6 +2228,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   mounted: function mounted() {
@@ -2245,6 +2251,13 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get("/invoices/view/getInvoice/" + id).then(function (response) {
         return _this.invoice = response.data;
+      }).catch(function (error) {
+        return console.log(error);
+      });
+    },
+    release: function release() {
+      axios.post("/invoice/release/" + this.id).then(function (response) {
+        return alert(response);
       }).catch(function (error) {
         return console.log(error);
       });
@@ -40753,6 +40766,16 @@ var render = function() {
             on: {
               click: function($event) {
                 return _vm.store()
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "btn btn-success",
+            attrs: { type: "button", value: "Freigeben" },
+            on: {
+              click: function($event) {
+                return _vm.release()
               }
             }
           })

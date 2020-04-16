@@ -100,6 +100,12 @@
                 class="btn btn-success"
                 @click="store()"
             />
+            <input
+                type="button"
+                value="Freigeben"
+                class="btn btn-success"
+                @click="release()"
+            />
             </div>
         </div>
     </div>
@@ -122,6 +128,12 @@ export default {
             axios
                 .get("/invoices/view/getInvoice/" + id)
                 .then(response => (this.invoice = response.data))
+                .catch(error => console.log(error));
+        },
+        release: function(){
+            axios
+                .post("/invoice/release/" + this.id)
+                .then(response => alert(response))
                 .catch(error => console.log(error));
         },
         store: function() {
