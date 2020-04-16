@@ -3,18 +3,33 @@
         <h1>Neue Abrechnung erstellen</h1>
         <form action="/invoice/new" method="post">
             <div class="form-group">
-                <label for="reason">Grund</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="reason"
-                    placeholder="Grund der Abrechnung"
-                    name="reason"
-                    v-model="reason"
-                />
-                <ul v-if="errors.reason" class="alert alert-danger" style="margin: 1em 0;">
-                    <span v-for="error in errors.reason" v-bind:key="error.id">{{error}}<br></span>
-                </ul>
+                <div class="form-group">
+                    <label for="reason">Grund</label>
+                    <select
+                        name="reason"
+                        id=""
+                        class="form-control"
+                        v-model="reason"
+                    >
+                        <option
+                            v-for="reason in reason_list"
+                            :value="reason.title"
+                            v-bind:key="reason.id"
+                            >{{ reason.title }}</option
+                        >
+                    </select>
+                    <ul
+                        v-if="errors.reason"
+                        class="alert alert-danger"
+                        style="margin: 1em 0;"
+                    >
+                        <span
+                            v-for="error in errors.reason"
+                            v-bind:key="error.id"
+                            >{{ error }}<br
+                        /></span>
+                    </ul>
+                </div>
             </div>
             <div class="form-group">
                 <label for="date">Datum</label>
@@ -26,8 +41,14 @@
                     name="date"
                     v-model="date"
                 />
-                <ul v-if="errors.date" class="alert alert-danger" style="margin: 1em 0;">
-                    <span v-for="error in errors.date" v-bind:key="error.id">{{error}}<br></span>
+                <ul
+                    v-if="errors.date"
+                    class="alert alert-danger"
+                    style="margin: 1em 0;"
+                >
+                    <span v-for="error in errors.date" v-bind:key="error.id"
+                        >{{ error }}<br
+                    /></span>
                 </ul>
             </div>
             <div class="form-group">
@@ -40,8 +61,16 @@
                     name="due_until"
                     v-model="due_until"
                 />
-                <ul v-if="errors.due_until" class="alert alert-danger" style="margin: 1em 0;">
-                    <span v-for="error in errors.due_until" v-bind:key="error.id">{{error}}<br></span>
+                <ul
+                    v-if="errors.due_until"
+                    class="alert alert-danger"
+                    style="margin: 1em 0;"
+                >
+                    <span
+                        v-for="error in errors.due_until"
+                        v-bind:key="error.id"
+                        >{{ error }}<br
+                    /></span>
                 </ul>
             </div>
             <div class="form-group">
@@ -63,8 +92,16 @@
                     rows="5"
                     v-model="annotation"
                 ></textarea>
-                <ul v-if="errors.annotation" class="alert alert-danger" style="margin: 1em 0;">
-                    <span v-for="error in errors.annotation" v-bind:key="error.id">{{error}}<br></span>
+                <ul
+                    v-if="errors.annotation"
+                    class="alert alert-danger"
+                    style="margin: 1em 0;"
+                >
+                    <span
+                        v-for="error in errors.annotation"
+                        v-bind:key="error.id"
+                        >{{ error }}<br
+                    /></span>
                 </ul>
             </div>
 
@@ -95,11 +132,13 @@
                         v-bind:key="pos.id"
                         :position="pos"
                         :errors="errors"
-                        v-on:removeInvoicePosition="removeInvoicePosition($event)"
+                        v-on:removeInvoicePosition="
+                            removeInvoicePosition($event)
+                        "
                     ></invoice-position>
                 </div>
             </div>
-            <br>
+            <br />
             <input
                 type="button"
                 value="Speichern"
@@ -112,6 +151,7 @@
 
 <script>
 export default {
+    props: ["reason_list"],
     data: function() {
         return {
             author: "admin",
@@ -121,14 +161,14 @@ export default {
             annotation: "",
             invoicePositions: [],
             id: 0,
-            errors: {},
+            errors: {}
         };
     },
-    computed:{
-        totalAmountComputed: function(){
+    computed: {
+        totalAmountComputed: function() {
             let totalAmt = 0;
 
-            this.invoicePositions.forEach(function(position){
+            this.invoicePositions.forEach(function(position) {
                 totalAmt += position.amount;
             });
 
@@ -136,19 +176,25 @@ export default {
         }
     },
     methods: {
-        removeInvoicePosition: function(event){
+        removeInvoicePosition: function(event) {
             alert("loda");
             console.log(event);
 
-            this.invoicePositions = this.invoicePositions.filter(function( obj ) {
+            this.invoicePositions = this.invoicePositions.filter(function(obj) {
                 return obj.id !== event;
             });
         },
         addPos: function() {
             var name = prompt("Namen der Rechnungspos eingeben", "");
-            if(name != null){
-                while(name === "" || this.invoicePositions.filter(e => e.name === name).length > 0){
-                    name = prompt("Bitte den Namen der Rechnungsposition nicht leer lassen oder einen bereits verwendeten Namen eingeben.")
+            if (name != null) {
+                while (
+                    name === "" ||
+                    this.invoicePositions.filter(e => e.name === name).length >
+                        0
+                ) {
+                    name = prompt(
+                        "Bitte den Namen der Rechnungsposition nicht leer lassen oder einen bereits verwendeten Namen eingeben."
+                    );
                 }
                 this.id = this.id + 1;
                 var id = this.id;
@@ -166,7 +212,6 @@ export default {
 
                 this.invoicePositions.push(position);
             }
-            
         },
 
         store: function() {
@@ -176,15 +221,15 @@ export default {
 
             this.invoicePositions.forEach(function(position) {
                 invoicePositionsStripped.push({
-                    "id": position.id,
-                    "name": position.name,
-                    "amount": position.amount,
-                    "annotation": position.annotation,
-                    "belegNr": position.document_number,
-                    "paidByTeacher": position.paidByTeacher,
-                    "iban": position.iban,
-                    "studentIDs": [],
-                    "studentAmounts": [],
+                    id: position.id,
+                    name: position.name,
+                    amount: position.amount,
+                    annotation: position.annotation,
+                    belegNr: position.document_number,
+                    paidByTeacher: position.paidByTeacher,
+                    iban: position.iban,
+                    studentIDs: [],
+                    studentAmounts: []
                 });
 
                 totalAmountRequest += position.amount;
@@ -208,13 +253,13 @@ export default {
                 url: "/invoice/new",
                 dataType: "json",
                 data: {
-                    "author": that.author,
-                    "date": that.date,
-                    "due_until": that.due_until,
-                    "reason": that.reason,
-                    "annotation": that.annotation,
-                    "totalAmount": totalAmountRequest,
-                    "invoicePositions": invoicePositionsStripped
+                    author: that.author,
+                    date: that.date,
+                    due_until: that.due_until,
+                    reason: that.reason,
+                    annotation: that.annotation,
+                    totalAmount: totalAmountRequest,
+                    invoicePositions: invoicePositionsStripped
                 },
                 success: function(response) {
                     console.log(response);

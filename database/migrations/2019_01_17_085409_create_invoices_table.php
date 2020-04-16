@@ -15,7 +15,7 @@ class CreateInvoicesTable extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('reason');
+            $table->integer('reason_id');
             $table->integer('author_id');
             $table->text('annotation')->nullable();
             $table->boolean('approved')->default($value = false);

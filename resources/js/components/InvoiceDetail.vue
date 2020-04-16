@@ -7,21 +7,27 @@
         </p>
         <div class="form-group">
             <label for="title">Abrechnungsgrund: </label>
-            <input
-                type="text"
-                name="title"
-                class="form-control"
+            <select
+                name="reason"
                 id=""
-                v-model="invoice.reason"
-            />
+                class="form-control"
+                v-model="invoice.reason.title"
+            >
+                <option
+                    v-for="reason in reason_list"
+                    :value="reason.title"
+                    v-bind:key="reason.id"
+                    >{{ reason.title }}</option
+                >
+            </select>
             <ul
-                v-if="errors.title"
+                v-if="errors.reason"
                 class="alert alert-danger"
                 style="margin: 1em 0;"
             >
-                <li v-for="error in errors.title" v-bind:key="error.id">
-                    {{ error }}
-                </li>
+                <span v-for="error in errors.reason" v-bind:key="error.id"
+                    >{{ error }}<br
+                /></span>
             </ul>
         </div>
         <div class="form-group">
@@ -44,7 +50,7 @@
             </ul>
         </div>
         <div class="form-group">
-            <label for="date">Datum der Abrechnung: </label>
+            <label for="date">Spätest gewünschtes Einzahlungsdatum: </label>
             <input
                 type="text"
                 name="date"
@@ -62,7 +68,7 @@
                 </li>
             </ul>
         </div>
-        
+
         <div class="form-group">
             <label for="description">Anmerkungen </label>
             <textarea
@@ -114,17 +120,17 @@
                 ></invoice-detail-position>
 
                 <input
-                type="button"
-                value="Änderungen speichern"
-                class="btn btn-success"
-                @click="store()"
-            />
-            <input
-                type="button"
-                value="Freigeben"
-                class="btn btn-success"
-                @click="release()"
-            />
+                    type="button"
+                    value="Änderungen speichern"
+                    class="btn btn-success"
+                    @click="store()"
+                />
+                <input
+                    type="button"
+                    value="Freigeben"
+                    class="btn btn-success"
+                    @click="release()"
+                />
             </div>
         </div>
     </div>
@@ -132,7 +138,7 @@
 
 <script>
 export default {
-    props: ["id"],
+    props: ["id", "reason_list"],
     mounted() {
         this.getInvoice(this.id);
     },
@@ -149,19 +155,17 @@ export default {
                 .then(response => (this.invoice = response.data))
                 .catch(error => console.log(error));
         },
-        release: function(){
+        release: function() {
             axios
                 .post("/invoice/release/" + this.id)
                 .then(response => alert(response["data"]))
                 .catch(error => console.log(error));
         },
         store: function() {
-
             var invoicePositionsStripped = [];
             var totalAmountRequest = 0;
 
             this.invoice.positions.forEach(function(position) {
-                
                 //console.log("position:");
                 //console.log(position);
 
@@ -177,24 +181,21 @@ export default {
                 //Bypasses paidbyteacher = 0 => becomes undefined and doesnt send per ajax bug
                 var paidByTeacher = false;
 
-                if(position.paidByTeacher == 1)
-                    paidByTeacher = true;
+                if (position.paidByTeacher == 1) paidByTeacher = true;
 
                 invoicePositionsStripped.push({
-                    "id": position.id,
-                    "name": position.name,
-                    "amount": position.total_amount,
-                    "annotation": position.annotation,
-                    "belegNr": position.document_number,
-                    "paidByTeacher": paidByTeacher,
-                    "iban": position.iban,
-                    "studentIDs": studentIDs,
-                    "studentAmounts": studentAmounts,
+                    id: position.id,
+                    name: position.name,
+                    amount: position.total_amount,
+                    annotation: position.annotation,
+                    belegNr: position.document_number,
+                    paidByTeacher: paidByTeacher,
+                    iban: position.iban,
+                    studentIDs: studentIDs,
+                    studentAmounts: studentAmounts
                 });
 
                 totalAmountRequest += position.total_amount;
-
-                
             });
 
             var that = this;
@@ -209,14 +210,14 @@ export default {
                 url: "/invoice/update",
                 dataType: "json",
                 data: {
-                    "id": that.invoice.id,
-                    "author": "admin",
-                    "date": that.invoice.date,
-                    "due_until": that.invoice.due_until,
-                    "reason": that.invoice.reason,
-                    "annotation": that.invoice.annotation,
-                    "totalAmount": totalAmountRequest,
-                    "invoicePositions": invoicePositionsStripped
+                    id: that.invoice.id,
+                    author: "admin",
+                    date: that.invoice.date,
+                    due_until: that.invoice.due_until,
+                    reason: that.invoice.reason.title,
+                    annotation: that.invoice.annotation,
+                    totalAmount: totalAmountRequest,
+                    invoicePositions: invoicePositionsStripped
                 },
                 success: function(response) {
                     //alert("loda")

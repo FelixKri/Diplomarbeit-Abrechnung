@@ -1,5 +1,5 @@
 @extends('layout.master')
 
 @section('content')
-    <invoice-form></invoice-form>
+    <invoice-form :reason_list="{{$reasons}}"></invoice-form>
 @endsection
