@@ -131,6 +131,10 @@
                 return this.students;
             },
             store: function(){
+
+                this.errors = null;
+                this.errors = {};
+
                 var that = this; //i hate this(that)
                 var studentIds = [];
                 var studentAmounts = [];
@@ -153,6 +157,7 @@
                     url: '/prescribing/new',
                     dataType: 'json',
                     data: {
+                        "id": that.id,
                         "title": that.title,
                         "author": that.author,
                         "date": that.date,
@@ -171,6 +176,7 @@
                         that.id = response;
                         //window.location = "/";
                         //disable Speicherbutton
+                        that.errors = {};
                     },
                     error: function(xhr, status, error) {
                         var respJson = JSON.parse(xhr.responseText);

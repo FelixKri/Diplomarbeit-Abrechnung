@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Invoice extends Model
 {
     protected $table = 'invoices'; 
-    protected $fillable = ['reason', 'author_id', 'annotation', 'approved', 'saved', 'total_amount', 'date', 'due_until'];
+    protected $fillable = ['reason_id', 'author_id', 'annotation', 'approved', 'saved', 'total_amount', 'date', 'due_until'];
 
     public function author(){
         return $this->belongsTo(FosUser::class, 'author_id');
@@ -15,5 +15,9 @@ class Invoice extends Model
 
     public function positions(){
         return $this->hasMany(InvoicePosition::class, 'invoice_id');
+    }
+
+    public function reason(){
+        return $this->belongsTo(Reason::class, 'reason_id');
     }
 }

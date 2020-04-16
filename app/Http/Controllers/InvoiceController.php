@@ -10,6 +10,7 @@ use App\Invoice;
 use App\InvoicePosition;
 use App\UserHasInvoicePosition;
 use App\FosUser;
+use App\Reason;
 use Log;
 
 
@@ -21,7 +22,10 @@ class InvoiceController extends Controller
     }
 
     public function create(){
-        return view('invoice.create');
+
+        $reasons = Reason::all();
+
+        return view('invoice.create', compact("reasons"));
     }
 
     public function update(){
@@ -32,7 +36,7 @@ class InvoiceController extends Controller
             'date' => 'date|required',
             'due_until' => 'date|after:today|required|date_format:Y-m-d',
             'author' => 'required|string',
-            'reason' => 'required|string',
+            'reason' => 'required',
             'invoicePositions' => 'required|array|min:1',
             'invoicePositions.*.name' => "required|string",
             'invoicePositions.*.amount' => "required|numeric",
@@ -105,7 +109,7 @@ class InvoiceController extends Controller
             return response()->json(['errors' => "Invoice not found"], 401);
         }
 
-        $invoice->reason = request()->reason;
+        $invoice->reason_id = Reason::where('title', request()->reason)->first()->id;
         $invoice->total_amount = request()->totalAmount;
         $invoice->annotation = request()->annotation;
         $invoice->due_until = request()->due_until;
@@ -141,7 +145,7 @@ class InvoiceController extends Controller
                 $p->value = $uhip[$i]->amount;
                 $p->user_id = $uhip[$i]->user_id;
                 $p->due_until = $in->due_until;
-                $p->reason_id = 0;
+                $p->reason_id = $in->reason_id;
                 $p->finished = false;
                 //Nötig weil der prescribings table keine timestamps hat sondern nur den created_at
                 $p->created_at = $now;
@@ -318,7 +322,7 @@ class InvoiceController extends Controller
             'date' => 'date|required',
             'due_until' => 'date|after:today|required|date_format:Y-m-d',
             'author' => 'required|string',
-            'reason' => 'required|string',
+            'reason' => 'required',
             'invoicePositions' => 'required|array|min:1',
             'invoicePositions.*.name' => "required|string",
             'invoicePositions.*.amount' => "required|numeric",
@@ -351,7 +355,7 @@ class InvoiceController extends Controller
         $inv->date = request()->date;
         $inv->due_until = request()->due_until;
         $inv->author_id = FosUser::where('username', request()->author)->first()->id;
-        $inv->reason = request()->reason;
+        $inv->reason_id = Reason::where('title', request()->reason)->first()->id;
         $inv->total_amount = request()->totalAmount;
         $inv->annotation = request()->annotation;
         $inv->save();
@@ -398,13 +402,16 @@ class InvoiceController extends Controller
     }
 
     public function getInvoiceById($id){
-        $invoice = Invoice::with('author', 'positions', 'positions.userHasInvoicePosition', 'positions.userHasInvoicePosition.user', 'positions.userHasInvoicePosition.user.group')->find($id);        
+        $invoice = Invoice::with('author', 'positions', 'positions.userHasInvoicePosition', 'positions.userHasInvoicePosition.user', 'positions.userHasInvoicePosition.user.group', 'reason')->find($id);        
 
         return $invoice;
     }
 
     public function showDetail($id){
-        return view('invoice.detailView', compact('id'));
+
+        $reasons = Reason::all();
+        
+        return view('invoice.detailView', compact('id', 'reasons'));
     }
 
     public function destroy(){
