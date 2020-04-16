@@ -145,7 +145,7 @@
                 class="btn btn-success"
                 @click="store()"
             />
-            <input type="button" value="Freigeben" class="btn btn-success" @click="release" :disabled="id == null">
+            <input type="button" value="Freigeben" class="btn btn-success" @click="release" :disabled="this.saved == false">
         </form>
     </div>
 </template>
@@ -161,13 +161,9 @@ export default {
             reason: "",
             annotation: "",
             invoicePositions: [],
-<<<<<<< HEAD
             id: null,
             errors: {},
-=======
-            id: 0,
-            errors: {}
->>>>>>> 051cd9024f67f45a45e42c4313a640e270b27683
+            saved: false
         };
     },
     computed: {
@@ -287,6 +283,7 @@ export default {
                     that.errors = {};
                     alert("Erfolgreich gespeichert!");
                     that.id = response;
+                    that.saved = true;
                 },
                 error: function(xhr, status, error) {
                     var respJson = JSON.parse(xhr.responseText);
