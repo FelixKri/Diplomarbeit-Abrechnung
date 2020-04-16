@@ -89,10 +89,7 @@
                 class="form-control"
                 v-model="prescribing.reason"
             >
-                <option
-                    value=""
-                    >
-                </option>
+                <option value=""> </option>
                 <option
                     v-for="reason in reasons"
                     :value="reason"
@@ -142,9 +139,79 @@
             :id="1"
         ></add-person-modal>
         <hr />
+        <table>
+            <tr>
+                <td>
+                    <input
+                        type="number"
+                        id="number"
+                        placeholder="Betrag"
+                        class="form-control"
+                        v-model="amount_st"
+                    />
+                </td>
+                <td>
+                    <input
+                        class="btn btn-primary btn-sm"
+                        @click="splitEveryone()"
+                        type="button"
+                        value="Auf alle Aufteilen"
+                    />
+                </td>
+                <td>
+                    <input
+                        class="btn btn-primary btn-sm"
+                        @click="splitSelected()"
+                        type="button"
+                        value="Auf ausgewählte Aufteilen"
+                    />
+                </td>
+                <td>
+                    <input
+                        class="btn btn-primary btn-sm"
+                        @click="assignEveryone()"
+                        type="button"
+                        value="Betrag allen zuweisen"
+                    />
+                </td>
+                <td>
+                    <input
+                        class="btn btn-primary btn-sm"
+                        @click="assignSelected()"
+                        type="button"
+                        value="Betrag ausgewählten zuweisen "
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input
+                        type="radio"
+                        id="type"
+                        name="type"
+                        value="overwrite"
+                        checked
+                        v-model="type"
+                    />
+                    <label for="type">Überschreiben</label>
+                </td>
+                <td>
+                    <input
+                        type="radio"
+                        id="type"
+                        name="type"
+                        value="add"
+                        v-model="type"
+                    />
+                    <label for="type">Hinzuaddieren</label>
+                </td>
+            </tr>
+        </table>
+
         <table class="table">
             <thead>
                 <tr>
+                    <th scope="col">X</th>
                     <th scope="col">Nachname</th>
                     <th scope="col">Vorname</th>
                     <th scope="col">Klasse</th>
@@ -158,12 +225,20 @@
                     v-for="position in prescribing.positions"
                     v-bind:key="position.id"
                 >
+                    <td>
+                        <input type="checkbox" v-model="position.checked">
+                    </td>
                     <td>{{ position.user.last_name }}</td>
                     <td>{{ position.user.first_name }}</td>
                     <td>{{ position.user.group.name }}</td>
                     <td>
-                        <input type="" name="" class="form-control" v-model="position.amount" />
-                     </td>
+                        <input
+                            type=""
+                            name=""
+                            class="form-control"
+                            v-model="position.amount"
+                        />
+                    </td>
                     <td>
                         <input
                             type="text"
@@ -172,7 +247,12 @@
                             placeholder="Optionale Anmerkung"
                         />
                     </td>
-                    <td style="cursor: pointer;" @click="removeStudent(position.id);" ><i class="fas fa-user-minus" ></i></td>
+                    <td
+                        style="cursor: pointer;"
+                        @click="removeStudent(position.id)"
+                    >
+                        <i class="fas fa-user-minus"></i>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -228,7 +308,9 @@ export default {
                 author: ""
             },
             reasons: null,
-            errors: {}
+            errors: {},
+            amount_st: 0,
+            type: "overwrite"
         };
     },
     methods: {
@@ -253,10 +335,10 @@ export default {
                     this.prescribing.date = this.prescribingRequested.date;
                     this.prescribing.due_until = this.prescribingRequested.due_until;
                     this.prescribing.reason_suggestion = this.prescribingRequested.reason_suggestion;
-                    if(this.prescribingRequested.reason){
+                    if (this.prescribingRequested.reason) {
                         this.prescribing.reason = this.prescribingRequested.reason.title;
                     }
-                        
+
                     this.prescribing.description = this.prescribingRequested.description;
                     this.prescribing.positions = this.prescribingRequested.positions;
                     this.prescribing.author = this.prescribingRequested.author.username;
@@ -265,8 +347,10 @@ export default {
             })();
         },
         addStudents: function() {},
-        removeStudent: function(id){
-            this.prescribing.positions = this.prescribing.positions.filter(el => el.id !== id);
+        removeStudent: function(id) {
+            this.prescribing.positions = this.prescribing.positions.filter(
+                el => el.id !== id
+            );
         },
         store: function() {
             var that = this;
@@ -336,6 +420,156 @@ export default {
                 .post("/prescribing/reject/" + this.id)
                 .then(response => console.log(response))
                 .catch(error => console.log(error));
+        },
+        splitEveryone: function() {
+            /**
+             * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
+             */
+            alert(
+                "Folgender Betrag wird auf alle Schüler aufgeteilt: " +
+                    this.amount_st
+            );
+
+            let number_of_students = this.prescribing.positions.length;
+
+            alert("Schülerzahl: " + number_of_students);
+
+            let value = this.amount_st / number_of_students;
+
+            alert("Betrag pro Schüler: " + value);
+
+            var splitMoney = 0;
+
+            if (this.type == "overwrite") {
+                this.prescribing.positions.forEach(function(student) {
+                    var studentMoney = Math.round(value * 100) / 100;
+                    student.amount = studentMoney;
+                    splitMoney += studentMoney;
+                });
+            } else {
+                this.prescribing.positions.forEach(function(student) {
+                    var studentMoney = Math.round(value * 100) / 100;
+                    student.amount += studentMoney;
+                    splitMoney += studentMoney;
+                });
+            }
+
+            //CENTAUSGLEICH
+            //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+            var centdiff =
+            Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+            console.log("centdiff: " + centdiff);
+            console.log("splitted money: " + splitMoney);
+            console.log("all money: " + this.amount_st);
+
+            if (centdiff > 0) {
+                this.prescribing.positions.forEach(function(student) {
+                    if (centdiff <= 0) {
+                        return;
+                    }
+
+                    //Same here, 33.33 + .01 = 33,339999999999996
+                    student.amount =
+                        Math.round((student.amount + 0.01) * 100) / 100;
+                    centdiff -= 0.01;
+                });
+            } else if (centdiff < 0) {
+                //Students pay too much
+                this.prescribing.positions.forEach(function(student) {
+                    if (centdiff >= 0) {
+                        return;
+                    }
+
+                    //Same here
+                    student.amount -=
+                        Math.round((student.amount - 0.01) * 100) / 100;
+                    centdiff += 0.01;
+                });
+            }
+
+            //Just for information: the program will not reach this point after centausgleich
+            //Because return was used instead of break
+        },
+
+        splitSelected: function() {
+            /**
+             * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
+             */
+
+            alert(
+                "Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " +
+                    this.amount_st
+            );
+
+            let number_of_students = 0;
+            this.prescribing.positions.forEach(function(student) {
+                if (student.checked) {
+                    number_of_students++;
+                }
+            });
+
+            alert("Schülerzahl: " + number_of_students);
+
+            let value = this.amount_st / number_of_students;
+
+            alert("Betrag pro Schüler: " + value);
+
+            if (this.type == "overwrite") {
+                this.prescribing.positions.forEach(function(student) {
+                    if (student.checked) {
+                        student.amount = value;
+                    }
+                });
+            } else {
+                this.prescribing.positions.forEach(function(student) {
+                    if (student.checked) {
+                        student.amount += value;
+                    }
+                });
+            }
+        },
+        assignEveryone: function() {
+            alert(
+                "Folgender Betrag wird allen Schülern zugewiesen: " +
+                    this.amount_st
+            );
+
+            let value = parseFloat(this.amount_st);
+
+            if (this.type == "overwrite") {
+                this.prescribing.positions.forEach(function(student) {
+                    student.amount = value;
+                });
+            } else {
+                this.prescribing.positions.forEach(function(student) {
+                    student.amount += value;
+                });
+            }
+        },
+        assignSelected: function() {
+            /*
+             * Weist den Betrag aus dem Betrag-Feld allen ausgewählten Schülern zu.
+             */
+            alert(
+                "Folgender Betrag wird ausgewählten Schülern zugewiesen: " +
+                    this.amount_st
+            );
+
+            let value = this.amount_st;
+
+            if (this.type == "overwrite") {
+                this.prescribing.positions.forEach(function(student) {
+                    if (student.checked) {
+                        student.amount = value;
+                    }
+                });
+            } else {
+                this.prescribing.positions.forEach(function(student) {
+                    if (student.checked) {
+                        student.amount += value;
+                    }
+                });
+            }
         }
     }
 };
