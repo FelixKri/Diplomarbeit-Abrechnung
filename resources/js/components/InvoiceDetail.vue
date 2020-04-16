@@ -152,7 +152,7 @@ export default {
         release: function(){
             axios
                 .post("/invoice/release/" + this.id)
-                .then(response => alert(response))
+                .then(response => alert(response["data"]))
                 .catch(error => console.log(error));
         },
         store: function() {

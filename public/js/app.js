@@ -2276,7 +2276,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     release: function release() {
       axios.post("/invoice/release/" + this.id).then(function (response) {
-        return alert(response);
+        return alert(response["data"]);
       }).catch(function (error) {
         return console.log(error);
       });

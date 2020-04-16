@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use App\Prescribing;
 use App\Invoice;
 use App\InvoicePosition;
 use App\UserHasInvoicePosition;
@@ -121,30 +122,34 @@ class InvoiceController extends Controller
     public function release($id)
     {
         $in = Invoice::find($id);
-        $in->finished = false;
+        $in->saved = true;
         $in->approved = true;
         $in->save();
 
+        $invPoses = InvoicePosition::where("invoice_id", $in->id)->get();
         $now = date("Y-m-d H:i:s");
 
-        $uhps = UserHasPrescribingSuggestion::Where("prescribing_suggestion_id", $ps->id)->get();
+        for ($j = 0; $j < sizeof($invPoses); $j++) {
 
-        //Make real prescribings
-        for ($i = 0; $i < sizeof($uhps); $i++) {
+            $uhip = UserHasInvoicePosition::Where("invoice_position_id", $invPoses[$j]->id)->get();
 
-            $p = new Prescribing();
-            $p->title = $ps->title;
-            $p->value = $uhps[$i]->amount;
-            $p->user_id = $uhps[$i]->user_id;
-            $p->due_until = $ps->due_until;
-            $p->reason_id = $ps->reason_id;
-            $p->finished = false;
-            //Nötig weil der prescribings table keine timestamps hat sondern nur den created_at
-            $p->created_at = $now;
-            $p->save();
+            //Make real prescribings
+            for ($i = 0; $i < sizeof($uhip); $i++) {
+
+                $p = new Prescribing();
+                $p->title = $invPoses[$j]->name;
+                $p->value = $uhip[$i]->amount;
+                $p->user_id = $uhip[$i]->user_id;
+                $p->due_until = $in->due_until;
+                $p->reason_id = 0;
+                $p->finished = false;
+                //Nötig weil der prescribings table keine timestamps hat sondern nur den created_at
+                $p->created_at = $now;
+                $p->save();
+            }
         }
 
-        return response()->json("success", 200);
+        return response()->json("Success", 200);
     }
 
     public function UpdateInvPoses($invoice, $request)
