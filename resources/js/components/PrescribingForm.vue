@@ -66,7 +66,7 @@
             
             <student-list-table></student-list-table>
 
-            <input type="button" value="Speichern" class="btn btn-primary" @click="store">
+            <input type="button" value="Speichern" class="btn btn-primary" @click="store" :disabled="released == true">
             <input type="button" value="Freigeben" class="btn btn-success" @click="release" :disabled="id == null">
         </form>
     </div>
@@ -100,6 +100,7 @@
         },
         data: function () {
             return {
+                released: false,
                 id: null,
                 title: "",
                 author: "admin",
@@ -193,7 +194,7 @@
                     })
                     .catch(error => console.log(error));
 
-                    //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+                this.released=true;
             },
             addStudents: function(studentsDom)
             {
