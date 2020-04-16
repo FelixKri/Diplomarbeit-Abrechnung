@@ -216,6 +216,9 @@ export default {
             }
         },
         release: function(){
+            if(this.saved)
+            {
+
                 axios
                     .post("/invoice/setFinished/" + this.id)
                     .then(response => {
@@ -225,6 +228,7 @@ export default {
                     .catch(error => console.log(error));
 
                     //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+                }
             },
 
         store: function() {

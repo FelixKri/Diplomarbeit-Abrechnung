@@ -2295,11 +2295,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     release: function release() {
-      axios.post("/invoice/release/" + this.id).then(function (response) {
-        return alert(response["data"]);
-      }).catch(function (error) {
-        return console.log(error);
-      });
+      if (id != null) {
+        axios.post("/invoice/release/" + this.id).then(function (response) {
+          return alert(response["data"]);
+        }).catch(function (error) {
+          return console.log(error);
+        });
+      }
     },
     print: function print() {
       this.store();
@@ -2957,12 +2959,14 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     release: function release() {
-      axios.post("/invoice/setFinished/" + this.id).then(function (response) {
-        console.log(response);
-        alert("Erfolgreich freigegeben");
-      }).catch(function (error) {
-        return console.log(error);
-      }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+      if (this.saved) {
+        axios.post("/invoice/setFinished/" + this.id).then(function (response) {
+          console.log(response);
+          alert("Erfolgreich freigegeben");
+        }).catch(function (error) {
+          return console.log(error);
+        }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+      }
     },
     store: function store() {
       this.errors = null;
@@ -56487,15 +56491,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*************************************************!*\
   !*** ./resources/js/components/InvoiceForm.vue ***!
   \*************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _InvoiceForm_vue_vue_type_template_id_429c2ff6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./InvoiceForm.vue?vue&type=template&id=429c2ff6& */ "./resources/js/components/InvoiceForm.vue?vue&type=template&id=429c2ff6&");
 /* harmony import */ var _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InvoiceForm.vue?vue&type=script&lang=js& */ "./resources/js/components/InvoiceForm.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -56525,7 +56528,7 @@ component.options.__file = "resources/js/components/InvoiceForm.vue"
 /*!**************************************************************************!*\
   !*** ./resources/js/components/InvoiceForm.vue?vue&type=script&lang=js& ***!
   \**************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
