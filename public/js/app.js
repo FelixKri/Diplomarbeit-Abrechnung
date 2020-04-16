@@ -2221,6 +2221,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id", "reason_list"],
   mounted: function mounted() {
@@ -2808,8 +2814,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-<<<<<<< HEAD
-=======
 //
 //
 //
@@ -2848,7 +2852,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
->>>>>>> 051cd9024f67f45a45e42c4313a640e270b27683
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["reason_list"],
   data: function data() {
@@ -3691,6 +3695,86 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   mounted: function mounted() {
@@ -3714,7 +3798,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         author: ""
       },
       reasons: null,
-      errors: {}
+      errors: {},
+      amount_st: 0,
+      type: "overwrite"
     };
   },
   methods: {
@@ -3850,6 +3936,127 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }).catch(function (error) {
         return console.log(error);
       });
+    },
+    splitEveryone: function splitEveryone() {
+      /**
+       * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
+       */
+      alert("Folgender Betrag wird auf alle Schüler aufgeteilt: " + this.amount_st);
+      var number_of_students = this.prescribing.positions.length;
+      alert("Schülerzahl: " + number_of_students);
+      var value = this.amount_st / number_of_students;
+      alert("Betrag pro Schüler: " + value);
+      var splitMoney = 0;
+
+      if (this.type == "overwrite") {
+        this.prescribing.positions.forEach(function (student) {
+          var studentMoney = Math.round(value * 100) / 100;
+          student.amount = studentMoney;
+          splitMoney += studentMoney;
+        });
+      } else {
+        this.prescribing.positions.forEach(function (student) {
+          var studentMoney = Math.round(value * 100) / 100;
+          student.amount += studentMoney;
+          splitMoney += studentMoney;
+        });
+      } //CENTAUSGLEICH
+      //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+
+
+      var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+      console.log("centdiff: " + centdiff);
+      console.log("splitted money: " + splitMoney);
+      console.log("all money: " + this.amount_st);
+
+      if (centdiff > 0) {
+        this.prescribing.positions.forEach(function (student) {
+          if (centdiff <= 0) {
+            return;
+          } //Same here, 33.33 + .01 = 33,339999999999996
+
+
+          student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+          centdiff -= 0.01;
+        });
+      } else if (centdiff < 0) {
+        //Students pay too much
+        this.prescribing.positions.forEach(function (student) {
+          if (centdiff >= 0) {
+            return;
+          } //Same here
+
+
+          student.amount -= Math.round((student.amount - 0.01) * 100) / 100;
+          centdiff += 0.01;
+        });
+      } //Just for information: the program will not reach this point after centausgleich
+      //Because return was used instead of break
+
+    },
+    splitSelected: function splitSelected() {
+      /**
+       * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
+       */
+      alert("Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " + this.amount_st);
+      var number_of_students = 0;
+      this.prescribing.positions.forEach(function (student) {
+        if (student.checked) {
+          number_of_students++;
+        }
+      });
+      alert("Schülerzahl: " + number_of_students);
+      var value = this.amount_st / number_of_students;
+      alert("Betrag pro Schüler: " + value);
+
+      if (this.type == "overwrite") {
+        this.prescribing.positions.forEach(function (student) {
+          if (student.checked) {
+            student.amount = value;
+          }
+        });
+      } else {
+        this.prescribing.positions.forEach(function (student) {
+          if (student.checked) {
+            student.amount += value;
+          }
+        });
+      }
+    },
+    assignEveryone: function assignEveryone() {
+      alert("Folgender Betrag wird allen Schülern zugewiesen: " + this.amount_st);
+      var value = parseFloat(this.amount_st);
+
+      if (this.type == "overwrite") {
+        this.prescribing.positions.forEach(function (student) {
+          student.amount = value;
+        });
+      } else {
+        this.prescribing.positions.forEach(function (student) {
+          student.amount += value;
+        });
+      }
+    },
+    assignSelected: function assignSelected() {
+      /*
+       * Weist den Betrag aus dem Betrag-Feld allen ausgewählten Schülern zu.
+       */
+      alert("Folgender Betrag wird ausgewählten Schülern zugewiesen: " + this.amount_st);
+      var value = this.amount_st;
+
+      if (this.type == "overwrite") {
+        this.prescribing.positions.forEach(function (student) {
+          if (student.checked) {
+            student.amount = value;
+          }
+        });
+      } else {
+        this.prescribing.positions.forEach(function (student) {
+          if (student.checked) {
+            student.amount += value;
+          }
+        });
+      }
     }
   }
 });
@@ -42925,6 +43132,134 @@ var render = function() {
       _vm._v(" "),
       _c("hr"),
       _vm._v(" "),
+      _c("table", [
+        _c("tr", [
+          _c("td", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.amount_st,
+                  expression: "amount_st"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "number", id: "number", placeholder: "Betrag" },
+              domProps: { value: _vm.amount_st },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.amount_st = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              staticClass: "btn btn-primary btn-sm",
+              attrs: { type: "button", value: "Auf alle Aufteilen" },
+              on: {
+                click: function($event) {
+                  return _vm.splitEveryone()
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              staticClass: "btn btn-primary btn-sm",
+              attrs: { type: "button", value: "Auf ausgewählte Aufteilen" },
+              on: {
+                click: function($event) {
+                  return _vm.splitSelected()
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              staticClass: "btn btn-primary btn-sm",
+              attrs: { type: "button", value: "Betrag allen zuweisen" },
+              on: {
+                click: function($event) {
+                  return _vm.assignEveryone()
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              staticClass: "btn btn-primary btn-sm",
+              attrs: { type: "button", value: "Betrag ausgewählten zuweisen " },
+              on: {
+                click: function($event) {
+                  return _vm.assignSelected()
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("td", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.type,
+                  expression: "type"
+                }
+              ],
+              attrs: {
+                type: "radio",
+                id: "type",
+                name: "type",
+                value: "overwrite",
+                checked: ""
+              },
+              domProps: { checked: _vm._q(_vm.type, "overwrite") },
+              on: {
+                change: function($event) {
+                  _vm.type = "overwrite"
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "type" } }, [_vm._v("Überschreiben")])
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.type,
+                  expression: "type"
+                }
+              ],
+              attrs: { type: "radio", id: "type", name: "type", value: "add" },
+              domProps: { checked: _vm._q(_vm.type, "add") },
+              on: {
+                change: function($event) {
+                  _vm.type = "add"
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "type" } }, [_vm._v("Hinzuaddieren")])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
       _c("table", { staticClass: "table" }, [
         _vm._m(0),
         _vm._v(" "),
@@ -42932,6 +43267,49 @@ var render = function() {
           "tbody",
           _vm._l(_vm.prescribing.positions, function(position) {
             return _c("tr", { key: position.id }, [
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: position.checked,
+                      expression: "position.checked"
+                    }
+                  ],
+                  attrs: { type: "checkbox" },
+                  domProps: {
+                    checked: Array.isArray(position.checked)
+                      ? _vm._i(position.checked, null) > -1
+                      : position.checked
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = position.checked,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(position, "checked", $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            _vm.$set(
+                              position,
+                              "checked",
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
+                        }
+                      } else {
+                        _vm.$set(position, "checked", $$c)
+                      }
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
               _c("td", [_vm._v(_vm._s(position.user.last_name))]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(position.user.first_name))]),
@@ -43038,6 +43416,8 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("X")]),
+        _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nachname")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Vorname")]),
@@ -56492,15 +56872,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************************!*\
   !*** ./resources/js/components/InvoiceDetail.vue ***!
   \***************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _InvoiceDetail_vue_vue_type_template_id_12096e83___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./InvoiceDetail.vue?vue&type=template&id=12096e83& */ "./resources/js/components/InvoiceDetail.vue?vue&type=template&id=12096e83&");
 /* harmony import */ var _InvoiceDetail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InvoiceDetail.vue?vue&type=script&lang=js& */ "./resources/js/components/InvoiceDetail.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _InvoiceDetail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _InvoiceDetail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -56530,7 +56909,7 @@ component.options.__file = "resources/js/components/InvoiceDetail.vue"
 /*!****************************************************************************!*\
   !*** ./resources/js/components/InvoiceDetail.vue?vue&type=script&lang=js& ***!
   \****************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56631,14 +57010,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*************************************************!*\
   !*** ./resources/js/components/InvoiceForm.vue ***!
   \*************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _InvoiceForm_vue_vue_type_template_id_429c2ff6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./InvoiceForm.vue?vue&type=template&id=429c2ff6& */ "./resources/js/components/InvoiceForm.vue?vue&type=template&id=429c2ff6&");
 /* harmony import */ var _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InvoiceForm.vue?vue&type=script&lang=js& */ "./resources/js/components/InvoiceForm.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -56668,7 +57048,7 @@ component.options.__file = "resources/js/components/InvoiceForm.vue"
 /*!**************************************************************************!*\
   !*** ./resources/js/components/InvoiceForm.vue?vue&type=script&lang=js& ***!
   \**************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

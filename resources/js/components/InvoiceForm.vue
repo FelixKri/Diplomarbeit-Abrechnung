@@ -161,13 +161,8 @@ export default {
             reason: "",
             annotation: "",
             invoicePositions: [],
-<<<<<<< HEAD
             id: null,
             errors: {},
-=======
-            id: 0,
-            errors: {}
->>>>>>> 051cd9024f67f45a45e42c4313a640e270b27683
         };
     },
     computed: {
