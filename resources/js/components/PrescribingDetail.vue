@@ -163,7 +163,7 @@
                     <td>{{ position.user.group.name }}</td>
                     <td>
                         <input type="" name="" class="form-control" v-model="position.amount" />
-                    </td>
+                     </td>
                     <td>
                         <input
                             type="text"
@@ -328,7 +328,7 @@ export default {
         release: function() {
             axios
                 .post("/prescribing/release/" + this.id)
-                .then(response => alert(response))
+                .then(response => alert(response.data))
                 .catch(error => console.log(error));
         },
         reject: function() {

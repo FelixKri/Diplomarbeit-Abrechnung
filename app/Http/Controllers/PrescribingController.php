@@ -35,7 +35,7 @@ class PrescribingController extends Controller
     {
 
         Log::debug("Saving prescribing. Request:");
-            Log::debug(request());
+        Log::debug(request());
 
         $rules = array(
             'date' => 'date|required',
@@ -166,7 +166,7 @@ class PrescribingController extends Controller
 
         $now = date("Y-m-d H:i:s");
 
-        $uhps = UserHasPrescribingSuggestion::Where("prescribing_suggestion_id", $ps->id)->get();
+        $uhps = $ps->positions;
 
         //Make real prescribings
         for ($i = 0; $i < sizeof($uhps); $i++) {

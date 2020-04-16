@@ -2234,6 +2234,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   mounted: function mounted() {
@@ -2304,6 +2323,7 @@ __webpack_require__.r(__webpack_exports__);
           "id": that.invoice.id,
           "author": "admin",
           "date": that.invoice.date,
+          "due_until": that.invoice.due_until,
           "reason": that.invoice.reason,
           "annotation": that.invoice.annotation,
           "totalAmount": totalAmountRequest,
@@ -2794,11 +2814,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       author: "admin",
       date: "",
+      due_until: "",
       reason: "",
       annotation: "",
       invoicePositions: [],
@@ -2880,6 +2915,7 @@ __webpack_require__.r(__webpack_exports__);
         data: {
           "author": that.author,
           "date": that.date,
+          "due_until": that.due_until,
           "reason": that.reason,
           "annotation": that.annotation,
           "totalAmount": totalAmountRequest,
@@ -3769,7 +3805,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     release: function release() {
       axios.post("/prescribing/release/" + this.id).then(function (response) {
-        return alert(response);
+        return alert(response.data);
       }).catch(function (error) {
         return console.log(error);
       });
@@ -40665,6 +40701,50 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "date" } }, [
+        _vm._v("Datum der Abrechnung: ")
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.invoice.due_until,
+            expression: "invoice.due_until"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: { type: "text", name: "date", id: "" },
+        domProps: { value: _vm.invoice.due_until },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.invoice, "due_until", $event.target.value)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _vm.errors.date
+        ? _c(
+            "ul",
+            {
+              staticClass: "alert alert-danger",
+              staticStyle: { margin: "1em 0" }
+            },
+            _vm._l(_vm.errors.due_until, function(error) {
+              return _c("li", { key: error.id }, [
+                _vm._v("\n                " + _vm._s(error) + "\n            ")
+              ])
+            }),
+            0
+          )
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
       _c("label", { attrs: { for: "description" } }, [_vm._v("Anmerkungen ")]),
       _vm._v(" "),
       _c("textarea", {
@@ -41342,6 +41422,56 @@ var render = function() {
                 staticStyle: { margin: "1em 0" }
               },
               _vm._l(_vm.errors.date, function(error) {
+                return _c("span", { key: error.id }, [
+                  _vm._v(_vm._s(error)),
+                  _c("br")
+                ])
+              }),
+              0
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "date" } }, [
+          _vm._v("Spätest gewünschtes Einzahlungsdatum")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.due_until,
+              expression: "due_until"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            type: "date",
+            id: "due_until",
+            placeholder: "Datum",
+            name: "due_until"
+          },
+          domProps: { value: _vm.due_until },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.due_until = $event.target.value
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.errors.due_until
+          ? _c(
+              "ul",
+              {
+                staticClass: "alert alert-danger",
+                staticStyle: { margin: "1em 0" }
+              },
+              _vm._l(_vm.errors.due_until, function(error) {
                 return _c("span", { key: error.id }, [
                   _vm._v(_vm._s(error)),
                   _c("br")
