@@ -22,6 +22,7 @@ class CreateInvoicesTable extends Migration
             $table->boolean('saved')->default($value = false);
             $table->float('total_amount', 8, 2);
             $table->date('date');
+            $table->date('due_until');
             $table->timestamps();
         });
     }

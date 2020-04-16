@@ -29,6 +29,7 @@ class InvoiceController extends Controller
 
         $rules = [
             'date' => 'date|required',
+            'due_until' => 'date|after:today|required|date_format:Y-m-d',
             'author' => 'required|string',
             'reason' => 'required|string',
             'invoicePositions' => 'required|array|min:1',
@@ -106,6 +107,7 @@ class InvoiceController extends Controller
         $invoice->reason = request()->reason;
         $invoice->total_amount = request()->totalAmount;
         $invoice->annotation = request()->annotation;
+        $invoice->due_until = request()->due_until;
         //$invoice->updated_at = date();
 
         $invoice->save();
@@ -280,6 +282,7 @@ class InvoiceController extends Controller
         
         $rules = [
             'date' => 'date|required',
+            'due_until' => 'date|after:today|required|date_format:Y-m-d',
             'author' => 'required|string',
             'reason' => 'required|string',
             'invoicePositions' => 'required|array|min:1',
@@ -312,6 +315,7 @@ class InvoiceController extends Controller
 
         $inv = new Invoice;
         $inv->date = request()->date;
+        $inv->due_until = request()->due_until;
         $inv->author_id = FosUser::where('username', request()->author)->first()->id;
         $inv->reason = request()->reason;
         $inv->total_amount = request()->totalAmount;

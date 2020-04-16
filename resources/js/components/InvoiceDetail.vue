@@ -43,6 +43,25 @@
                 </li>
             </ul>
         </div>
+        <div class="form-group">
+            <label for="date">Datum der Abrechnung: </label>
+            <input
+                type="text"
+                name="date"
+                id=""
+                v-model="invoice.due_until"
+                class="form-control"
+            />
+            <ul
+                v-if="errors.date"
+                class="alert alert-danger"
+                style="margin: 1em 0;"
+            >
+                <li v-for="error in errors.due_until" v-bind:key="error.id">
+                    {{ error }}
+                </li>
+            </ul>
+        </div>
         
         <div class="form-group">
             <label for="description">Anmerkungen </label>
@@ -181,6 +200,7 @@ export default {
                     "id": that.invoice.id,
                     "author": "admin",
                     "date": that.invoice.date,
+                    "due_until": that.invoice.due_until,
                     "reason": that.invoice.reason,
                     "annotation": that.invoice.annotation,
                     "totalAmount": totalAmountRequest,

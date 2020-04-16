@@ -31,6 +31,20 @@
                 </ul>
             </div>
             <div class="form-group">
+                <label for="date">Spätest gewünschtes Einzahlungsdatum</label>
+                <input
+                    type="date"
+                    class="form-control"
+                    id="due_until"
+                    placeholder="Datum"
+                    name="due_until"
+                    v-model="due_until"
+                />
+                <ul v-if="errors.due_until" class="alert alert-danger" style="margin: 1em 0;">
+                    <span v-for="error in errors.due_until" v-bind:key="error.id">{{error}}<br></span>
+                </ul>
+            </div>
+            <div class="form-group">
                 <label for="author">Abrechner</label>
                 <input
                     type="text"
@@ -102,6 +116,7 @@ export default {
         return {
             author: "admin",
             date: "",
+            due_until: "",
             reason: "",
             annotation: "",
             invoicePositions: [],
@@ -195,6 +210,7 @@ export default {
                 data: {
                     "author": that.author,
                     "date": that.date,
+                    "due_until": that.due_until,
                     "reason": that.reason,
                     "annotation": that.annotation,
                     "totalAmount": totalAmountRequest,
