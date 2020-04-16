@@ -2229,6 +2229,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id", "reason_list"],
   mounted: function mounted() {
@@ -2267,6 +2274,14 @@ __webpack_require__.r(__webpack_exports__);
       }).catch(function (error) {
         return console.log(error);
       });
+    },
+    setFinished: function setFinished() {
+      axios.post("/invoice/setFinished/" + this.id).then(function (response) {
+        console.log(response);
+        alert("Erfolgreich freigegeben");
+      }).catch(function (error) {
+        return console.log(error);
+      }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
     },
     store: function store() {
       var invoicePositionsStripped = [];
@@ -2703,6 +2718,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3779,6 +3800,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   mounted: function mounted() {
@@ -3929,17 +3959,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     release: function release() {
       axios.post("/prescribing/release/" + this.id).then(function (response) {
-        return alert(response.data);
+        console.log(response);
+        alert("Erfolgreich genehmigt");
       }).catch(function (error) {
         return console.log(error);
       });
     },
     reject: function reject() {
       axios.post("/prescribing/reject/" + this.id).then(function (response) {
-        return console.log(response);
+        console.log(response);
+        alert("Erfolgreich zurückgewiesen");
       }).catch(function (error) {
         return console.log(error);
       });
+    },
+    setFinished: function setFinished() {
+      axios.post("/prescribing/setFinished/" + this.id).then(function (response) {
+        console.log(response);
+        alert("Erfolgreich freigegeben");
+      }).catch(function (error) {
+        return console.log(error);
+      }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
     },
     splitEveryone: function splitEveryone() {
       /**
@@ -41333,8 +41373,9 @@ var render = function() {
             staticClass: "btn btn-success",
             attrs: {
               type: "button",
-              value: "Freigeben",
-              disabled: _vm.invoice.saved == false
+              value: "Freigeben (Sekretariat)",
+              disabled:
+                _vm.invoice.saved == false || _vm.invoice.approved == true
             },
             on: {
               click: function($event) {
@@ -41344,11 +41385,22 @@ var render = function() {
           }),
           _vm._v(" "),
           _c("input", {
+            staticClass: "btn btn-success",
+            attrs: {
+              type: "button",
+              value: "Freigeben (Lehrer)",
+              disabled: _vm.invoice.saved == true
+            },
+            on: { click: _vm.setFinished }
+          }),
+          _vm._v(" "),
+          _c("input", {
             staticClass: "btn btn-danger",
             attrs: {
               type: "button",
               value: "Zurückweisen",
-              disabled: _vm.invoice.saved == false
+              disabled:
+                _vm.invoice.saved == false || _vm.invoice.approved == true
             },
             on: { click: _vm.reject }
           }),
@@ -42205,18 +42257,22 @@ var render = function() {
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(i.date))]),
               _vm._v(" "),
-              i.saved
+              i.saved && i.approved == false
                 ? _c("td", [
-                    _vm._v(
-                      "\n                    gespeichert\n                "
-                    )
+                    _c("span", { staticClass: "badge badge-primary" }, [
+                      _vm._v("von Lehrer Freigegeben")
+                    ])
                   ])
                 : i.approved
                 ? _c("td", [
-                    _vm._v("\n                    Genehmigt\n                ")
+                    _c("span", { staticClass: "badge badge-success" }, [
+                      _vm._v("von Sekretariat genehmigt")
+                    ])
                   ])
                 : _c("td", [
-                    _vm._v("\n                    Offen\n                ")
+                    _c("span", { staticClass: "badge badge-danger" }, [
+                      _vm._v("Offen")
+                    ])
                   ])
             ]
           )
@@ -43406,14 +43462,48 @@ var render = function() {
       _vm._v(" "),
       _c("input", {
         staticClass: "btn btn-success",
-        attrs: { type: "button", value: "Freigeben" },
-        on: { click: _vm.release }
+        attrs: {
+          type: "button",
+          value: "Freigeben (Sekretariat)",
+          disabled:
+            _vm.prescribingRequested.finished == false ||
+            _vm.prescribingRequested.approved == true
+        },
+        on: {
+          click: function($event) {
+            return _vm.release()
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "btn btn-success",
+        attrs: {
+          type: "button",
+          value: "Freigeben (Lehrer)",
+          disabled: _vm.prescribingRequested.finished == true
+        },
+        on: {
+          click: function($event) {
+            return _vm.setFinished()
+          }
+        }
       }),
       _vm._v(" "),
       _c("input", {
         staticClass: "btn btn-danger",
-        attrs: { type: "button", value: "Zurückweisen" },
-        on: { click: _vm.reject }
+        attrs: {
+          type: "button",
+          value: "Zurückweisen",
+          disabled:
+            _vm.prescribingRequested.finished == false ||
+            _vm.prescribingRequested.approved == true
+        },
+        on: {
+          click: function($event) {
+            return _vm.reject()
+          }
+        }
       }),
       _vm._v(" "),
       _c("input", {
@@ -43929,16 +44019,16 @@ var render = function() {
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(p.due_until))]),
             _vm._v(" "),
-            p.finished
-              ? _c("td", [
-                  _c("span", { staticClass: "badge badge-primary" }, [
-                    _vm._v("Von Lehrer Freigegeben")
-                  ])
-                ])
-              : p.approved
+            p.approved && p.approved
               ? _c("td", [
                   _c("span", { staticClass: "badge badge-success" }, [
                     _vm._v("Von Sekretariat Genehmigt")
+                  ])
+                ])
+              : p.finished
+              ? _c("td", [
+                  _c("span", { staticClass: "badge badge-primary" }, [
+                    _vm._v("Von Lehrer Freigegeben")
                   ])
                 ])
               : _c("td", [

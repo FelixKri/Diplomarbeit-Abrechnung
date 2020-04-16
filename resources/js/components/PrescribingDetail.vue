@@ -226,7 +226,7 @@
                     v-bind:key="position.id"
                 >
                     <td>
-                        <input type="checkbox" v-model="position.checked">
+                        <input type="checkbox" v-model="position.checked" />
                     </td>
                     <td>{{ position.user.last_name }}</td>
                     <td>{{ position.user.first_name }}</td>
@@ -264,15 +264,24 @@
         />
         <input
             type="button"
-            value="Freigeben"
+            value="Freigeben (Sekretariat)"
             class="btn btn-success"
-            @click="release"
+            @click="release()"
+            :disabled="prescribingRequested.finished == false || prescribingRequested.approved == true"
+        />
+        <input
+            type="button"
+            value="Freigeben (Lehrer)"
+            class="btn btn-success"
+            @click="setFinished()"
+            :disabled="prescribingRequested.finished == true"
         />
         <input
             type="button"
             value="Zurückweisen"
             class="btn btn-danger"
-            @click="reject"
+            @click="reject()"
+            :disabled="prescribingRequested.finished == false || prescribingRequested.approved == true"
         />
         <input
             type="button"
@@ -412,14 +421,32 @@ export default {
         release: function() {
             axios
                 .post("/prescribing/release/" + this.id)
-                .then(response => alert(response.data))
+                .then(response => {
+                    console.log(response);
+                    alert("Erfolgreich genehmigt");
+                })
                 .catch(error => console.log(error));
         },
         reject: function() {
             axios
                 .post("/prescribing/reject/" + this.id)
-                .then(response => console.log(response))
+                .then(response => {
+                    console.log(response);
+                    alert("Erfolgreich zurückgewiesen");
+                })
                 .catch(error => console.log(error));
+
+        },
+        setFinished: function() {
+            axios
+                .post("/prescribing/setFinished/" + this.id)
+                .then(response => {
+                    console.log(response);
+                    alert("Erfolgreich freigegeben");
+                })
+                .catch(error => console.log(error));
+
+            //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
         },
         splitEveryone: function() {
             /**
@@ -457,7 +484,7 @@ export default {
             //CENTAUSGLEICH
             //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
             var centdiff =
-            Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+                Math.round((this.amount_st - splitMoney) * 10000) / 10000;
             console.log("centdiff: " + centdiff);
             console.log("splitted money: " + splitMoney);
             console.log("all money: " + this.amount_st);

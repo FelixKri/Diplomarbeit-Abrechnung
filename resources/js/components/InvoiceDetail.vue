@@ -120,31 +120,38 @@
                 ></invoice-detail-position>
 
                 <input
-                type="button"
-                value="Änderungen speichern"
-                class="btn btn-success"
-                @click="store()"
-            />
-            <input
-                type="button"
-                value="Freigeben"
-                class="btn btn-success"
-                @click="release()"
-                :disabled="invoice.saved == false"
-            />
-            <input
-            type="button"
-            value="Zurückweisen"
-            class="btn btn-danger"
-            @click="reject"
-            :disabled="invoice.saved == false"
-        />
-            <input
-            type="button"
-            value="Speichern und Drucken"
-            class="btn btn-primary"
-            @click="print"
-        />
+                    type="button"
+                    value="Änderungen speichern"
+                    class="btn btn-success"
+                    @click="store()"
+                />
+                <input
+                    type="button"
+                    value="Freigeben (Sekretariat)"
+                    class="btn btn-success"
+                    @click="release()"
+                    :disabled="invoice.saved == false || invoice.approved == true"
+                />
+                <input
+                    type="button"
+                    value="Freigeben (Lehrer)"
+                    class="btn btn-success"
+                    @click="setFinished"
+                    :disabled="invoice.saved == true"
+                />
+                <input
+                    type="button"
+                    value="Zurückweisen"
+                    class="btn btn-danger"
+                    @click="reject"
+                    :disabled="invoice.saved == false || invoice.approved == true"
+                />
+                <input
+                    type="button"
+                    value="Speichern und Drucken"
+                    class="btn btn-primary"
+                    @click="print"
+                />
             </div>
         </div>
     </div>
@@ -178,8 +185,7 @@ export default {
         print: function() {
             this.store();
 
-            window.location.href =
-                "/invoice/download/" + this.id;
+            window.location.href = "/invoice/download/" + this.id;
             //Todo: Sende Request an PDF Generator Funktion im BackEnd
         },
         reject: function() {
@@ -188,6 +194,18 @@ export default {
                 .then(response => alert(response["data"]))
                 .catch(error => console.log(error));
         },
+        setFinished: function() {
+            axios
+                .post("/invoice/setFinished/" + this.id)
+                .then(response => {
+                    console.log(response);
+                    alert("Erfolgreich freigegeben");
+                })
+                .catch(error => console.log(error));
+
+            //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+        },
+
         store: function() {
             var invoicePositionsStripped = [];
             var totalAmountRequest = 0;

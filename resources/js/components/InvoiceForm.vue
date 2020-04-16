@@ -145,7 +145,13 @@
                 class="btn btn-success"
                 @click="store()"
             />
-            <input type="button" value="Freigeben" class="btn btn-success" @click="release" :disabled="this.saved == false">
+            <input
+                type="button"
+                value="Freigeben"
+                class="btn btn-success"
+                @click="release"
+                :disabled="this.saved == false"
+            />
         </form>
     </div>
 </template>
@@ -215,23 +221,21 @@ export default {
                 this.invoicePositions.push(position);
             }
         },
-        release: function(){
-                axios
-                    .post("/invoice/setFinished/" + this.id)
-                    .then(response => {
-                        console.log(response)
-                        alert("Erfolgreich freigegeben")
-                    })
-                    .catch(error => console.log(error));
+        release: function() {
+            axios
+                .post("/invoice/setFinished/" + this.id)
+                .then(response => {
+                    console.log(response);
+                    alert("Erfolgreich freigegeben");
+                })
+                .catch(error => console.log(error));
 
-                    //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
-            },
-
+            //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+        },
         store: function() {
-
             this.errors = null;
             this.errors = {};
-            
+
             var that = this;
             var invoicePositionsStripped = [];
             var totalAmountRequest = 0;

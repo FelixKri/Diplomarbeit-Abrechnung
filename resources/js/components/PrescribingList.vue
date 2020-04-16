@@ -17,11 +17,11 @@
                 <td>{{p.author_id}}</td>
                 <td>{{p.description}}</td>
                 <td>{{p.due_until}}</td>
-                <td v-if="p.finished">
-                    <span class="badge badge-primary">Von Lehrer Freigegeben</span>
-                </td>
-                <td v-else-if="p.approved">
+                <td v-if="p.approved  && p.approved">
                     <span class="badge badge-success">Von Sekretariat Genehmigt</span>
+                </td>
+                <td v-else-if="p.finished">
+                    <span class="badge badge-primary">Von Lehrer Freigegeben</span>
                 </td>
                 <td v-else>
                     <span class="badge badge-danger">Offen</span>

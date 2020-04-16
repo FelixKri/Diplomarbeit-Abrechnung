@@ -24,14 +24,14 @@
                     <td>{{ i.author.username}} </td>
                     <td>{{ i.annotation }}</td>
                     <td>{{ i.date }}</td>
-                    <td v-if="i.saved">
-                        gespeichert
+                    <td v-if="i.saved && i.approved == false">
+                         <span class="badge badge-primary">von Lehrer Freigegeben</span>
                     </td>
                     <td v-else-if="i.approved">
-                        Genehmigt
+                        <span class="badge badge-success">von Sekretariat genehmigt</span>
                     </td>
                     <td v-else>
-                        Offen
+                        <span class="badge badge-danger">Offen</span>
                     </td>
                 </tr>
             </tbody>

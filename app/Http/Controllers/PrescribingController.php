@@ -170,7 +170,6 @@ class PrescribingController extends Controller
     public function release($id)
     {
         $ps = PrescribingSuggestion::find($id);
-        $ps->finished = false;
         $ps->approved = true;
         $ps->save();
 
