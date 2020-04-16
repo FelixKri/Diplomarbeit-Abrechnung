@@ -215,6 +215,10 @@ export default {
         },
 
         store: function() {
+
+            this.errors = null;
+            this.errors = {};
+            
             var that = this;
             var invoicePositionsStripped = [];
             var totalAmountRequest = 0;
@@ -263,6 +267,7 @@ export default {
                 },
                 success: function(response) {
                     console.log(response);
+                    that.errors = {};
                     alert("Erfolgreich gespeichert!");
                 },
                 error: function(xhr, status, error) {

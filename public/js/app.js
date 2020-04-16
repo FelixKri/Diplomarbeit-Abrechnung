@@ -2215,6 +2215,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id", "reason_list"],
   mounted: function mounted() {
@@ -2890,6 +2896,8 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     store: function store() {
+      this.errors = null;
+      this.errors = {};
       var that = this;
       var invoicePositionsStripped = [];
       var totalAmountRequest = 0;
@@ -2929,6 +2937,7 @@ __webpack_require__.r(__webpack_exports__);
         },
         success: function success(response) {
           console.log(response);
+          that.errors = {};
           alert("Erfolgreich gespeichert!");
         },
         error: function error(xhr, status, _error) {
@@ -3960,6 +3969,8 @@ __webpack_require__.r(__webpack_exports__);
       return this.students;
     },
     store: function store() {
+      this.errors = null;
+      this.errors = {};
       var that = this; //i hate this(that)
 
       var studentIds = [];
@@ -3998,6 +4009,8 @@ __webpack_require__.r(__webpack_exports__);
           alert("Erfolgreich gespeichert");
           that.id = response; //window.location = "/";
           //disable Speicherbutton
+
+          that.errors = {};
         },
         error: function error(xhr, status, _error) {
           var respJson = JSON.parse(xhr.responseText);

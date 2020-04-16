@@ -120,19 +120,6 @@
                 ></invoice-detail-position>
 
                 <input
-<<<<<<< HEAD
-                    type="button"
-                    value="Änderungen speichern"
-                    class="btn btn-success"
-                    @click="store()"
-                />
-                <input
-                    type="button"
-                    value="Freigeben"
-                    class="btn btn-success"
-                    @click="release()"
-                />
-=======
                 type="button"
                 value="Änderungen speichern"
                 class="btn btn-success"
@@ -150,7 +137,6 @@
             class="btn btn-primary"
             @click="print"
         />
->>>>>>> af0637e092def3c8db83ae452983825c8eda89f5
             </div>
         </div>
     </div>
