@@ -2258,11 +2258,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     release: function release() {
-      axios.post("/invoice/release/" + this.id).then(function (response) {
-        return alert(response["data"]);
-      }).catch(function (error) {
-        return console.log(error);
-      });
+      if (id != null) {
+        axios.post("/invoice/release/" + this.id).then(function (response) {
+          return alert(response["data"]);
+        }).catch(function (error) {
+          return console.log(error);
+        });
+      }
     },
     print: function print() {
       this.store();
@@ -2934,12 +2936,14 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     release: function release() {
-      axios.post("/invoice/setFinished/" + this.id).then(function (response) {
-        console.log(response);
-        alert("Erfolgreich freigegeben");
-      }).catch(function (error) {
-        return console.log(error);
-      }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+      if (this.saved) {
+        axios.post("/invoice/setFinished/" + this.id).then(function (response) {
+          console.log(response);
+          alert("Erfolgreich freigegeben");
+        }).catch(function (error) {
+          return console.log(error);
+        }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+      }
     },
     store: function store() {
       this.errors = null;

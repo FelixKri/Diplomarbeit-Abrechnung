@@ -177,10 +177,13 @@ export default {
                 .catch(error => console.log(error));
         },
         release: function() {
+            if(id != null)
+            {
             axios
                 .post("/invoice/release/" + this.id)
                 .then(response => alert(response["data"]))
                 .catch(error => console.log(error));
+            }
         },
         print: function() {
             this.store();
