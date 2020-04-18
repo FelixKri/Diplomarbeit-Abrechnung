@@ -351,7 +351,12 @@ class InvoiceController extends Controller
             return response()->json(['errors' => $validator->errors()], 401);
         }
 
-        $inv = new Invoice;
+        if(request()->id == null){
+            $inv = new Invoice;
+        }else{
+            $inv = Invoice::find(request()->id);
+        }
+
         $inv->date = request()->date;
         $inv->due_until = request()->due_until;
         $inv->author_id = FosUser::where('username', request()->author)->first()->id;
@@ -360,7 +365,10 @@ class InvoiceController extends Controller
         $inv->annotation = request()->annotation;
         $inv->save();
 
-        
+        if(request()->id != null){
+            InvoicePosition::where('invoice_id', request()->id)->delete();
+        }
+
         for ($i=0; $i < sizeof(request()->invoicePositions); $i++) { 
             $paidByTeacher = false;
             

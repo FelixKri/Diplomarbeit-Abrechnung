@@ -222,7 +222,7 @@ export default {
                     amount: 0,
                     paidByTeacher: false,
                     iban: "",
-                    students: []
+                    user_has_invoice_position: []
                 };
 
                 this.invoice.positions.push(position);
