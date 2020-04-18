@@ -267,7 +267,10 @@
             value="Freigeben (Sekretariat)"
             class="btn btn-success"
             @click="release()"
-            :disabled="prescribingRequested.finished == false || prescribingRequested.approved == true"
+            :disabled="
+                prescribingRequested.finished == false ||
+                    prescribingRequested.approved == true
+            "
         />
         <input
             type="button"
@@ -281,7 +284,10 @@
             value="Zurückweisen"
             class="btn btn-danger"
             @click="reject()"
-            :disabled="prescribingRequested.finished == false || prescribingRequested.approved == true"
+            :disabled="
+                prescribingRequested.finished == false ||
+                    prescribingRequested.approved == true
+            "
         />
         <input
             type="button"
@@ -435,7 +441,6 @@ export default {
                     alert("Erfolgreich zurückgewiesen");
                 })
                 .catch(error => console.log(error));
-
         },
         setFinished: function() {
             axios
@@ -452,18 +457,19 @@ export default {
             /**
              * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
              */
-            alert(
-                "Folgender Betrag wird auf alle Schüler aufgeteilt: " +
-                    this.amount_st
-            );
 
             let number_of_students = this.prescribing.positions.length;
 
-            alert("Schülerzahl: " + number_of_students);
-
             let value = this.amount_st / number_of_students;
 
-            alert("Betrag pro Schüler: " + value);
+            alert(
+                "Folgender Betrag wird auf " +
+                    number_of_students +
+                    " Schüler aufgeteilt: " +
+                    this.amount_st +
+                    "\n Betrag pro Schüler: " +
+                    value
+            );
 
             var splitMoney = 0;
 
@@ -523,11 +529,6 @@ export default {
              * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
              */
 
-            alert(
-                "Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " +
-                    this.amount_st
-            );
-
             let number_of_students = 0;
             this.prescribing.positions.forEach(function(student) {
                 if (student.checked) {
@@ -535,11 +536,16 @@ export default {
                 }
             });
 
-            alert("Schülerzahl: " + number_of_students);
-
             let value = this.amount_st / number_of_students;
 
-            alert("Betrag pro Schüler: " + value);
+            alert(
+                "Folgender Betrag wird auf " +
+                    number_of_students +
+                    " ausgewählte Schüler aufgeteilt: " +
+                    this.amount_st +
+                    "\n Betrag pro Schüler: " +
+                    value
+            );
 
             if (this.type == "overwrite") {
                 this.prescribing.positions.forEach(function(student) {

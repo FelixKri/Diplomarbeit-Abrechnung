@@ -269,18 +269,12 @@ export default {
             /**
              * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
              */
-            alert(
-                "Folgender Betrag wird auf alle Schüler aufgeteilt: " +
-                    this.amount_st
-            );
+            
 
             let number_of_students = this.position.user_has_invoice_position.length;
-
-            alert("Schülerzahl: " + number_of_students);
-
             let value = this.amount_st / number_of_students;
 
-            alert("Betrag pro Schüler: " + value);
+            alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
             if (this.type == "overwrite") {
                 this.position.user_has_invoice_position.forEach(function(student) {
@@ -298,10 +292,6 @@ export default {
              * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
              */
 
-            alert(
-                "Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " +
-                    this.amount_st
-            );
 
             let number_of_students = 0;
             this.position.user_has_invoice_position.forEach(function(student) {
@@ -310,11 +300,11 @@ export default {
                 }
             });
 
-            alert("Schülerzahl: " + number_of_students);
 
             let value = this.amount_st / number_of_students;
 
-            alert("Betrag pro Schüler: " + value);
+            alert("Folgender Betrag wird auf " + number_of_students + " ausgewählte Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
+
 
             if (this.type == "overwrite") {
                 this.position.user_has_invoice_position.forEach(function(student) {

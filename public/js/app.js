@@ -2616,11 +2616,9 @@ __webpack_require__.r(__webpack_exports__);
       /**
        * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
        */
-      alert("Folgender Betrag wird auf alle Schüler aufgeteilt: " + this.amount_st);
       var number_of_students = this.position.user_has_invoice_position.length;
-      alert("Schülerzahl: " + number_of_students);
       var value = this.amount_st / number_of_students;
-      alert("Betrag pro Schüler: " + value);
+      alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
       if (this.type == "overwrite") {
         this.position.user_has_invoice_position.forEach(function (student) {
@@ -2636,16 +2634,14 @@ __webpack_require__.r(__webpack_exports__);
       /**
        * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
        */
-      alert("Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " + this.amount_st);
       var number_of_students = 0;
       this.position.user_has_invoice_position.forEach(function (student) {
         if (student.checked) {
           number_of_students++;
         }
       });
-      alert("Schülerzahl: " + number_of_students);
       var value = this.amount_st / number_of_students;
-      alert("Betrag pro Schüler: " + value);
+      alert("Folgender Betrag wird auf " + number_of_students + " ausgewählte Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
       if (this.type == "overwrite") {
         this.position.user_has_invoice_position.forEach(function (student) {
@@ -2936,14 +2932,12 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     release: function release() {
-      if (this.saved) {
-        axios.post("/invoice/setFinished/" + this.id).then(function (response) {
-          console.log(response);
-          alert("Erfolgreich freigegeben");
-        }).catch(function (error) {
-          return console.log(error);
-        }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
-      }
+      axios.post("/invoice/setFinished/" + this.id).then(function (response) {
+        console.log(response);
+        alert("Erfolgreich freigegeben");
+      }).catch(function (error) {
+        return console.log(error);
+      }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
     },
     store: function store() {
       this.errors = null;
@@ -3380,11 +3374,9 @@ __webpack_require__.r(__webpack_exports__);
       /**
        * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
        */
-      alert("Folgender Betrag wird auf alle Schüler aufgeteilt: " + this.amount_st);
       var number_of_students = this.position.students.length;
-      alert("Schülerzahl: " + number_of_students);
       var value = this.amount_st / number_of_students;
-      alert("Betrag pro Schüler: " + value);
+      alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
       if (this.type == "overwrite") {
         this.position.students.forEach(function (student) {
@@ -3400,16 +3392,14 @@ __webpack_require__.r(__webpack_exports__);
       /**
        * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
        */
-      alert("Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " + this.amount_st);
       var number_of_students = 0;
       this.position.students.forEach(function (student) {
         if (student.checked) {
           number_of_students++;
         }
       });
-      alert("Schülerzahl: " + number_of_students);
       var value = this.amount_st / number_of_students;
-      alert("Betrag pro Schüler: " + value);
+      alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
       if (this.type == "overwrite") {
         this.position.students.forEach(function (student) {
@@ -3519,6 +3509,12 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3989,11 +3985,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       /**
        * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
        */
-      alert("Folgender Betrag wird auf alle Schüler aufgeteilt: " + this.amount_st);
       var number_of_students = this.prescribing.positions.length;
-      alert("Schülerzahl: " + number_of_students);
       var value = this.amount_st / number_of_students;
-      alert("Betrag pro Schüler: " + value);
+      alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
       var splitMoney = 0;
 
       if (this.type == "overwrite") {
@@ -4046,16 +4040,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       /**
        * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
        */
-      alert("Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " + this.amount_st);
       var number_of_students = 0;
       this.prescribing.positions.forEach(function (student) {
         if (student.checked) {
           number_of_students++;
         }
       });
-      alert("Schülerzahl: " + number_of_students);
       var value = this.amount_st / number_of_students;
-      alert("Betrag pro Schüler: " + value);
+      alert("Folgender Betrag wird auf " + number_of_students + " ausgewählte Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
       if (this.type == "overwrite") {
         this.prescribing.positions.forEach(function (student) {
@@ -4628,11 +4620,9 @@ __webpack_require__.r(__webpack_exports__);
       /**
        * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
        */
-      alert("Folgender Betrag wird auf alle Schüler aufgeteilt: " + this.amount_st);
       var number_of_students = this.data.students.length;
-      alert("Schülerzahl: " + number_of_students);
       var value = this.amount_st / number_of_students;
-      alert("Betrag pro Schüler: " + value);
+      alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
       var splitMoney = 0;
 
       if (this.type == "overwrite") {
@@ -4686,16 +4676,14 @@ __webpack_require__.r(__webpack_exports__);
       /**
        * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
        */
-      alert("Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " + this.amount_st);
       var number_of_students = 0;
       this.data.students.forEach(function (student) {
         if (student.checked) {
           number_of_students++;
         }
       });
-      alert("Schülerzahl: " + number_of_students);
       var value = this.amount_st / number_of_students;
-      alert("Betrag pro Schüler: " + value);
+      alert("Folgender Betrag wird auf " + number_of_students + " ausgewählte Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
       if (this.type == "overwrite") {
         this.data.students.forEach(function (student) {
