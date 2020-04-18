@@ -2,13 +2,16 @@
     table,td{
         border: 1px solid black;
     }
+
+    @page { margin-top: 70px; }
+    body { margin-top: 70px; }
 </style>
 
 <h1>{{$prescribing->title}}</h1>
 <p>Erstellt von: {{$prescribing->author->username}}</p>
 
 <hr>
-@if ($prescribing->approved == false)
+@if ($prescribing->finished == false)
             <p style="
                     position: absolute;
                     transform: rotate(60deg);
@@ -38,6 +41,10 @@
         <td style="border: none;">Beschreibung/Anmerkung: </td>
         <td style="border: none;">{{$prescribing->description}}</td>
     </tr>
+    <tr>
+        <td style="border: none;">Gesamtsumme:</td>
+        <td style="border: none;">{{number_format ($prescribing->total_amount ,2 ,"," ,".")}}€</td>
+    </tr>
 </table>
 <table style="width: 100%;">
     @if ($prescribing->approved == false)
@@ -54,7 +61,7 @@
         <th>Klasse</th>
         <th>Nachname</th>
         <th>Vorname</th>
-        <th>Betrag</th>
+        <th>Betrag [€]</th>
         <th>Anmerkung</th>
     </tr>
     @foreach ($prescribing->positions as $position)
@@ -63,7 +70,7 @@
         <td>{{$position->user->group->name}}</td>
         <td>{{$position->user->last_name}}</td>
         <td>{{$position->user->first_name}}</td>
-        <td>{{$position->amount}}€</td>
+        <td style="text-align: right;">{{number_format ($position->amount ,2 ,"," ,".")}}</td>
         <td>{{$position->annotation}}</td>
     </tr>
     @endforeach
@@ -79,6 +86,29 @@
         $word_space = 0.0;  //  default
         $char_space = 0.0;  //  default
         $angle = 0.0;   //  default
+        $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);+
+
+        $x = 400;
+        $y = 60;
+        $text = "__________________________";
+        $font = null;
+        $size = 10;
+        $color = array(0,0,0);
+        $word_space = 0.0;  //  default
+        $char_space = 0.0;  //  default
+        $angle = 0.0;   //  default
         $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
+
+        $x = 400;
+        $y = 70;
+        $text = "Unterschrift";
+        $font = null;
+        $size = 10;
+        $color = array(0,0,0);
+        $word_space = 0.0;  //  default
+        $char_space = 0.0;  //  default
+        $angle = 0.0;   //  default
+        $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
+        
     }
 </script>

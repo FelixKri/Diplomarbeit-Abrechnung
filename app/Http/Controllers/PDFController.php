@@ -30,6 +30,6 @@ class PDFController extends Controller
       $pdf = PDF::loadView('pdfs.invoicePDF', compact('invoice'));
       $pdf->getDomPDF()->set_option("enable_php", true);
 
-      return $pdf->download($invoice->reason.".pdf");
+      return $pdf->download($invoice->reason->title.".pdf");
     }
 }

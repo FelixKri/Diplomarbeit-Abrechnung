@@ -126,6 +126,16 @@
                 </li>
             </ul>
         </div>
+        <div class="form-group">
+            <label for="total_amount">Gesamtbetrag [€]</label>
+            <input
+                type="number"
+                name="total_amount"
+                :value="numWithSeperators(totalAmountComputed)"
+                disabled
+                class="form-control"
+            />
+        </div>
         <button
             class="btn btn-primary btn-sm"
             data-toggle="modal"
@@ -267,7 +277,10 @@
             value="Freigeben (Sekretariat)"
             class="btn btn-success"
             @click="release()"
-            :disabled="prescribingRequested.finished == false || prescribingRequested.approved == true"
+            :disabled="
+                prescribingRequested.finished == false ||
+                    prescribingRequested.approved == true
+            "
         />
         <input
             type="button"
@@ -281,7 +294,10 @@
             value="Zurückweisen"
             class="btn btn-danger"
             @click="reject()"
-            :disabled="prescribingRequested.finished == false || prescribingRequested.approved == true"
+            :disabled="
+                prescribingRequested.finished == false ||
+                    prescribingRequested.approved == true
+            "
         />
         <input
             type="button"
@@ -313,7 +329,7 @@ export default {
                 reason_suggestion: "",
                 reason: "",
                 description: "",
-                positions: null,
+                positions: [],  
                 author: ""
             },
             reasons: null,
@@ -322,7 +338,23 @@ export default {
             type: "overwrite"
         };
     },
+    computed: {
+        totalAmountComputed: function() {
+            let totalAmt = 0;
+
+            this.prescribing.positions.forEach(function(student) {
+                totalAmt += Number(student.amount);
+            });
+
+            return totalAmt;
+        }
+    },
     methods: {
+        numWithSeperators: function(num) {
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return num_parts.join(",");
+        },
         getAllReasons: function() {
             axios
                 .get("/getReasons")
@@ -355,7 +387,9 @@ export default {
                 }
             })();
         },
-        addStudents: function() {},
+        addStudents: function() {
+            
+        },
         removeStudent: function(id) {
             this.prescribing.positions = this.prescribing.positions.filter(
                 el => el.id !== id
@@ -435,7 +469,6 @@ export default {
                     alert("Erfolgreich zurückgewiesen");
                 })
                 .catch(error => console.log(error));
-
         },
         setFinished: function() {
             axios
@@ -452,18 +485,19 @@ export default {
             /**
              * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
              */
-            alert(
-                "Folgender Betrag wird auf alle Schüler aufgeteilt: " +
-                    this.amount_st
-            );
 
             let number_of_students = this.prescribing.positions.length;
 
-            alert("Schülerzahl: " + number_of_students);
-
             let value = this.amount_st / number_of_students;
 
-            alert("Betrag pro Schüler: " + value);
+            alert(
+                "Folgender Betrag wird auf " +
+                    number_of_students +
+                    " Schüler aufgeteilt: " +
+                    this.amount_st +
+                    "\n Betrag pro Schüler: " +
+                    value
+            );
 
             var splitMoney = 0;
 
@@ -523,11 +557,6 @@ export default {
              * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
              */
 
-            alert(
-                "Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " +
-                    this.amount_st
-            );
-
             let number_of_students = 0;
             this.prescribing.positions.forEach(function(student) {
                 if (student.checked) {
@@ -535,11 +564,16 @@ export default {
                 }
             });
 
-            alert("Schülerzahl: " + number_of_students);
-
             let value = this.amount_st / number_of_students;
 
-            alert("Betrag pro Schüler: " + value);
+            alert(
+                "Folgender Betrag wird auf " +
+                    number_of_students +
+                    " ausgewählte Schüler aufgeteilt: " +
+                    this.amount_st +
+                    "\n Betrag pro Schüler: " +
+                    value
+            );
 
             if (this.type == "overwrite") {
                 this.prescribing.positions.forEach(function(student) {

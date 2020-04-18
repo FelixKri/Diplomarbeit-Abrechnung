@@ -10,12 +10,13 @@
         <div class="row">
             <div class="col-sm">
                 <div class="form-group">
-                    <label for="amount">Betrag</label>
+                    <label for="amount">Gesamtbetrag der Position [€]</label>
                     <input
                         type="number"
                         class="form-control"
                         placeholder="Betrag"
-                        v-model="position.amount"
+                        disabled
+                        :value="numWithSeperators(totalAmountComputed)"
                     />
                 </div>
                 <input type="checkbox" v-model="position.paidByTeacher"><span>Von Lehrpersonal bezhalt</span>
@@ -213,7 +214,23 @@ export default {
         };
     },
     props: ["position", "errors"],
+    computed: {
+        totalAmountComputed: function() {
+            let totalAmt = 0;
+
+            this.position.user_has_invoice_position.forEach(function(student) {
+                totalAmt += Number(student.amount);
+            });
+
+            return totalAmt;
+        }
+    },
     methods: {
+        numWithSeperators: function(num) {
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return num_parts.join(",");
+        },
         getId: function(){
             return position.id;
         },
@@ -269,18 +286,12 @@ export default {
             /**
              * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
              */
-            alert(
-                "Folgender Betrag wird auf alle Schüler aufgeteilt: " +
-                    this.amount_st
-            );
+            
 
             let number_of_students = this.position.user_has_invoice_position.length;
-
-            alert("Schülerzahl: " + number_of_students);
-
             let value = this.amount_st / number_of_students;
 
-            alert("Betrag pro Schüler: " + value);
+            alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
             if (this.type == "overwrite") {
                 this.position.user_has_invoice_position.forEach(function(student) {
@@ -298,10 +309,6 @@ export default {
              * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
              */
 
-            alert(
-                "Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " +
-                    this.amount_st
-            );
 
             let number_of_students = 0;
             this.position.user_has_invoice_position.forEach(function(student) {
@@ -310,11 +317,11 @@ export default {
                 }
             });
 
-            alert("Schülerzahl: " + number_of_students);
 
             let value = this.amount_st / number_of_students;
 
-            alert("Betrag pro Schüler: " + value);
+            alert("Folgender Betrag wird auf " + number_of_students + " ausgewählte Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
+
 
             if (this.type == "overwrite") {
                 this.position.user_has_invoice_position.forEach(function(student) {

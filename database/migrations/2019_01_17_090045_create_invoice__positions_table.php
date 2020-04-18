@@ -34,6 +34,7 @@ class CreateInvoicePositionsTable extends Migration
             $table->string('iban')->nullable();
             $table->integer('document_number');
             $table->string('annotation')->nullable();
+            $table->integer('position_id');
             $table->timestamps();
         });
     }

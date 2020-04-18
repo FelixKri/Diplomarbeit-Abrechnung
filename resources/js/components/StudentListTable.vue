@@ -67,15 +67,12 @@
                 /**
                  * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
                  */
-                alert("Folgender Betrag wird auf alle Schüler aufgeteilt: " + this.amount_st);
 
                 let number_of_students = this.data.students.length;
-
-                alert("Schülerzahl: " + number_of_students);
-
                 let value = this.amount_st / number_of_students;
 
-                alert("Betrag pro Schüler: " + value);
+                alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
+
 
                 var splitMoney = 0;
 
@@ -142,8 +139,6 @@
                  * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
                  */
 
-                alert("Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " + this.amount_st);
-
                 let number_of_students = 0;
                 this.data.students.forEach(function(student) {
                     if(student.checked){
@@ -151,11 +146,9 @@
                     }
                 });
 
-                alert("Schülerzahl: " + number_of_students);
-
                 let value = this.amount_st / number_of_students;
 
-                alert("Betrag pro Schüler: " + value);
+                alert("Folgender Betrag wird auf " + number_of_students + " ausgewählte Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
                 if(this.type=="overwrite"){
                     this.data.students.forEach(function(student) {

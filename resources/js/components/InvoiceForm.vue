@@ -104,7 +104,16 @@
                     /></span>
                 </ul>
             </div>
-
+            <div class="form-group">
+                <label for="total_amount">Gesamtbetrag [€]</label>
+                <input
+                    type="number"
+                    name="total_amount"
+                    :value="numWithSeperators(totalAmountComputed)"
+                    disabled
+                    class="form-control"
+                />
+            </div>
             <div class="">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -177,13 +186,22 @@ export default {
             let totalAmt = 0;
 
             this.invoicePositions.forEach(function(position) {
-                totalAmt += position.amount;
+                
+                position.students.forEach(function(student){
+                    totalAmt += student.amount;
+                })
+                
             });
 
             return totalAmt;
         }
     },
     methods: {
+        numWithSeperators: function(num) {
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return num_parts.join(",");
+        },
         removeInvoicePosition: function(event) {
             alert("loda");
             console.log(event);

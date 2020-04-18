@@ -17,7 +17,7 @@
                         type="number"
                         class="form-control"
                         placeholder="Betrag"
-                        v-model="totalAmountComputed"
+                        :value="numWithSeperators(totalAmountComputed)"
                         disabled
                     />
                 </div>
@@ -278,6 +278,11 @@ export default {
     },
     props: ["position", "errors"],
     methods: {
+        numWithSeperators: function(num) {
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return num_parts.join(",");
+        },
         removeInvoicePosition: function(){
             //ToDo: Event triggern
             this.$emit("removeInvoicePosition", this.position.id);
@@ -303,18 +308,11 @@ export default {
             /**
              * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
              */
-            alert(
-                "Folgender Betrag wird auf alle Schüler aufgeteilt: " +
-                    this.amount_st
-            );
 
             let number_of_students = this.position.students.length;
-
-            alert("Schülerzahl: " + number_of_students);
-
             let value = this.amount_st / number_of_students;
 
-            alert("Betrag pro Schüler: " + value);
+            alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
             if (this.type == "overwrite") {
                 this.position.students.forEach(function(student) {
@@ -332,10 +330,6 @@ export default {
              * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf
              */
 
-            alert(
-                "Folgender Betrag wird auf ausgewählte Schüler aufgeteilt: " +
-                    this.amount_st
-            );
 
             let number_of_students = 0;
             this.position.students.forEach(function(student) {
@@ -344,11 +338,9 @@ export default {
                 }
             });
 
-            alert("Schülerzahl: " + number_of_students);
-
             let value = this.amount_st / number_of_students;
 
-            alert("Betrag pro Schüler: " + value);
+            alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
             if (this.type == "overwrite") {
                 this.position.students.forEach(function(student) {
