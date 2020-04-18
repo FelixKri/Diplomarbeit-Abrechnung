@@ -170,13 +170,14 @@ export default {
     props: ["reason_list"],
     data: function() {
         return {
+            id: null,
             author: "admin",
             date: "",
             due_until: "",
             reason: "",
             annotation: "",
             invoicePositions: [],
-            id: null,
+            invoice_id: null,
             errors: {},
             saved: false
         };
@@ -292,6 +293,7 @@ export default {
                 url: "/invoice/new",
                 dataType: "json",
                 data: {
+                    id: that.invoice_id,
                     author: that.author,
                     date: that.date,
                     due_until: that.due_until,
@@ -304,7 +306,7 @@ export default {
                     console.log(response);
                     that.errors = {};
                     alert("Erfolgreich gespeichert!");
-                    that.id = response;
+                    that.invoice_id = response;
                     that.saved = true;
                 },
                 error: function(xhr, status, error) {

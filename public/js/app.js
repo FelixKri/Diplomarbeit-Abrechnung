@@ -2301,7 +2301,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           amount: 0,
           paidByTeacher: false,
           iban: "",
-          students: []
+          user_has_invoice_position: []
         };
         this.invoice.positions.push(position);
       }
@@ -2999,13 +2999,14 @@ __webpack_require__.r(__webpack_exports__);
   props: ["reason_list"],
   data: function data() {
     return {
+      id: null,
       author: "admin",
       date: "",
       due_until: "",
       reason: "",
       annotation: "",
       invoicePositions: [],
-      id: null,
+      invoice_id: null,
       errors: {},
       saved: false
     };
@@ -3099,6 +3100,7 @@ __webpack_require__.r(__webpack_exports__);
         url: "/invoice/new",
         dataType: "json",
         data: {
+          id: that.invoice_id,
           author: that.author,
           date: that.date,
           due_until: that.due_until,
@@ -3111,7 +3113,7 @@ __webpack_require__.r(__webpack_exports__);
           console.log(response);
           that.errors = {};
           alert("Erfolgreich gespeichert!");
-          that.id = response;
+          that.invoice_id = response;
           that.saved = true;
         },
         error: function error(xhr, status, _error) {
