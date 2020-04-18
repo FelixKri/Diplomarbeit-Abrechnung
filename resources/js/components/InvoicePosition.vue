@@ -314,15 +314,58 @@ export default {
 
             alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
+            var splitMoney = 0;
+
             if (this.type == "overwrite") {
                 this.position.students.forEach(function(student) {
-                    student.amount = value;
+                    var studentMoney = Math.round(value * 100) / 100;
+                    student.amount = studentMoney;
+                    splitMoney += studentMoney;
                 });
             } else {
                 this.position.students.forEach(function(student) {
-                    student.amount += value;
+                    var studentMoney = Math.round(value * 100) / 100;
+                    student.amount += studentMoney;
+                    splitMoney += studentMoney;
                 });
             }
+
+                //CENTAUSGLEICH
+                //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+                var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+                console.log("centdiff: " + centdiff);
+                console.log("splitted money: " + splitMoney);
+                console.log("all money: " + this.amount_st);
+
+                if(centdiff > 0)
+                {
+                    this.position.students.forEach(function(student) {
+                            
+                        if(centdiff <= 0)
+                        {
+                            return;
+                        }
+
+                        //Same here, 33.33 + .01 = 33,339999999999996
+                        student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+                        centdiff -= 0.01;
+                    });
+                }
+                else if(centdiff < 0)
+                {
+                    //Students pay too much
+                        this.position.students.forEach(function(student) {
+                            
+                        if(centdiff >= 0)
+                        {
+                            return;
+                        }
+
+                        //Same here
+                        student.amount = Math.round((student.amount - 0.01) * 100) / 100;
+                        centdiff += 0.01;
+                    });
+                }
         },
 
         splitSelected: function() {
@@ -342,19 +385,66 @@ export default {
 
             alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
 
+            var splitMoney = 0;
+
             if (this.type == "overwrite") {
                 this.position.students.forEach(function(student) {
                     if (student.checked) {
-                        student.amount = value;
+                        var studentMoney = Math.round(value * 100) / 100;
+                        student.amount = studentMoney;
+                        splitMoney += studentMoney;
                     }
                 });
             } else {
                 this.position.students.forEach(function(student) {
                     if (student.checked) {
-                        student.amount += value;
+                        var studentMoney = Math.round(value * 100) / 100;
+                        student.amount += studentMoney;
+                        splitMoney += studentMoney;
                     }
                 });
             }
+
+            //CENTAUSGLEICH auf ausgewählte
+                //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+                var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+                console.log("centdiff: " + centdiff);
+                console.log("splitted money: " + splitMoney);
+                console.log("all money: " + this.amount_st);
+
+                if(centdiff > 0)
+                {
+                    this.position.students.forEach(function(student) {
+                            if(!student.checked)
+                                return;
+
+                        if(centdiff <= 0)
+                        {
+                            return;
+                        }
+
+                        //Same here, 33.33 + .01 = 33,339999999999996
+                        student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+                        centdiff -= 0.01;
+                    });
+                }
+                else if(centdiff < 0)
+                {
+                    //Students pay too much
+                        this.position.students.forEach(function(student) {
+                            if(!student.checked)
+                                return;
+
+                        if(centdiff >= 0)
+                        {
+                            return;
+                        }
+
+                        //Same here
+                        student.amount = Math.round((student.amount - 0.01) * 100) / 100;
+                        centdiff += 0.01;
+                    });
+                }
         },
         assignEveryone: function() {
             alert(

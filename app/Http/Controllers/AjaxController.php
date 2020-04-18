@@ -17,6 +17,11 @@ class AjaxController extends Controller
 		return Reason::All()->pluck("title");
 	}
 
+	public function getGroups()
+	{
+		return Group::All()->sortByDesc('id');
+	}
+
 	public function getAllGroups()
 	{
 		return Group::All()->sortByDesc('id');
@@ -57,7 +62,7 @@ class AjaxController extends Controller
         	//Filter only after name
             $users = FosUser::where('last_name', 'LIKE', '%' . $nameFilter . '%')
                 ->orWhere('first_name', 'LIKE', '%' . $nameFilter . '%')
-                ->orWhere('id', 'LIKE', '%' . $nameFilter . '%')->take($limit)->get();
+                ->orWhere('id', 'LIKE', '%' . $nameFilter . '%')->orderBy('last_name')->take($limit)->get();
         }
         else if($nameFilter == "")
         {
@@ -76,7 +81,7 @@ class AjaxController extends Controller
 	        	$query->orWhere('group_id', $classes[$i]['id']);
 	        }
 
-	        $users = $query->take($limit)->get();
+	        $users = $query->orderBy('last_name')->take($limit)->get();
         }
         else
         {
@@ -94,7 +99,7 @@ class AjaxController extends Controller
 		        	$query->orWhere('group_id', $classes[$i]['id']);
 		        }
 
-		        $tempUsers = $query->get();
+		        $tempUsers = $query->orderBy('last_name')->get();
 				
 				$users = $tempUsers->filter(function ($item) use($nameFilter){
 
