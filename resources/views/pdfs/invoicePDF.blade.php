@@ -6,10 +6,10 @@
 
 
 
-<h1>{{$invoice->reason}}</h1>
+<h1>{{$invoice->reason->title}}</h1>
 <p>Ursprünglicher Author: {{$invoice->author->username}}</p>
 <hr>
-@if ($invoice->approved == false)
+@if ($invoice->saved == false)
     <p style="
             position: absolute;
             transform: rotate(60deg);
@@ -25,7 +25,7 @@
     </tr>
     <tr>
         <td style="border: none;">Grund:</td>
-        <td style="border: none;">{{$invoice->reason}}</td>
+        <td style="border: none;">{{$invoice->reason->title}}</td>
     </tr>
     <tr>
         <td style="border: none;">Beschreibung/Anmerkung: </td>
@@ -33,13 +33,13 @@
     </tr>
     <tr>
         <td style="border: none; font-weight: bold;">Gesamtbetrag:</td>
-        <td style="border: none; font-weight: bold;">{{$invoice->total_amount}}</td>
+        <td style="border: none; font-weight: bold;">{{number_format ($invoice->total_amount ,2 ,"," ,".")}}€</td>
     </tr>
 </table>
 
 @foreach ($invoice->positions as $position)
     <h2>{{$position->name}}</h2>
-    <p style="font-weight: bold;">Gesamtbetrag der Position: {{$position->total_amount}}</p>
+    <p style="font-weight: bold;">Gesamtbetrag der Position: {{number_format ($position->total_amount ,2 ,"," ,".")}}€</p>
     @if ($position->paid_by_teacher)
     <p>Position wurde von Lehrpersonal/Abrechner bezahlt, überweisen auf IBAN: {{$position->iban}}</p>
     @endif
@@ -68,7 +68,7 @@
             <td>{{$student->user->group->name}}</td>
             <td>{{$student->user->last_name}}</td>
             <td>{{$student->user->first_name}}</td>
-            <td>{{$student->amount}}€</td>
+            <td style="text-align: right;">{{number_format ($student->amount ,2 ,"," ,".")}}€</td>
         </tr>
         @endforeach
     </table>

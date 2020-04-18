@@ -10,12 +10,13 @@
         <div class="row">
             <div class="col-sm">
                 <div class="form-group">
-                    <label for="amount">Betrag</label>
+                    <label for="amount">Gesamtbetrag der Position [€]</label>
                     <input
                         type="number"
                         class="form-control"
                         placeholder="Betrag"
-                        v-model="position.amount"
+                        disabled
+                        :value="numWithSeperators(totalAmountComputed)"
                     />
                 </div>
                 <input type="checkbox" v-model="position.paidByTeacher"><span>Von Lehrpersonal bezhalt</span>
@@ -213,7 +214,23 @@ export default {
         };
     },
     props: ["position", "errors"],
+    computed: {
+        totalAmountComputed: function() {
+            let totalAmt = 0;
+
+            this.position.user_has_invoice_position.forEach(function(student) {
+                totalAmt += Number(student.amount);
+            });
+
+            return totalAmt;
+        }
+    },
     methods: {
+        numWithSeperators: function(num) {
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return num_parts.join(",");
+        },
         getId: function(){
             return position.id;
         },

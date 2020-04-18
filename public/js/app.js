@@ -2077,6 +2077,22 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2239,15 +2255,57 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id", "reason_list"],
   mounted: function mounted() {
-    this.getInvoice(this.id);
+    this.getInvoice(this.id); //get Last ID
   },
   data: function data() {
     return {
       invoice: null,
-      errors: {}
+      errors: {},
+      last_id: null
     };
   },
+  computed: {
+    totalAmountComputed: function totalAmountComputed() {
+      var totalAmt = 0;
+      this.invoice.positions.forEach(function (position) {
+        position.user_has_invoice_position.forEach(function (student) {
+          totalAmt += Number(student.amount);
+        });
+      });
+      return totalAmt;
+    }
+  },
   methods: {
+    numWithSeperators: function numWithSeperators(num) {
+      var num_parts = num.toString().split(".");
+      num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return num_parts.join(",");
+    },
+    addPos: function addPos() {
+      var name = prompt("Namen der Rechnungspos eingeben", "");
+
+      if (name != null) {
+        while (name === "" || this.invoice.positions.filter(function (e) {
+          return e.name === name;
+        }).length > 0) {
+          name = prompt("Bitte den Namen der Rechnungsposition nicht leer lassen oder einen bereits verwendeten Namen eingeben.");
+        }
+
+        this.last_id = this.last_id + 1;
+        var id = this.id;
+        var position = {
+          id: id,
+          name: name,
+          document_number: "",
+          annotation: "",
+          amount: 0,
+          paidByTeacher: false,
+          iban: "",
+          students: []
+        };
+        this.invoice.positions.push(position);
+      }
+    },
     getInvoice: function getInvoice(id) {
       var _this = this;
 
@@ -2256,6 +2314,45 @@ __webpack_require__.r(__webpack_exports__);
       }).catch(function (error) {
         return console.log(error);
       });
+
+      _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var apiRes;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                apiRes = null;
+                _context.prev = 1;
+                _context.next = 4;
+                return axios.get("/invoices/view/getInvoice/" + id);
+
+              case 4:
+                apiRes = _context.sent;
+                _context.next = 10;
+                break;
+
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](1);
+                apiRes = _context.t0.response;
+
+              case 10:
+                _context.prev = 10;
+                console.log(apiRes); // Could be success or error
+
+                _this.invoice = apiRes.data;
+                _this.last_id = _this.invoice.positions[_this.invoice.positions.length - 1].position_id;
+                return _context.finish(10);
+
+              case 15:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[1, 7, 10, 15]]);
+      }))();
     },
     release: function release() {
       if (id != null) {
@@ -2560,6 +2657,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     console.log("Component created: InvoicePosition");
@@ -2573,7 +2671,21 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   props: ["position", "errors"],
+  computed: {
+    totalAmountComputed: function totalAmountComputed() {
+      var totalAmt = 0;
+      this.position.user_has_invoice_position.forEach(function (student) {
+        totalAmt += Number(student.amount);
+      });
+      return totalAmt;
+    }
+  },
   methods: {
+    numWithSeperators: function numWithSeperators(num) {
+      var num_parts = num.toString().split(".");
+      num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return num_parts.join(",");
+    },
     getId: function getId() {
       return position.id;
     },
@@ -2874,6 +2986,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["reason_list"],
   data: function data() {
@@ -2893,12 +3014,19 @@ __webpack_require__.r(__webpack_exports__);
     totalAmountComputed: function totalAmountComputed() {
       var totalAmt = 0;
       this.invoicePositions.forEach(function (position) {
-        totalAmt += position.amount;
+        position.students.forEach(function (student) {
+          totalAmt += student.amount;
+        });
       });
       return totalAmt;
     }
   },
   methods: {
+    numWithSeperators: function numWithSeperators(num) {
+      var num_parts = num.toString().split(".");
+      num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return num_parts.join(",");
+    },
     removeInvoicePosition: function removeInvoicePosition(event) {
       alert("loda");
       console.log(event);
@@ -3358,6 +3486,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: ["position", "errors"],
   methods: {
+    numWithSeperators: function numWithSeperators(num) {
+      var num_parts = num.toString().split(".");
+      num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return num_parts.join(",");
+    },
     removeInvoicePosition: function removeInvoicePosition() {
       //ToDo: Event triggern
       this.$emit("removeInvoicePosition", this.position.id);
@@ -3809,6 +3942,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   mounted: function mounted() {
@@ -3828,7 +3971,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         reason_suggestion: "",
         reason: "",
         description: "",
-        positions: null,
+        positions: [],
         author: ""
       },
       reasons: null,
@@ -3837,7 +3980,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       type: "overwrite"
     };
   },
+  computed: {
+    totalAmountComputed: function totalAmountComputed() {
+      var totalAmt = 0;
+      this.prescribing.positions.forEach(function (student) {
+        totalAmt += Number(student.amount);
+      });
+      return totalAmt;
+    }
+  },
   methods: {
+    numWithSeperators: function numWithSeperators(num) {
+      var num_parts = num.toString().split(".");
+      num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return num_parts.join(",");
+    },
     getAllReasons: function getAllReasons() {
       var _this = this;
 
@@ -4188,18 +4345,139 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["reasons"],
   mounted: function mounted() {
-    console.log('Component mounted: PrescribingForm');
+    console.log("Component mounted: PrescribingForm");
     var that = this;
     $.ajax({
       headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
       },
       type: "GET",
-      url: '/getReasons',
-      dataType: 'json',
+      url: "/getReasons",
+      dataType: "json",
       success: function success(response) {
         this.reasons = response;
       }
@@ -4232,6 +4510,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    numWithSeperators: function numWithSeperators(num) {
+      var num_parts = num.toString().split(".");
+      num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return num_parts.join(",");
+    },
     getStudents: function getStudents() {
       return this.students;
     },
@@ -4252,24 +4535,24 @@ __webpack_require__.r(__webpack_exports__);
       });
       $.ajax({
         headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
         },
         type: "POST",
-        url: '/prescribing/new',
-        dataType: 'json',
+        url: "/prescribing/new",
+        dataType: "json",
         data: {
-          "id": that.id,
-          "title": that.title,
-          "author": that.author,
-          "date": that.date,
-          "due_until": that.due_until,
-          "reason_suggestion": that.reason_suggestion,
-          "reason": that.reason,
-          "description": that.description,
-          "students": studentIds,
-          "amount": studentAmounts,
-          "annotation": studentAnnotations,
-          "totalAmount": that.totalAmountComputed
+          id: that.id,
+          title: that.title,
+          author: that.author,
+          date: that.date,
+          due_until: that.due_until,
+          reason_suggestion: that.reason_suggestion,
+          reason: that.reason,
+          description: that.description,
+          students: studentIds,
+          amount: studentAmounts,
+          annotation: studentAnnotations,
+          totalAmount: that.totalAmountComputed
         },
         success: function success(response) {
           console.log(response);
@@ -41297,6 +41580,18 @@ var render = function() {
         : _vm._e()
     ]),
     _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "total_amount" } }, [
+        _vm._v("Gesamtbetrag der Abrechnung [€]")
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: { type: "text", name: "total_amount", disabled: "" },
+        domProps: { value: _vm.numWithSeperators(_vm.totalAmountComputed) }
+      })
+    ]),
+    _vm._v(" "),
     _c("hr"),
     _vm._v(" "),
     _c("div", {}, [
@@ -41446,27 +41741,15 @@ var render = function() {
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-sm" }, [
           _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "amount" } }, [_vm._v("Betrag")]),
+            _c("label", { attrs: { for: "amount" } }, [
+              _vm._v("Gesamtbetrag der Position [€]")
+            ]),
             _vm._v(" "),
             _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.position.amount,
-                  expression: "position.amount"
-                }
-              ],
               staticClass: "form-control",
-              attrs: { type: "number", placeholder: "Betrag" },
-              domProps: { value: _vm.position.amount },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.position, "amount", $event.target.value)
-                }
+              attrs: { type: "number", placeholder: "Betrag", disabled: "" },
+              domProps: {
+                value: _vm.numWithSeperators(_vm.totalAmountComputed)
               }
             })
           ]),
@@ -42113,6 +42396,18 @@ var render = function() {
           : _vm._e()
       ]),
       _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "total_amount" } }, [
+          _vm._v("Gesamtbetrag [€]")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "number", name: "total_amount", disabled: "" },
+          domProps: { value: _vm.numWithSeperators(_vm.totalAmountComputed) }
+        })
+      ]),
+      _vm._v(" "),
       _c("div", {}, [
         _c("nav", [
           _c(
@@ -42348,24 +42643,10 @@ var render = function() {
             _c("label", { attrs: { for: "amount" } }, [_vm._v("Betrag")]),
             _vm._v(" "),
             _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.totalAmountComputed,
-                  expression: "totalAmountComputed"
-                }
-              ],
               staticClass: "form-control",
               attrs: { type: "number", placeholder: "Betrag", disabled: "" },
-              domProps: { value: _vm.totalAmountComputed },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.totalAmountComputed = $event.target.value
-                }
+              domProps: {
+                value: _vm.numWithSeperators(_vm.totalAmountComputed)
               }
             })
           ]),
@@ -43176,6 +43457,18 @@ var render = function() {
           : _vm._e()
       ]),
       _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "total_amount" } }, [
+          _vm._v("Gesamtbetrag [€]")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "number", name: "total_amount", disabled: "" },
+          domProps: { value: _vm.numWithSeperators(_vm.totalAmountComputed) }
+        })
+      ]),
+      _vm._v(" "),
       _c(
         "button",
         {
@@ -43694,7 +43987,7 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "form-group" }, [
           _c("label", { attrs: { for: "due_until" } }, [
-            _vm._v("Spätestens gewünschtes Einzahlungsdatum: ")
+            _vm._v("Spätestens gewünschtes Einzahlungsdatum:\n            ")
           ]),
           _vm._v(" "),
           _c("input", {
@@ -43889,29 +44182,13 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "form-group" }, [
           _c("label", { attrs: { for: "description" } }, [
-            _vm._v("Gesamtbetrag: ")
+            _vm._v("Gesamtbetrag [€]: ")
           ]),
           _vm._v(" "),
           _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.totalAmountComputed,
-                expression: "totalAmountComputed"
-              }
-            ],
             staticClass: "form-control",
             attrs: { type: "text", name: "totalAmount", id: "", disabled: "" },
-            domProps: { value: _vm.totalAmountComputed },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.totalAmountComputed = $event.target.value
-              }
-            }
+            domProps: { value: _vm.numWithSeperators(_vm.totalAmountComputed) }
           })
         ]),
         _vm._v(" "),
@@ -43927,7 +44204,7 @@ var render = function() {
               type: "button"
             }
           },
-          [_vm._v("Person(n) hinzufügen")]
+          [_vm._v("\n            Person(n) hinzufügen\n        ")]
         ),
         _vm._v(" "),
         _c("add-person-modal", {

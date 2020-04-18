@@ -89,6 +89,10 @@
                 </li>
             </ul>
         </div>
+        <div class="form-group">
+            <label for="total_amount">Gesamtbetrag der Abrechnung [€]</label>
+            <input type="text" name="total_amount" class="form-control" disabled :value="numWithSeperators(totalAmountComputed)">
+        </div>
         <hr />
         <div class="">
             <nav>
@@ -130,7 +134,9 @@
                     value="Freigeben (Sekretariat)"
                     class="btn btn-success"
                     @click="release()"
-                    :disabled="invoice.saved == false || invoice.approved == true"
+                    :disabled="
+                        invoice.saved == false || invoice.approved == true
+                    "
                 />
                 <input
                     type="button"
@@ -144,7 +150,9 @@
                     value="Zurückweisen"
                     class="btn btn-danger"
                     @click="reject"
-                    :disabled="invoice.saved == false || invoice.approved == true"
+                    :disabled="
+                        invoice.saved == false || invoice.approved == true
+                    "
                 />
                 <input
                     type="button"
@@ -162,27 +170,91 @@ export default {
     props: ["id", "reason_list"],
     mounted() {
         this.getInvoice(this.id);
+
+        //get Last ID
     },
     data() {
         return {
             invoice: null,
-            errors: {}
+            errors: {},
+            last_id: null
         };
     },
+    computed: {
+        totalAmountComputed: function() {
+            let totalAmt = 0;
+
+            this.invoice.positions.forEach(function(position) {
+                position.user_has_invoice_position.forEach(function(student){
+                    totalAmt += Number(student.amount);
+                });
+            });
+
+            return totalAmt;
+        }
+    },
     methods: {
+        numWithSeperators: function(num) {
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return num_parts.join(",");
+        },
+        addPos: function() {
+            var name = prompt("Namen der Rechnungspos eingeben", "");
+            if (name != null) {
+                while (
+                    name === "" ||
+                    this.invoice.positions.filter(e => e.name === name).length >
+                        0
+                ) {
+                    name = prompt(
+                        "Bitte den Namen der Rechnungsposition nicht leer lassen oder einen bereits verwendeten Namen eingeben."
+                    );
+                }
+                this.last_id = this.last_id + 1;
+                var id = this.id;
+
+                var position = {
+                    id: id,
+                    name: name,
+                    document_number: "",
+                    annotation: "",
+                    amount: 0,
+                    paidByTeacher: false,
+                    iban: "",
+                    students: []
+                };
+
+                this.invoice.positions.push(position);
+            }
+        },
         getInvoice: function(id) {
             axios
                 .get("/invoices/view/getInvoice/" + id)
                 .then(response => (this.invoice = response.data))
                 .catch(error => console.log(error));
+
+            (async () => {
+                let apiRes = null;
+                try {
+                    apiRes = await axios.get(
+                        "/invoices/view/getInvoice/" + id
+                    );
+                } catch (err) {
+                    apiRes = err.response;
+                } finally {
+                    console.log(apiRes); // Could be success or error
+                    this.invoice = apiRes.data;
+                    this.last_id = this.invoice.positions[this.invoice.positions.length - 1].position_id;
+                }
+            })();
         },
         release: function() {
-            if(id != null)
-            {
-            axios
-                .post("/invoice/release/" + this.id)
-                .then(response => alert(response["data"]))
-                .catch(error => console.log(error));
+            if (id != null) {
+                axios
+                    .post("/invoice/release/" + this.id)
+                    .then(response => alert(response["data"]))
+                    .catch(error => console.log(error));
             }
         },
         print: function() {

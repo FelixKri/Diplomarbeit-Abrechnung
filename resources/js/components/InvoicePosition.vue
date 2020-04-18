@@ -17,7 +17,7 @@
                         type="number"
                         class="form-control"
                         placeholder="Betrag"
-                        v-model="totalAmountComputed"
+                        :value="numWithSeperators(totalAmountComputed)"
                         disabled
                     />
                 </div>
@@ -278,6 +278,11 @@ export default {
     },
     props: ["position", "errors"],
     methods: {
+        numWithSeperators: function(num) {
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return num_parts.join(",");
+        },
         removeInvoicePosition: function(){
             //ToDo: Event triggern
             this.$emit("removeInvoicePosition", this.position.id);

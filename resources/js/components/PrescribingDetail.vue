@@ -126,6 +126,16 @@
                 </li>
             </ul>
         </div>
+        <div class="form-group">
+            <label for="total_amount">Gesamtbetrag [€]</label>
+            <input
+                type="number"
+                name="total_amount"
+                :value="numWithSeperators(totalAmountComputed)"
+                disabled
+                class="form-control"
+            />
+        </div>
         <button
             class="btn btn-primary btn-sm"
             data-toggle="modal"
@@ -319,7 +329,7 @@ export default {
                 reason_suggestion: "",
                 reason: "",
                 description: "",
-                positions: null,
+                positions: [],  
                 author: ""
             },
             reasons: null,
@@ -328,7 +338,23 @@ export default {
             type: "overwrite"
         };
     },
+    computed: {
+        totalAmountComputed: function() {
+            let totalAmt = 0;
+
+            this.prescribing.positions.forEach(function(student) {
+                totalAmt += Number(student.amount);
+            });
+
+            return totalAmt;
+        }
+    },
     methods: {
+        numWithSeperators: function(num) {
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return num_parts.join(",");
+        },
         getAllReasons: function() {
             axios
                 .get("/getReasons")
@@ -361,7 +387,9 @@ export default {
                 }
             })();
         },
-        addStudents: function() {},
+        addStudents: function() {
+            
+        },
         removeStudent: function(id) {
             this.prescribing.positions = this.prescribing.positions.filter(
                 el => el.id !== id
