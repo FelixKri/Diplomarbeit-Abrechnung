@@ -221,16 +221,6 @@ export default {
                 this.invoicePositions.push(position);
             }
         },
-<<<<<<< HEAD
-        release: function() {
-            axios
-                .post("/invoice/setFinished/" + this.id)
-                .then(response => {
-                    console.log(response);
-                    alert("Erfolgreich freigegeben");
-                })
-                .catch(error => console.log(error));
-=======
         release: function(){
             if(this.saved)
             {
@@ -246,7 +236,6 @@ export default {
                     //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
                 }
             },
->>>>>>> 3b67072bc96df1896079bfabfced562ae7048171
 
             //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
         },
@@ -314,7 +303,6 @@ export default {
             });
         }
     }
-};
 </script>
 
 <style></style>
