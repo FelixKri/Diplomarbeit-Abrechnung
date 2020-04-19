@@ -124,6 +124,16 @@
                         ></position-tab>
                         <a
                             class="nav-item nav-link"
+                            id="nav-overview-tab"
+                            data-toggle="tab"
+                            href="#nav-overview"
+                            role="tab"
+                            aria-controls="nav-overview"
+                            aria-selected="false"
+                            >Übersicht</a
+                        >
+                        <a
+                            class="nav-item nav-link"
                             id="nav-add-tab"
                             data-toggle="tab"
                             href="#nav-add"
@@ -136,6 +146,7 @@
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
+                    <invoice-overview-position></invoice-overview-position>
                     <invoice-position
                         v-for="pos in invoicePositions"
                         v-bind:key="pos.id"

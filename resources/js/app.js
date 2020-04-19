@@ -18,6 +18,8 @@ Vue.component('invoice-list', require('./components/InvoiceList.vue').default);
 Vue.component('invoice-detail', require('./components/InvoiceDetail.vue').default);
 Vue.component('invoice-detail-position', require('./components/InvoiceDetailPosition.vue').default);
 Vue.component('student-invoice-detail', require('./components/StudentInvoiceDetail').default);
+Vue.component('invoice-overview-position', require('./components/InvoiceOverviewPosition.vue').default);
+Vue.component('student-overview-invoice', require('./components/StudentOverviewInvoice.vue').default);
 
 const app = new Vue({
     el: '#app',
