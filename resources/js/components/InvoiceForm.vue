@@ -165,7 +165,7 @@
                     ></add-person-modal>
                     <invoice-overview-position 
                     v-on:removeStudent="removeStudent"
-                    :studentAmounts="studentAmounts"
+                    :students="students"
                     :groups="groups"
                     :groupLength="groupLength"></invoice-overview-position>
                     <invoice-position
@@ -219,8 +219,7 @@ export default {
             invoice_id: null,
             errors: {},
             saved: false,
-            students: [],
-            studentAmounts: []
+            students: []
         };
     },
     computed: {
@@ -247,7 +246,6 @@ export default {
             {
                 this.invoicePositions[i].studentAmounts = this.invoicePositions[i].studentAmounts.filter(el => el.student.id !== id);
             }
-            this.studentAmounts = this.studentAmounts.filter(el => el.student.id !== id);
         },
         getStudents: function() {
             return this.students;
@@ -268,7 +266,6 @@ export default {
                 {
                     this.invoicePositions[i].studentAmounts = posStudentAmount;
                 }
-                this.studentAmounts = posStudentAmount;
 
             }
             else
@@ -284,7 +281,6 @@ export default {
                 {
                     this.invoicePositions[i].studentAmounts = this.invoicePositions[i].studentAmounts.concat(posStudentAmount);
                 }
-                this.studentAmounts = this.studentAmounts.concat(posStudentAmount);
             }
             
         },

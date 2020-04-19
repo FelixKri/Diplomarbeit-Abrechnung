@@ -3164,8 +3164,7 @@ __webpack_require__.r(__webpack_exports__);
       invoice_id: null,
       errors: {},
       saved: false,
-      students: [],
-      studentAmounts: []
+      students: []
     };
   },
   computed: {
@@ -3190,10 +3189,6 @@ __webpack_require__.r(__webpack_exports__);
           return el.student.id !== id;
         });
       }
-
-      this.studentAmounts = this.studentAmounts.filter(function (el) {
-        return el.student.id !== id;
-      });
     },
     getStudents: function getStudents() {
       return this.students;
@@ -3215,8 +3210,6 @@ __webpack_require__.r(__webpack_exports__);
         for (var i = 0; i < this.invoicePositions.length; i++) {
           this.invoicePositions[i].studentAmounts = posStudentAmount;
         }
-
-        this.studentAmounts = posStudentAmount;
       } else {
         this.students = this.students.concat(studentsDom);
         var posStudentAmount = [];
@@ -3230,8 +3223,6 @@ __webpack_require__.r(__webpack_exports__);
         for (var i = 0; i < this.invoicePositions.length; i++) {
           this.invoicePositions[i].studentAmounts = this.invoicePositions[i].studentAmounts.concat(posStudentAmount);
         }
-
-        this.studentAmounts = this.studentAmounts.concat(posStudentAmount);
       }
     },
     numWithSeperators: function numWithSeperators(num) {
@@ -3481,7 +3472,7 @@ __webpack_require__.r(__webpack_exports__);
       prescribing: null
     };
   },
-  props: ["studentAmounts", "groups", "groupLength"],
+  props: ["students", "groups", "groupLength"],
   methods: {
     removeStudent: function removeStudent(studentId) {
       this.$emit("removeStudent", studentId);
@@ -5483,7 +5474,43 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    console.log("Component mounted: StudentOverviewInvoice");
+  },
+  props: ["student"],
+  data: function data() {
+    return {};
+  },
+  methods: {
+    removeStudent: function removeStudent() {
+      console.log("deleting student with id " + this.student.id);
+      this.$emit('removeStudent', this.student.id);
+    },
+    getGroupName: function getGroupName(id) {
+      for (var i = 0; i < this.$parent.groupLength; i++) {
+        if (this.$parent.groups[i]["id"] == id) {
+          return this.$parent.groups[i]["name"];
+        }
+      }
+
+      console.log("Could not find groupId: " + id);
+      return "Error";
+    }
+  }
+});
 
 /***/ }),
 
@@ -42729,7 +42756,7 @@ var render = function() {
             _vm._v(" "),
             _c("invoice-overview-position", {
               attrs: {
-                studentAmounts: _vm.studentAmounts,
+                students: _vm.students,
                 groups: _vm.groups,
                 groupLength: _vm.groupLength
               },
@@ -42921,10 +42948,10 @@ var render = function() {
         _vm._v(" "),
         _c(
           "tbody",
-          _vm._l(this.studentAmounts, function(studentA) {
-            return _c("student-invoice", {
-              key: studentA.student.id,
-              attrs: { studentAmount: studentA },
+          _vm._l(this.students, function(student) {
+            return _c("student-overview-invoice", {
+              key: student.id,
+              attrs: { student: student },
               on: {
                 removeStudent: function($event) {
                   return _vm.removeStudent($event)
@@ -45231,7 +45258,79 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c("tr", [
+    _c("td", [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: this.student.checked,
+            expression: "this.student.checked"
+          }
+        ],
+        attrs: { type: "checkbox" },
+        domProps: {
+          checked: Array.isArray(this.student.checked)
+            ? _vm._i(this.student.checked, null) > -1
+            : this.student.checked
+        },
+        on: {
+          change: function($event) {
+            var $$a = this.student.checked,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 && _vm.$set(this.student, "checked", $$a.concat([$$v]))
+              } else {
+                $$i > -1 &&
+                  _vm.$set(
+                    this.student,
+                    "checked",
+                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                  )
+              }
+            } else {
+              _vm.$set(this.student, "checked", $$c)
+            }
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("th", { attrs: { scope: "row" } }, [_vm._v(_vm._s(this.student.id))]),
+    _vm._v(" "),
+    _c("td", [_vm._v(_vm._s(this.student.last_name))]),
+    _vm._v(" "),
+    _c("td", [_vm._v(_vm._s(this.student.first_name))]),
+    _vm._v(" "),
+    _c("td", [_vm._v(_vm._s(_vm.getGroupName(this.student.group_id)))]),
+    _vm._v(" "),
+    _c("td", [
+      _c("input", {
+        staticClass: "form-control",
+        attrs: { type: "", name: "" },
+        domProps: {
+          value: Math.round((this.student.amount + Number.EPSILON) * 100) / 100
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c(
+      "td",
+      {
+        on: {
+          click: function($event) {
+            return _vm.removeStudent()
+          }
+        }
+      },
+      [_c("i", { staticClass: "fas fa-user-minus" })]
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
