@@ -2729,14 +2729,49 @@ __webpack_require__.r(__webpack_exports__);
       var number_of_students = this.position.user_has_invoice_position.length;
       var value = this.amount_st / number_of_students;
       alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
+      var splitMoney = 0;
 
       if (this.type == "overwrite") {
         this.position.user_has_invoice_position.forEach(function (student) {
-          student.amount = value;
+          var studentMoney = Math.round(value * 100) / 100;
+          student.amount = studentMoney;
+          splitMoney += studentMoney;
         });
       } else {
         this.position.user_has_invoice_position.forEach(function (student) {
-          student.amount += value;
+          var studentMoney = Math.round(value * 100) / 100;
+          student.amount += studentMoney;
+          splitMoney += studentMoney;
+        });
+      } //CENTAUSGLEICH
+      //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+
+
+      var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+      console.log("centdiff: " + centdiff);
+      console.log("splitted money: " + splitMoney);
+      console.log("all money: " + this.amount_st);
+
+      if (centdiff > 0) {
+        this.position.user_has_invoice_position.forEach(function (student) {
+          if (centdiff <= 0) {
+            return;
+          } //Same here, 33.33 + .01 = 33,339999999999996
+
+
+          student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+          centdiff -= 0.01;
+        });
+      } else if (centdiff < 0) {
+        //Students pay too much
+        this.position.user_has_invoice_position.forEach(function (student) {
+          if (centdiff >= 0) {
+            return;
+          } //Same here
+
+
+          student.amount = Math.round((student.amount - 0.01) * 100) / 100;
+          centdiff += 0.01;
         });
       }
     },
@@ -2752,18 +2787,57 @@ __webpack_require__.r(__webpack_exports__);
       });
       var value = this.amount_st / number_of_students;
       alert("Folgender Betrag wird auf " + number_of_students + " ausgewählte Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
+      var splitMoney = 0;
 
       if (this.type == "overwrite") {
         this.position.user_has_invoice_position.forEach(function (student) {
           if (student.checked) {
-            student.amount = value;
+            var studentMoney = Math.round(value * 100) / 100;
+            student.amount = studentMoney;
+            splitMoney += studentMoney;
           }
         });
       } else {
         this.position.user_has_invoice_position.forEach(function (student) {
           if (student.checked) {
-            student.amount += value;
+            var studentMoney = Math.round(value * 100) / 100;
+            student.amount += studentMoney;
+            splitMoney += studentMoney;
           }
+        });
+      } //CENTAUSGLEICH auf ausgewählte
+      //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+
+
+      var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+      console.log("centdiff: " + centdiff);
+      console.log("splitted money: " + splitMoney);
+      console.log("all money: " + this.amount_st);
+
+      if (centdiff > 0) {
+        this.position.user_has_invoice_position.forEach(function (student) {
+          if (!student.checked) return;
+
+          if (centdiff <= 0) {
+            return;
+          } //Same here, 33.33 + .01 = 33,339999999999996
+
+
+          student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+          centdiff -= 0.01;
+        });
+      } else if (centdiff < 0) {
+        //Students pay too much
+        this.position.user_has_invoice_position.forEach(function (student) {
+          if (!student.checked) return;
+
+          if (centdiff >= 0) {
+            return;
+          } //Same here
+
+
+          student.amount = Math.round((student.amount - 0.01) * 100) / 100;
+          centdiff += 0.01;
         });
       }
     },
@@ -3515,14 +3589,49 @@ __webpack_require__.r(__webpack_exports__);
       var number_of_students = this.position.students.length;
       var value = this.amount_st / number_of_students;
       alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
+      var splitMoney = 0;
 
       if (this.type == "overwrite") {
         this.position.students.forEach(function (student) {
-          student.amount = value;
+          var studentMoney = Math.round(value * 100) / 100;
+          student.amount = studentMoney;
+          splitMoney += studentMoney;
         });
       } else {
         this.position.students.forEach(function (student) {
-          student.amount += value;
+          var studentMoney = Math.round(value * 100) / 100;
+          student.amount += studentMoney;
+          splitMoney += studentMoney;
+        });
+      } //CENTAUSGLEICH
+      //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+
+
+      var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+      console.log("centdiff: " + centdiff);
+      console.log("splitted money: " + splitMoney);
+      console.log("all money: " + this.amount_st);
+
+      if (centdiff > 0) {
+        this.position.students.forEach(function (student) {
+          if (centdiff <= 0) {
+            return;
+          } //Same here, 33.33 + .01 = 33,339999999999996
+
+
+          student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+          centdiff -= 0.01;
+        });
+      } else if (centdiff < 0) {
+        //Students pay too much
+        this.position.students.forEach(function (student) {
+          if (centdiff >= 0) {
+            return;
+          } //Same here
+
+
+          student.amount = Math.round((student.amount - 0.01) * 100) / 100;
+          centdiff += 0.01;
         });
       }
     },
@@ -3538,18 +3647,57 @@ __webpack_require__.r(__webpack_exports__);
       });
       var value = this.amount_st / number_of_students;
       alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
+      var splitMoney = 0;
 
       if (this.type == "overwrite") {
         this.position.students.forEach(function (student) {
           if (student.checked) {
-            student.amount = value;
+            var studentMoney = Math.round(value * 100) / 100;
+            student.amount = studentMoney;
+            splitMoney += studentMoney;
           }
         });
       } else {
         this.position.students.forEach(function (student) {
           if (student.checked) {
-            student.amount += value;
+            var studentMoney = Math.round(value * 100) / 100;
+            student.amount += studentMoney;
+            splitMoney += studentMoney;
           }
+        });
+      } //CENTAUSGLEICH auf ausgewählte
+      //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+
+
+      var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+      console.log("centdiff: " + centdiff);
+      console.log("splitted money: " + splitMoney);
+      console.log("all money: " + this.amount_st);
+
+      if (centdiff > 0) {
+        this.position.students.forEach(function (student) {
+          if (!student.checked) return;
+
+          if (centdiff <= 0) {
+            return;
+          } //Same here, 33.33 + .01 = 33,339999999999996
+
+
+          student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+          centdiff -= 0.01;
+        });
+      } else if (centdiff < 0) {
+        //Students pay too much
+        this.position.students.forEach(function (student) {
+          if (!student.checked) return;
+
+          if (centdiff >= 0) {
+            return;
+          } //Same here
+
+
+          student.amount = Math.round((student.amount - 0.01) * 100) / 100;
+          centdiff += 0.01;
         });
       }
     },
@@ -3962,6 +4110,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function mounted() {
     this.getPrescribing(this.id);
     this.getAllReasons();
+    this.getAllGroups();
     console.log("Prescribing:");
     console.log(this.prescribing);
   },
@@ -3980,6 +4129,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         author: ""
       },
       reasons: null,
+      groups: null,
       errors: {},
       amount_st: 0,
       type: "overwrite"
@@ -4009,8 +4159,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return console.log(error);
       });
     },
-    getPrescribing: function getPrescribing(id) {
+    getAllGroups: function getAllGroups() {
       var _this2 = this;
+
+      axios.get("/getGroups").then(function (response) {
+        return _this2.groups = response.data;
+      }).catch(function (error) {
+        return console.log(error);
+      });
+    },
+    getPrescribing: function getPrescribing(id) {
+      var _this3 = this;
 
       _asyncToGenerator(
       /*#__PURE__*/
@@ -4037,20 +4196,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 10:
                 _context.prev = 10;
-                _this2.prescribingRequested = apiRes.data;
-                _this2.prescribing.title = _this2.prescribingRequested.title;
-                _this2.prescribing.date = _this2.prescribingRequested.date;
-                _this2.prescribing.due_until = _this2.prescribingRequested.due_until;
-                _this2.prescribing.reason_suggestion = _this2.prescribingRequested.reason_suggestion;
+                _this3.prescribingRequested = apiRes.data;
+                _this3.prescribing.title = _this3.prescribingRequested.title;
+                _this3.prescribing.date = _this3.prescribingRequested.date;
+                _this3.prescribing.due_until = _this3.prescribingRequested.due_until;
+                _this3.prescribing.reason_suggestion = _this3.prescribingRequested.reason_suggestion;
 
-                if (_this2.prescribingRequested.reason) {
-                  _this2.prescribing.reason = _this2.prescribingRequested.reason.title;
+                if (_this3.prescribingRequested.reason) {
+                  _this3.prescribing.reason = _this3.prescribingRequested.reason.title;
                 }
 
-                _this2.prescribing.description = _this2.prescribingRequested.description;
-                _this2.prescribing.positions = _this2.prescribingRequested.positions;
-                _this2.prescribing.author = _this2.prescribingRequested.author.username;
-                _this2.prescribing.id = _this2.prescribingRequested.id;
+                _this3.prescribing.description = _this3.prescribingRequested.description;
+                _this3.prescribing.positions = _this3.prescribingRequested.positions;
+                _this3.prescribing.author = _this3.prescribingRequested.author.username;
+                _this3.prescribing.id = _this3.prescribingRequested.id;
                 return _context.finish(10);
 
               case 22:
@@ -4061,7 +4220,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee, null, [[1, 7, 10, 22]]);
       }))();
     },
-    addStudents: function addStudents() {},
+    getStudents: function getStudents() {
+      return this.prescribing.positions;
+    },
+    addStudents: function addStudents(studentsDom) {
+      var newPoses = [];
+      var that = this;
+      studentsDom.forEach(function (student) {
+        var newPos = {};
+        newPos["id"] = -1;
+        newPos["user_id"] = student["id"];
+        newPos["amount"] = 0;
+        newPos["annotation"] = null;
+        newPos["user"] = student;
+
+        for (var i = 0; i < Object.keys(that.groups).length; i++) {
+          if (that.groups[i].id == student.group_id) {
+            student["group"] = that.groups[i];
+            break;
+          }
+        }
+
+        newPoses.push(newPos);
+      });
+      console.log(newPoses);
+      if (this.prescribing.positions == null) this.prescribing.positions = newPoses;else this.prescribing.positions = this.prescribing.positions.concat(newPoses);
+    },
     removeStudent: function removeStudent(id) {
       this.prescribing.positions = this.prescribing.positions.filter(function (el) {
         return el.id !== id;
@@ -4191,7 +4375,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           } //Same here
 
 
-          student.amount -= Math.round((student.amount - 0.01) * 100) / 100;
+          student.amount = Math.round((student.amount - 0.01) * 100) / 100;
           centdiff += 0.01;
         });
       } //Just for information: the program will not reach this point after centausgleich
@@ -4210,18 +4394,57 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
       var value = this.amount_st / number_of_students;
       alert("Folgender Betrag wird auf " + number_of_students + " ausgewählte Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
+      var splitMoney = 0;
 
       if (this.type == "overwrite") {
         this.prescribing.positions.forEach(function (student) {
           if (student.checked) {
-            student.amount = value;
+            var studentMoney = Math.round(value * 100) / 100;
+            student.amount = studentMoney;
+            splitMoney += studentMoney;
           }
         });
       } else {
         this.prescribing.positions.forEach(function (student) {
           if (student.checked) {
-            student.amount += value;
+            var studentMoney = Math.round(value * 100) / 100;
+            student.amount += studentMoney;
+            splitMoney += studentMoney;
           }
+        });
+      } //CENTAUSGLEICH auf ausgewählte
+      //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+
+
+      var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+      console.log("centdiff: " + centdiff);
+      console.log("splitted money: " + splitMoney);
+      console.log("all money: " + this.amount_st);
+
+      if (centdiff > 0) {
+        this.prescribing.positions.forEach(function (student) {
+          if (!student.checked) return;
+
+          if (centdiff <= 0) {
+            return;
+          } //Same here, 33.33 + .01 = 33,339999999999996
+
+
+          student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+          centdiff -= 0.01;
+        });
+      } else if (centdiff < 0) {
+        //Students pay too much
+        this.prescribing.positions.forEach(function (student) {
+          if (!student.checked) return;
+
+          if (centdiff >= 0) {
+            return;
+          } //Same here
+
+
+          student.amount = Math.round((student.amount - 0.01) * 100) / 100;
+          centdiff += 0.01;
         });
       }
     },
@@ -4952,13 +5175,10 @@ __webpack_require__.r(__webpack_exports__);
           } //Same here
 
 
-          student.amount -= Math.round((student.amount - 0.01) * 100) / 100;
+          student.amount = Math.round((student.amount - 0.01) * 100) / 100;
           centdiff += 0.01;
         });
-      } //Just for information: the program will not reach this point after centausgleich
-      //Because return was used instead of break
-      //Because break does not exist. Sucks to be vue.js
-
+      }
     },
     splitSelected: function splitSelected() {
       /**
@@ -4972,18 +5192,57 @@ __webpack_require__.r(__webpack_exports__);
       });
       var value = this.amount_st / number_of_students;
       alert("Folgender Betrag wird auf " + number_of_students + " ausgewählte Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
+      var splitMoney = 0;
 
       if (this.type == "overwrite") {
         this.data.students.forEach(function (student) {
           if (student.checked) {
-            student.amount = value;
+            var studentMoney = Math.round(value * 100) / 100;
+            student.amount = studentMoney;
+            splitMoney += studentMoney;
           }
         });
       } else {
         this.data.students.forEach(function (student) {
           if (student.checked) {
-            student.amount += value;
+            var studentMoney = Math.round(value * 100) / 100;
+            student.amount += studentMoney;
+            splitMoney += studentMoney;
           }
+        });
+      } //CENTAUSGLEICH auf ausgewählte
+      //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+
+
+      var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+      console.log("centdiff: " + centdiff);
+      console.log("splitted money: " + splitMoney);
+      console.log("all money: " + this.amount_st);
+
+      if (centdiff > 0) {
+        this.data.students.forEach(function (student) {
+          if (!student.checked) return;
+
+          if (centdiff <= 0) {
+            return;
+          } //Same here, 33.33 + .01 = 33,339999999999996
+
+
+          student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+          centdiff -= 0.01;
+        });
+      } else if (centdiff < 0) {
+        //Students pay too much
+        this.data.students.forEach(function (student) {
+          if (!student.checked) return;
+
+          if (centdiff >= 0) {
+            return;
+          } //Same here
+
+
+          student.amount = Math.round((student.amount - 0.01) * 100) / 100;
+          centdiff += 0.01;
         });
       }
     },

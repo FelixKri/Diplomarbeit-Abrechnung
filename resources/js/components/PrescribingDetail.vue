@@ -314,6 +314,7 @@ export default {
     mounted() {
         this.getPrescribing(this.id);
         this.getAllReasons();
+        this.getAllGroups();
 
         console.log("Prescribing:");
         console.log(this.prescribing);
@@ -333,6 +334,7 @@ export default {
                 author: ""
             },
             reasons: null,
+            groups: null,
             errors: {},
             amount_st: 0,
             type: "overwrite"
@@ -361,6 +363,12 @@ export default {
                 .then(response => (this.reasons = response.data))
                 .catch(error => console.log(error));
         },
+        getAllGroups: function(){
+                axios
+                .get("/getGroups")
+                .then(response => (this.groups = response.data))
+                .catch(error => console.log(error));
+        },
         getPrescribing: function(id) {
             (async () => {
                 let apiRes = null;
@@ -387,8 +395,41 @@ export default {
                 }
             })();
         },
-        addStudents: function() {
-            
+        getStudents: function() {
+            return this.prescribing.positions;
+        },
+        addStudents: function(studentsDom) {
+
+            var newPoses = [];
+
+            var that = this;
+
+            studentsDom.forEach(function(student){
+                var newPos = {};
+                newPos["id"] = -1;
+                newPos["user_id"] = student["id"];
+                newPos["amount"] = 0;
+                newPos["annotation"] = null;
+                newPos["user"] = student;
+
+                for(var i = 0;i < Object.keys(that.groups).length;i++)
+                {
+
+                 if(that.groups[i].id == student.group_id)
+                    {
+                        student["group"] = that.groups[i];
+                        break;
+                    }   
+                }
+
+                newPoses.push(newPos);
+            });
+            console.log(newPoses);
+
+            if (this.prescribing.positions == null) 
+                this.prescribing.positions = newPoses;
+            else 
+                this.prescribing.positions = this.prescribing.positions.concat(newPoses);
         },
         removeStudent: function(id) {
             this.prescribing.positions = this.prescribing.positions.filter(
@@ -542,7 +583,7 @@ export default {
                     }
 
                     //Same here
-                    student.amount -=
+                    student.amount =
                         Math.round((student.amount - 0.01) * 100) / 100;
                     centdiff += 0.01;
                 });
@@ -575,19 +616,66 @@ export default {
                     value
             );
 
+            var splitMoney = 0;
+
             if (this.type == "overwrite") {
                 this.prescribing.positions.forEach(function(student) {
                     if (student.checked) {
-                        student.amount = value;
+                        var studentMoney = Math.round(value * 100) / 100;
+                        student.amount = studentMoney;
+                        splitMoney += studentMoney;
                     }
                 });
             } else {
                 this.prescribing.positions.forEach(function(student) {
                     if (student.checked) {
-                        student.amount += value;
+                        var studentMoney = Math.round(value * 100) / 100;
+                        student.amount += studentMoney;
+                        splitMoney += studentMoney;
                     }
                 });
             }
+
+            //CENTAUSGLEICH auf ausgewählte
+                //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
+                var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+                console.log("centdiff: " + centdiff);
+                console.log("splitted money: " + splitMoney);
+                console.log("all money: " + this.amount_st);
+
+                if(centdiff > 0)
+                {
+                    this.prescribing.positions.forEach(function(student) {
+                            if(!student.checked)
+                                return;
+
+                        if(centdiff <= 0)
+                        {
+                            return;
+                        }
+
+                        //Same here, 33.33 + .01 = 33,339999999999996
+                        student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+                        centdiff -= 0.01;
+                    });
+                }
+                else if(centdiff < 0)
+                {
+                    //Students pay too much
+                        this.prescribing.positions.forEach(function(student) {
+                            if(!student.checked)
+                                return;
+
+                        if(centdiff >= 0)
+                        {
+                            return;
+                        }
+
+                        //Same here
+                        student.amount = Math.round((student.amount - 0.01) * 100) / 100;
+                        centdiff += 0.01;
+                    });
+                }
         },
         assignEveryone: function() {
             alert(
