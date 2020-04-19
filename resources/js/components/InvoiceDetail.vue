@@ -230,10 +230,6 @@ export default {
             }
         },
         getInvoice: function(id) {
-            axios
-                .get("/invoices/view/getInvoice/" + id)
-                .then(response => (this.invoice = response.data))
-                .catch(error => console.log(error));
 
             (async () => {
                 let apiRes = null;

@@ -1,5 +1,5 @@
 <template>
-    <div :id="'getFromPrescribing_' + id" class="modal fade" role="dialog">
+    <div id="getFromPrescribing" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
@@ -18,7 +18,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="prescribing in prescribings" v-bind:key="prescribing.id" style="cursor: pointer;">
-                                <td @click="copyStudentsToInvoicePosition(prescribing.positions)">{{prescribing.title}}</td>
+                                <td @click="importPrescribing(prescribing)">{{prescribing.title}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -43,46 +43,12 @@ export default {
         };
     },
     methods: {
-        copyStudentsToInvoicePosition: function(positions){
-
-            var students = [];
+        importPrescribing: function(prescribing){
             
-            for (let index = 0; index < positions.length; index++) {
-                axios
-                    .get("/user/getById/" + positions[index].user_id)
-                    .then(response =>(students.push(response.data)))
-                    .catch(error => console.log(error));
-            }
+            alert("wird emitted");
             
-            positions.forEach(pos => {
-                students.push(pos.user);
-            });
+            this.$emit("importPrescribing", prescribing);
 
-            students.forEach(st => {
-                st.amount = 0;
-                st.checked = false;
-            });
-
-            /*
-            positions.forEach(pos => {
-                $.ajax({
-                    headers: {
-                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-                    },
-                    type: "get",
-                    url: "/user/getById/" + pos.user_id,
-                    dataType: "json",
-                    data: {
-                    },
-
-                    success: function(response) {
-                        students.push(response);
-                    }
-                });
-            });
-            */
-            
-            this.$emit("addstudents", students);
         }
     }
 };

@@ -113,15 +113,27 @@
                     disabled
                     class="form-control"
                 />
-                <br>
+                <br />
                 <button
-                class="btn btn-primary btn-sm"
-                data-toggle="modal"
-                :data-target="'#addUser_1'"
-                type="button"
-            >
-                Person(en) hinzufügen
-            </button>
+                    class="btn btn-primary btn-sm"
+                    data-toggle="modal"
+                    :data-target="'#addUser_1'"
+                    type="button"
+                >
+                    Person(en) hinzufügen
+                </button>
+
+                <button
+                    class="btn btn-primary btn-sm"
+                    data-toggle="modal"
+                    data-target="#getFromPrescribing"
+                    type="button"
+                >
+                    Vorschreibung importieren
+                </button>
+                <add-from-prescribing-modal
+                    v-on:importPrescribing="importPrescribing"
+                ></add-from-prescribing-modal>
             </div>
 
             <div class="">
@@ -157,17 +169,17 @@
                 </nav>
 
                 <div class="tab-content" id="nav-tabContent">
-
-                    
                     <add-person-modal
                         v-on:addstudents="addStudents"
                         :id="1"
                     ></add-person-modal>
-                    <invoice-overview-position 
-                    v-on:removeStudent="removeStudent"
-                    :students="students"
-                    :groups="groups"
-                    :groupLength="groupLength"></invoice-overview-position>
+                    <invoice-overview-position
+                        v-on:removeStudent="removeStudent"
+                        :students="students"
+                        :groups="groups"
+                        :groupLength="groupLength"
+                        ref="overview"
+                    ></invoice-overview-position>
                     <invoice-position
                         v-for="pos in invoicePositions"
                         v-bind:key="pos.id"
@@ -203,7 +215,7 @@
 export default {
     props: ["reason_list"],
     created: function() {
-        $('.nav-tabs a:first').tab('show');
+        $(".nav-tabs a:first").tab("show");
     },
     data: function() {
         return {
@@ -219,7 +231,8 @@ export default {
             invoice_id: null,
             errors: {},
             saved: false,
-            students: []
+            students: [],
+            prescribing: null,
         };
     },
     computed: {
@@ -227,62 +240,66 @@ export default {
             let totalAmt = 0;
 
             this.invoicePositions.forEach(function(position) {
-                
-                position.studentAmounts.forEach(function(studentAmount){
+                position.studentAmounts.forEach(function(studentAmount) {
                     totalAmt += studentAmount.amount;
-                })
-                
+                });
             });
 
             return totalAmt;
         }
     },
     methods: {
-        removeStudent: function(id)
-        {
+        importPrescribing: function(prescribing){
+
+            alert("wird importiert");
+
+            this.prescribing = prescribing;
+
+            this.$refs.overview.importPrescribing();
+
+        },
+        removeStudent: function(id) {
             this.students = this.students.filter(el => el.id !== id);
             //Call removeStudent on the Poses
-            for(var i = 0;i < this.invoicePositions.length;i++)
-            {
-                this.invoicePositions[i].studentAmounts = this.invoicePositions[i].studentAmounts.filter(el => el.student.id !== id);
+            for (var i = 0; i < this.invoicePositions.length; i++) {
+                this.invoicePositions[i].studentAmounts = this.invoicePositions[
+                    i
+                ].studentAmounts.filter(el => el.student.id !== id);
             }
         },
         getStudents: function() {
             return this.students;
         },
-        addStudents: function(studentsDom){
+        addStudents: function(studentsDom) {
             console.log("Adding Students: ");
             console.log(studentsDom);
 
-            if(this.students == null)
-            {
+            if (this.students == null) {
                 this.students = studentsDom;
 
                 var posStudentAmount = [];
-                studentsDom.forEach(function(student){
-                    posStudentAmount.push({"amount":0, "student": student});
+                studentsDom.forEach(function(student) {
+                    posStudentAmount.push({ amount: 0, student: student });
                 });
-                for(var i = 0;i < this.invoicePositions.length;i++)
-                {
+                for (var i = 0; i < this.invoicePositions.length; i++) {
                     this.invoicePositions[i].studentAmounts = posStudentAmount;
                 }
-
-            }
-            else
-            {
+            } else {
                 this.students = this.students.concat(studentsDom);
 
                 var posStudentAmount = [];
-                studentsDom.forEach(function(student){
-                    posStudentAmount.push({"amount":0, "student": student});
+                studentsDom.forEach(function(student) {
+                    posStudentAmount.push({ amount: 0, student: student });
                 });
 
-                for(var i = 0;i < this.invoicePositions.length;i++)
-                {
-                    this.invoicePositions[i].studentAmounts = this.invoicePositions[i].studentAmounts.concat(posStudentAmount);
+                for (var i = 0; i < this.invoicePositions.length; i++) {
+                    this.invoicePositions[
+                        i
+                    ].studentAmounts = this.invoicePositions[
+                        i
+                    ].studentAmounts.concat(posStudentAmount);
                 }
             }
-            
         },
         numWithSeperators: function(num) {
             var num_parts = num.toString().split(".");
@@ -313,8 +330,8 @@ export default {
                 var id = this.id;
 
                 var posStudentAmount = [];
-                this.students.forEach(function(student){
-                    posStudentAmount.push({"amount":0, "student": student});
+                this.students.forEach(function(student) {
+                    posStudentAmount.push({ amount: 0, student: student });
                 });
 
                 var position = {
@@ -331,92 +348,90 @@ export default {
                 this.invoicePositions.push(position);
             }
         },
-        release: function(){
-            if(this.saved)
-            {
-
+        release: function() {
+            if (this.saved) {
                 axios
                     .post("/invoice/setFinished/" + this.id)
                     .then(response => {
-                        console.log(response)
-                        alert("Erfolgreich freigegeben")
+                        console.log(response);
+                        alert("Erfolgreich freigegeben");
                     })
                     .catch(error => console.log(error));
 
-                    //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
-                }
-            },
-
-            //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
-        },
-        store: function() {
-            this.errors = null;
-            this.errors = {};
-
-            var that = this;
-            var invoicePositionsStripped = [];
-            var totalAmountRequest = 0;
-
-            this.invoicePositions.forEach(function(position) {
-                invoicePositionsStripped.push({
-                    id: position.id,
-                    name: position.name,
-                    position_id: position.position_id,
-                    amount: position.amount,
-                    annotation: position.annotation,
-                    belegNr: position.document_number,
-                    paidByTeacher: position.paidByTeacher,
-                    iban: position.iban,
-                    studentIDs: [],
-                    studentAmounts: [],
-                });
-
-                totalAmountRequest += position.amount;
-
-                position.students.forEach(function(student) {
-                    invoicePositionsStripped[position.id - 1].studentIDs.push(
-                        student.id
-                    );
-
-                    invoicePositionsStripped[
-                        position.id - 1
-                    ].studentAmounts.push(student.amount);
-                });
-            });
-
-            console.log(invoicePositionsStripped);
-
-            $.ajax({
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-                },
-                type: "POST",
-                url: "/invoice/new",
-                dataType: "json",
-                data: {
-                    id: that.invoice_id,
-                    author: that.author,
-                    date: that.date,
-                    due_until: that.due_until,
-                    reason: that.reason,
-                    annotation: that.annotation,
-                    totalAmount: totalAmountRequest,
-                    invoicePositions: invoicePositionsStripped
-                },
-                success: function(response) {
-                    console.log(response);
-                    that.errors = {};
-                    alert("Erfolgreich gespeichert!");
-                    that.invoice_id = response;
-                    that.saved = true;
-                },
-                error: function(xhr, status, error) {
-                    var respJson = JSON.parse(xhr.responseText);
-                    that.errors = respJson.errors;
-                }
-            });
+                //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+            }
         }
+
+        //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+    },
+    store: function() {
+        this.errors = null;
+        this.errors = {};
+
+        var that = this;
+        var invoicePositionsStripped = [];
+        var totalAmountRequest = 0;
+
+        this.invoicePositions.forEach(function(position) {
+            invoicePositionsStripped.push({
+                id: position.id,
+                name: position.name,
+                position_id: position.position_id,
+                amount: position.amount,
+                annotation: position.annotation,
+                belegNr: position.document_number,
+                paidByTeacher: position.paidByTeacher,
+                iban: position.iban,
+                studentIDs: [],
+                studentAmounts: []
+            });
+
+            totalAmountRequest += position.amount;
+
+            position.students.forEach(function(student) {
+                invoicePositionsStripped[position.id - 1].studentIDs.push(
+                    student.id
+                );
+
+                invoicePositionsStripped[position.id - 1].studentAmounts.push(
+                    student.amount
+                );
+            });
+        });
+
+        console.log(invoicePositionsStripped);
+
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+            },
+            type: "POST",
+            url: "/invoice/new",
+            dataType: "json",
+            data: {
+                id: that.invoice_id,
+                author: that.author,
+                date: that.date,
+                due_until: that.due_until,
+                reason: that.reason,
+                annotation: that.annotation,
+                totalAmount: totalAmountRequest,
+                invoicePositions: invoicePositionsStripped
+            },
+            success: function(response) {
+                console.log(response);
+                that.errors = {};
+                alert("Erfolgreich gespeichert!");
+                that.invoice_id = response;
+                that.saved = true;
+            },
+            error: function(xhr, status, error) {
+                var respJson = JSON.parse(xhr.responseText);
+                that.errors = respJson.errors;
+            }
+        });
     }
+};
 </script>
 
 <style></style>
