@@ -113,7 +113,17 @@
                     disabled
                     class="form-control"
                 />
+                <br>
+                <button
+                class="btn btn-primary btn-sm"
+                data-toggle="modal"
+                :data-target="'#addUser_1'"
+                type="button"
+            >
+                Person(en) hinzufügen
+            </button>
             </div>
+
             <div class="">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -145,13 +155,26 @@
                         >
                     </div>
                 </nav>
+
                 <div class="tab-content" id="nav-tabContent">
-                    <invoice-overview-position></invoice-overview-position>
+
+                    
+                    <add-person-modal
+                        v-on:addstudents="addStudents"
+                        :id="1"
+                    ></add-person-modal>
+                    <invoice-overview-position 
+                    v-on:removeStudent="removeStudent"
+                    :studentAmounts="studentAmounts"
+                    :groups="groups"
+                    :groupLength="groupLength"></invoice-overview-position>
                     <invoice-position
                         v-for="pos in invoicePositions"
                         v-bind:key="pos.id"
                         :position="pos"
                         :errors="errors"
+                        :groups="groups"
+                        :groupLength="groupLength"
                         v-on:removeInvoicePosition="
                             removeInvoicePosition($event)
                         "
@@ -179,8 +202,13 @@
 <script>
 export default {
     props: ["reason_list"],
+    created: function() {
+        $('.nav-tabs a:first').tab('show');
+    },
     data: function() {
         return {
+            groups: [],
+            groupLength: 0,
             id: null,
             author: "admin",
             date: "",
@@ -190,7 +218,9 @@ export default {
             invoicePositions: [],
             invoice_id: null,
             errors: {},
-            saved: false
+            saved: false,
+            students: [],
+            studentAmounts: []
         };
     },
     computed: {
@@ -199,8 +229,8 @@ export default {
 
             this.invoicePositions.forEach(function(position) {
                 
-                position.students.forEach(function(student){
-                    totalAmt += student.amount;
+                position.studentAmounts.forEach(function(studentAmount){
+                    totalAmt += studentAmount.amount;
                 })
                 
             });
@@ -209,6 +239,55 @@ export default {
         }
     },
     methods: {
+        removeStudent: function(id)
+        {
+            this.students = this.students.filter(el => el.id !== id);
+            //Call removeStudent on the Poses
+            for(var i = 0;i < this.invoicePositions.length;i++)
+            {
+                this.invoicePositions[i].studentAmounts = this.invoicePositions[i].studentAmounts.filter(el => el.student.id !== id);
+            }
+            this.studentAmounts = this.studentAmounts.filter(el => el.student.id !== id);
+        },
+        getStudents: function() {
+            return this.students;
+        },
+        addStudents: function(studentsDom){
+            console.log("Adding Students: ");
+            console.log(studentsDom);
+
+            if(this.students == null)
+            {
+                this.students = studentsDom;
+
+                var posStudentAmount = [];
+                studentsDom.forEach(function(student){
+                    posStudentAmount.push({"amount":0, "student": student});
+                });
+                for(var i = 0;i < this.invoicePositions.length;i++)
+                {
+                    this.invoicePositions[i].studentAmounts = posStudentAmount;
+                }
+                this.studentAmounts = posStudentAmount;
+
+            }
+            else
+            {
+                this.students = this.students.concat(studentsDom);
+
+                var posStudentAmount = [];
+                studentsDom.forEach(function(student){
+                    posStudentAmount.push({"amount":0, "student": student});
+                });
+
+                for(var i = 0;i < this.invoicePositions.length;i++)
+                {
+                    this.invoicePositions[i].studentAmounts = this.invoicePositions[i].studentAmounts.concat(posStudentAmount);
+                }
+                this.studentAmounts = this.studentAmounts.concat(posStudentAmount);
+            }
+            
+        },
         numWithSeperators: function(num) {
             var num_parts = num.toString().split(".");
             num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -237,6 +316,11 @@ export default {
                 this.id = this.id + 1;
                 var id = this.id;
 
+                var posStudentAmount = [];
+                this.students.forEach(function(student){
+                    posStudentAmount.push({"amount":0, "student": student});
+                });
+
                 var position = {
                     id: id,
                     name: name,
@@ -245,7 +329,7 @@ export default {
                     amount: 0,
                     paidByTeacher: false,
                     iban: "",
-                    students: []
+                    studentAmounts: posStudentAmount
                 };
 
                 this.invoicePositions.push(position);

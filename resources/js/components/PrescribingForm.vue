@@ -167,7 +167,7 @@
                 :data-target="'#addUser_1'"
                 type="button"
             >
-                Person(n) hinzufügen
+                Person(en) hinzufügen
             </button>
 
             <add-person-modal

@@ -23,9 +23,13 @@
                 </tr>
             </thead>
             <tbody>
-                <student-overview-invoice
-                    
-                ></student-overview-invoice>
+                <student-invoice
+                    v-bind:key="studentA.student.id"
+                    v-for="studentA in this.studentAmounts"
+                    :studentAmount="studentA"
+                    v-on:removeStudent="removeStudent($event)"
+                ></student-invoice>
+
             </tbody>
         </table>
 
@@ -38,6 +42,12 @@ export default {
         return {
             prescribing: null,
         };
+    },
+    props: ["studentAmounts", "groups", "groupLength"],
+    methods:{
+        removeStudent: function(studentId){
+            this.$emit("removeStudent", studentId);
+        }
     },
 };
 </script>

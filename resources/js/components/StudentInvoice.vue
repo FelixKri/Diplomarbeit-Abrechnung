@@ -1,14 +1,14 @@
 <template>
   <tr>
     <td>
-      <input type="checkbox" v-model="student.checked" />
+      <input type="checkbox" v-model="this.studentAmount.student.checked" />
     </td>
-    <th scope="row">{{student.id}}</th>
-    <td>{{student.last_name}}</td>
-    <td>{{student.first_name}}</td>
-    <td>{{getGroupName(student.group_id)}}</td>
+    <th scope="row">{{this.studentAmount.student.id}}</th>
+    <td>{{this.studentAmount.student.last_name}}</td>
+    <td>{{this.studentAmount.student.first_name}}</td>
+    <td>{{getGroupName(this.studentAmount.student.group_id)}}</td>
     <td>
-      <input type="" name="" class="form-control" :value="Math.round((student.amount + Number.EPSILON) * 100) / 100" />
+      <input type="" name="" class="form-control" :value="Math.round((this.studentAmount.amount + Number.EPSILON) * 100) / 100" />
     </td>
     <td @click="removeStudent();" ><i class="fas fa-user-minus" ></i></td>
   </tr>
@@ -19,7 +19,7 @@ export default {
   mounted() {
     console.log("Component mounted: Student");
   },
-  props: ["student"],
+  props: ["studentAmount"],
   data: function() {
     return {
       
@@ -27,8 +27,8 @@ export default {
   },
   methods:{
     removeStudent: function(){
-      console.log("deleting student with id " + this.student.id);
-      this.$emit('removeStudent', this.student.id);
+      console.log("deleting student with id " + this.studentAmount.student.id);
+      this.$emit('removeStudent', this.studentAmount.student.id);
     },
     getGroupName: function(id)
     {

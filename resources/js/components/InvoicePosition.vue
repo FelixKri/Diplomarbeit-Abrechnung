@@ -201,31 +201,6 @@
             </tr>
         </table>
 
-        <button
-            class="btn btn-primary btn-sm"
-            data-toggle="modal"
-            :data-target="'#addUser_' + position.id"
-            type="button"
-        >
-            Person(en) hinzufügen
-        </button>
-        <button
-            class="btn btn-primary btn-sm"
-            data-toggle="modal"
-            :data-target="'#getFromPrescribing_' + position.id"
-            type="button"
-        >
-            Personen aus Vorschreibung übernehmen
-        </button>
-
-        <add-person-modal
-            v-on:addstudents="addStudents"
-            :id="position.id"
-        ></add-person-modal>
-        <add-from-prescribing-modal
-            v-on:addstudents="addStudents"
-            :id="position.id"
-        >
         </add-from-prescribing-modal>
         <table class="table">
             <thead>
@@ -240,9 +215,9 @@
             </thead>
             <tbody>
                 <student-invoice
-                    v-bind:key="student.id"
-                    v-for="student in position.students"
-                    :student="student"
+                    v-bind:key="studentA.student.id"
+                    v-for="studentA in this.position.studentAmounts"
+                    :studentAmount="studentA"
                     v-on:removeStudent="removeStudent($event)"
                 ></student-invoice>
             </tbody>
@@ -256,8 +231,6 @@ export default {
     },
     data: function() {
         return {
-            groups: [],
-            groupLength: 0,
             amount_st: 0,
             type: false
         };
@@ -267,8 +240,8 @@ export default {
 
             let totalAmt = 0;
 
-            this.position.students.forEach(student => {
-                totalAmt += Number(student.amount);
+            this.position.studentAmounts.forEach(studentA => {
+                totalAmt += Number(studentA.amount);
             });
 
             this.position.amount = totalAmt;
@@ -276,7 +249,7 @@ export default {
             return totalAmt;
         }
     },
-    props: ["position", "errors"],
+    props: ["position", "errors", "groups", "groupLength"],
     methods: {
         numWithSeperators: function(num) {
             var num_parts = num.toString().split(".");
@@ -287,29 +260,12 @@ export default {
             //ToDo: Event triggern
             this.$emit("removeInvoicePosition", this.position.id);
         },
-        getStudents: function() {
-            return this.position.students;
-        },
-        addStudents: function(studentsDom) {
-
-            console.log(studentsDom);
-
-            if (this.position.students == null)
-                this.position.students = studentsDom;
-            else
-                this.position.students = this.position.students.concat(
-                    studentsDom
-                );
-
-            //console.log("Added students. Students:");
-            //console.log(this.position.students);
-        },
         splitEveryone: function() {
             /**
              * Teilt Betrag aus dem Betrag-Feld auf alle Schüler auf.
              */
 
-            let number_of_students = this.position.students.length;
+            let number_of_students = this.position.studentAmounts.length;
             let value = this.amount_st / number_of_students;
 
             alert("Folgender Betrag wird auf " + number_of_students + " Schüler aufgeteilt: " + this.amount_st + "\n Betrag pro Schüler: " + value);
@@ -317,15 +273,15 @@ export default {
             var splitMoney = 0;
 
             if (this.type == "overwrite") {
-                this.position.students.forEach(function(student) {
+                this.position.studentAmounts.forEach(function(studentA) {
                     var studentMoney = Math.round(value * 100) / 100;
-                    student.amount = studentMoney;
+                    studentA.amount = studentMoney;
                     splitMoney += studentMoney;
                 });
             } else {
-                this.position.students.forEach(function(student) {
+                this.position.studentAmounts.forEach(function(studentA) {
                     var studentMoney = Math.round(value * 100) / 100;
-                    student.amount += studentMoney;
+                    studentA.amount += studentMoney;
                     splitMoney += studentMoney;
                 });
             }
@@ -339,7 +295,7 @@ export default {
 
                 if(centdiff > 0)
                 {
-                    this.position.students.forEach(function(student) {
+                    this.position.studentAmounts.forEach(function(studentA) {
                             
                         if(centdiff <= 0)
                         {
@@ -347,14 +303,14 @@ export default {
                         }
 
                         //Same here, 33.33 + .01 = 33,339999999999996
-                        student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+                        studentA.amount = Math.round((studentA.amount + 0.01) * 100) / 100;
                         centdiff -= 0.01;
                     });
                 }
                 else if(centdiff < 0)
                 {
                     //Students pay too much
-                        this.position.students.forEach(function(student) {
+                        this.position.studentAmounts.forEach(function(studentA) {
                             
                         if(centdiff >= 0)
                         {
@@ -362,7 +318,7 @@ export default {
                         }
 
                         //Same here
-                        student.amount = Math.round((student.amount - 0.01) * 100) / 100;
+                        studentA.amount = Math.round((studentA.amount - 0.01) * 100) / 100;
                         centdiff += 0.01;
                     });
                 }
@@ -375,8 +331,8 @@ export default {
 
 
             let number_of_students = 0;
-            this.position.students.forEach(function(student) {
-                if (student.checked) {
+            this.position.studentAmounts.forEach(function(studentA) {
+                if (studentA.student.checked) {
                     number_of_students++;
                 }
             });
@@ -388,18 +344,18 @@ export default {
             var splitMoney = 0;
 
             if (this.type == "overwrite") {
-                this.position.students.forEach(function(student) {
-                    if (student.checked) {
+                this.position.studentAmounts.forEach(function(studentA) {
+                    if (studentA.student.checked) {
                         var studentMoney = Math.round(value * 100) / 100;
-                        student.amount = studentMoney;
+                        studentA.amount = studentMoney;
                         splitMoney += studentMoney;
                     }
                 });
             } else {
-                this.position.students.forEach(function(student) {
-                    if (student.checked) {
+                this.position.studentAmounts.forEach(function(studentA) {
+                    if (studentA.student.checked) {
                         var studentMoney = Math.round(value * 100) / 100;
-                        student.amount += studentMoney;
+                        studentA.amount += studentMoney;
                         splitMoney += studentMoney;
                     }
                 });
@@ -414,8 +370,8 @@ export default {
 
                 if(centdiff > 0)
                 {
-                    this.position.students.forEach(function(student) {
-                            if(!student.checked)
+                    this.position.studentAmounts.forEach(function(studentA) {
+                            if(!studentA.student.checked)
                                 return;
 
                         if(centdiff <= 0)
@@ -424,15 +380,15 @@ export default {
                         }
 
                         //Same here, 33.33 + .01 = 33,339999999999996
-                        student.amount = Math.round((student.amount + 0.01) * 100) / 100;
+                        studentA.amount = Math.round((studentA.amount + 0.01) * 100) / 100;
                         centdiff -= 0.01;
                     });
                 }
                 else if(centdiff < 0)
                 {
                     //Students pay too much
-                        this.position.students.forEach(function(student) {
-                            if(!student.checked)
+                        this.position.studentAmounts.forEach(function(studentA) {
+                            if(!studentA.student.checked)
                                 return;
 
                         if(centdiff >= 0)
@@ -441,7 +397,7 @@ export default {
                         }
 
                         //Same here
-                        student.amount = Math.round((student.amount - 0.01) * 100) / 100;
+                        studentA.amount = Math.round((studentA.amount - 0.01) * 100) / 100;
                         centdiff += 0.01;
                     });
                 }
@@ -455,13 +411,13 @@ export default {
             let value = parseFloat(this.amount_st);
 
             if (this.type == "overwrite") {
-                this.position.students.forEach(function(student) {
+                this.position.studentAmounts.forEach(function(studentA) {
                     //this.$set(student, "amount", value);
-                    student.amount = value;
+                    studentA.amount = value;
                 });
             } else {
-                this.position.students.forEach(function(student) {
-                    student.amount += value;
+                this.position.studentAmounts.forEach(function(studentA) {
+                    studentA.amount += value;
                 });
             }
         },
@@ -477,29 +433,18 @@ export default {
             let value = this.amount_st;
 
             if (this.type == "overwrite") {
-                this.position.students.forEach(function(student) {
-                    if (student.checked) {
-                        student.amount = Number(value);
+                this.position.studentAmounts.forEach(function(studentA) {
+                    if (studentA.student.checked) {
+                        studentA.amount = Number(value);
                     }
                 });
             } else {
-                this.position.students.forEach(function(student) {
-                    if (student.checked) {
-                        student.amount += Number(value);
+                this.position.studentAmounts.forEach(function(studentA) {
+                    if (studentA.student.checked) {
+                        studentA.amount += Number(value);
                     }
                 });
             }
-        },
-        removeStudent: function(id) {
-            var result = this.position.students.filter(obj => {
-                if (obj.id === id) {
-                    obj.checked = false;
-                }
-            });
-
-            this.position.students = this.position.students.filter(
-                el => el.id !== id
-            );
         }
     }
 };
