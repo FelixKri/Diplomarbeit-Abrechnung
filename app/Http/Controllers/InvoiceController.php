@@ -28,7 +28,7 @@ class InvoiceController extends Controller
         return view('invoice.create', compact("reasons"));
     }
 
-    public function update(){
+    public function updateOld(){
         //Log::debug("Request:");
         //Log::debug(request());
 
@@ -39,7 +39,6 @@ class InvoiceController extends Controller
             'reason' => 'required',
             'invoicePositions' => 'required|array|min:1',
             'invoicePositions.*.name' => "required|string",
-            'invoicePositions.*.amount' => "required|numeric",
             'invoicePositions.*.annotation' => "",
             'invoicePositions.*.belegNr' => "required",
             'invoicePositions.*.iban' => "required_if:invoicePositions.*.paidByTeacher,true",
@@ -61,6 +60,7 @@ class InvoiceController extends Controller
 
         $validator = Validator::make(request()->all(), $rules, $messages);
 
+        
         if ($validator->fails()) {
 
             $newErrors = [];
@@ -101,7 +101,7 @@ class InvoiceController extends Controller
             }
 
             return response()->json(['errors' => $newErrors], 401);
-        }
+        } 
 
         $invoice = Invoice::where('id', request()->id)->first();
 
@@ -113,7 +113,6 @@ class InvoiceController extends Controller
         $invoice->total_amount = request()->totalAmount;
         $invoice->annotation = request()->annotation;
         $invoice->due_until = request()->due_until;
-        //$invoice->updated_at = date();
 
         $invoice->save();
 
@@ -156,6 +155,84 @@ class InvoiceController extends Controller
         return response()->json("Success", 200);
     }
 
+    public function update(){
+        $rules = [
+            'date' => 'date|required',
+            'due_until' => 'date|after:today|required|date_format:Y-m-d',
+            'author' => 'required|string',
+            'reason' => 'required',
+            'invoicePositions' => 'required|array|min:1',
+            'invoicePositions.*.name' => "required|string",
+            'invoicePositions.*.annotation' => "",
+            'invoicePositions.*.belegNr' => "required",
+            'invoicePositions.*.iban' => "required_if:invoicePositions.*.paidByTeacher,true",
+            'invoicePositions.*.studentIDs' => "required|array|min:1",
+            'invoicePositions.*.studentIDs.*' => "integer",
+            'invoicePositions.*.studentAmounts' => "required|array|min:1",
+            'invoicePositions.*.studentAmounts.*' => "numeric",
+        ];
+
+        $messages = [
+            'required'    => 'Das Feld muss ausgefüllt werden.',
+            'after' => 'Das Feld muss nach dem heutigen Tag liegen',
+            'date' => 'Das Feld muss ein gültiges Datum enthalten',
+            'required_without' => "Bitte entweder einen Grund oder Grundvorschlag auswählen",
+            'min' => 'Bitte mindestens einen Schüler zur Vorschreibung hinufügen',
+            'required_if' => 'Bitte einen IBan für die Überweisung angeben',
+        ];
+
+        $validator = Validator::make(request()->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 401);
+        }
+
+        $inv = Invoice::find(request()->id);
+        $inv->date = request()->date;
+        $inv->due_until = request()->due_until;
+        $inv->author_id = FosUser::where('username', request()->author)->first()->id;
+        $inv->reason_id = Reason::where('title', request()->reason)->first()->id;
+        $inv->total_amount = request()->totalAmount;
+        $inv->annotation = request()->annotation;
+        $inv->save();
+
+        //Get all old InvoicePositions and UserHasInvoicePositions and delete them
+        $position_ids = InvoicePosition::where('invoice_id', request()->id)->pluck('id');
+        InvoicePosition::where('invoice_id', request()->id)->delete();
+        UserHasInvoicePosition::where('invoice_position_id', $position_ids)->delete();
+
+        //Create new Invoice Positions and UserHasInvoicePositions
+        foreach(request()->invoicePositions as $invoicePosition){
+            $paidByTeacher = false;
+            
+            if($invoicePosition['paidByTeacher'] === "true"){
+                $paidByTeacher = true;
+            }
+
+            $inv_pos = new InvoicePosition;
+            $inv_pos->name = $invoicePosition['name'];
+            $inv_pos->invoice_id = $inv->id;
+            $inv_pos->paid_by_teacher = $paidByTeacher;
+            $inv_pos->iban = $invoicePosition['iban'];
+            $inv_pos->document_number = $invoicePosition["belegNr"];
+            $inv_pos->annotation = $invoicePosition["annotation"];
+            $inv_pos->total_amount = array_sum($invoicePosition["studentAmounts"]);
+            $inv_pos->position_id = $invoicePosition["position_id"];
+            $inv_pos->save();
+
+            for ($j=0; $j < sizeof($invoicePosition["studentIDs"]); $j++){
+                $usr_has_inv_pos = new UserHasInvoicePosition;
+                $usr_has_inv_pos->user_id = $invoicePosition["studentIDs"][$j];
+                $usr_has_inv_pos->amount = $invoicePosition["studentAmounts"][$j];
+                $usr_has_inv_pos->invoice_position_id = $inv_pos->id;
+                $usr_has_inv_pos->save();
+            }
+        }
+
+        return response()->json(['success' => 'success'], 200);
+
+    }
+
     public function UpdateInvPoses($invoice, $request)
     {
         //Get all old InvPoses
@@ -181,8 +258,10 @@ class InvoiceController extends Controller
                     $invPoses[$j]->iban = $request->invoicePositions[$i]['iban'];
                     $invPoses[$j]->document_number = $request->invoicePositions[$i]["belegNr"];
                     $invPoses[$j]->annotation = $request->invoicePositions[$i]["annotation"];
-                    $invPoses[$j]->total_amount = $request->invoicePositions[$i]["amount"];
-                    //$invPoses[$j]->updated_at = date();
+                    //$invPoses[$j]->total_amount = $request->invoicePositions[$i]["amount"];
+
+                    $invPoses[$j]->total_amount = array_sum($request->invoicePositions[$i]["studentAmounts"]);
+
                     $invPoses[$j]->save();
 
                     $this->UpdateUserHasInvPos($invPoses[$j], $request, $i);
@@ -207,7 +286,8 @@ class InvoiceController extends Controller
                 $inv_pos->iban = $request->invoicePositions[$i]['iban'];
                 $inv_pos->document_number = $request->invoicePositions[$i]["belegNr"];
                 $inv_pos->annotation = $request->invoicePositions[$i]["annotation"];
-                $inv_pos->total_amount = $request->invoicePositions[$i]["amount"];
+                $inv_pos->total_amount = array_sum($request->invoicePositions[$i]["studentAmounts"]);
+                $inv_pos->position_id = $request->invoicePositions[$i]["position_id"];
                 $inv_pos->save();
 
                 //Create user has invposes

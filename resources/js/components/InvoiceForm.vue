@@ -270,13 +270,14 @@ export default {
                 invoicePositionsStripped.push({
                     id: position.id,
                     name: position.name,
+                    position_id: position.position_id,
                     amount: position.amount,
                     annotation: position.annotation,
                     belegNr: position.document_number,
                     paidByTeacher: position.paidByTeacher,
                     iban: position.iban,
                     studentIDs: [],
-                    studentAmounts: []
+                    studentAmounts: [],
                 });
 
                 totalAmountRequest += position.amount;
@@ -291,6 +292,8 @@ export default {
                     ].studentAmounts.push(student.amount);
                 });
             });
+
+            console.log(invoicePositionsStripped);
 
             $.ajax({
                 headers: {

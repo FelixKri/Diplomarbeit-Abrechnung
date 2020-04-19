@@ -216,12 +216,13 @@ export default {
 
                 var position = {
                     id: id,
+                    position_id: this.last_id,
                     name: name,
                     document_number: "",
                     annotation: "",
                     amount: 0,
                     paidByTeacher: false,
-                    iban: "",
+                    iban: null,
                     user_has_invoice_position: []
                 };
 
@@ -286,19 +287,15 @@ export default {
             var totalAmountRequest = 0;
 
             this.invoice.positions.forEach(function(position) {
-                //console.log("position:");
-                //console.log(position);
 
                 var studentIDs = [];
                 var studentAmounts = [];
 
                 position.user_has_invoice_position.forEach(function(student) {
                     studentIDs.push(student.user_id);
-
                     studentAmounts.push(student.amount);
                 });
 
-                //Bypasses paidbyteacher = 0 => becomes undefined and doesnt send per ajax bug
                 var paidByTeacher = false;
 
                 if (position.paidByTeacher == 1) paidByTeacher = true;
@@ -306,13 +303,13 @@ export default {
                 invoicePositionsStripped.push({
                     id: position.id,
                     name: position.name,
-                    amount: position.total_amount,
                     annotation: position.annotation,
                     belegNr: position.document_number,
                     paidByTeacher: paidByTeacher,
                     iban: position.iban,
                     studentIDs: studentIDs,
-                    studentAmounts: studentAmounts
+                    studentAmounts: studentAmounts,
+                    position_id: position.position_id,
                 });
 
                 totalAmountRequest += position.total_amount;
@@ -336,7 +333,7 @@ export default {
                     due_until: that.invoice.due_until,
                     reason: that.invoice.reason.title,
                     annotation: that.invoice.annotation,
-                    totalAmount: totalAmountRequest,
+                    totalAmount: that.totalAmountComputed,
                     invoicePositions: invoicePositionsStripped
                 },
                 success: function(response) {

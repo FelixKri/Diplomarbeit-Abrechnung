@@ -2295,12 +2295,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         var id = this.id;
         var position = {
           id: id,
+          position_id: this.last_id,
           name: name,
           document_number: "",
           annotation: "",
           amount: 0,
           paidByTeacher: false,
-          iban: "",
+          iban: null,
           user_has_invoice_position: []
         };
         this.invoice.positions.push(position);
@@ -2386,27 +2387,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var invoicePositionsStripped = [];
       var totalAmountRequest = 0;
       this.invoice.positions.forEach(function (position) {
-        //console.log("position:");
-        //console.log(position);
         var studentIDs = [];
         var studentAmounts = [];
         position.user_has_invoice_position.forEach(function (student) {
           studentIDs.push(student.user_id);
           studentAmounts.push(student.amount);
-        }); //Bypasses paidbyteacher = 0 => becomes undefined and doesnt send per ajax bug
-
+        });
         var paidByTeacher = false;
         if (position.paidByTeacher == 1) paidByTeacher = true;
         invoicePositionsStripped.push({
           id: position.id,
           name: position.name,
-          amount: position.total_amount,
           annotation: position.annotation,
           belegNr: position.document_number,
           paidByTeacher: paidByTeacher,
           iban: position.iban,
           studentIDs: studentIDs,
-          studentAmounts: studentAmounts
+          studentAmounts: studentAmounts,
+          position_id: position.position_id
         });
         totalAmountRequest += position.total_amount;
       });
@@ -2427,7 +2425,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           due_until: that.invoice.due_until,
           reason: that.invoice.reason.title,
           annotation: that.invoice.annotation,
-          totalAmount: totalAmountRequest,
+          totalAmount: that.totalAmountComputed,
           invoicePositions: invoicePositionsStripped
         },
         success: function success(response) {
@@ -3082,6 +3080,7 @@ __webpack_require__.r(__webpack_exports__);
       invoicePositionsStripped.push({
         id: position.id,
         name: position.name,
+        position_id: position.position_id,
         amount: position.amount,
         annotation: position.annotation,
         belegNr: position.document_number,
@@ -3096,6 +3095,7 @@ __webpack_require__.r(__webpack_exports__);
         invoicePositionsStripped[position.id - 1].studentAmounts.push(student.amount);
       });
     });
+    console.log(invoicePositionsStripped);
     $.ajax({
       headers: {
         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
