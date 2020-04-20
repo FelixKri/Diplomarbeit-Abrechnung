@@ -464,7 +464,7 @@ class InvoiceController extends Controller
             $inv_pos->document_number = request()->invoicePositions[$i]["belegNr"];
             $inv_pos->annotation = request()->invoicePositions[$i]["annotation"];
             $inv_pos->total_amount = request()->invoicePositions[$i]["amount"];
-            //$inv_pos->position_id = request()->invoicePositions[$i]["id"];
+            $inv_pos->position_id = request()->invoicePositions[$i]["id"];
             $inv_pos->save();
             
             for ($j=0; $j < sizeof(request()->invoicePositions[$i]["studentAmounts"]); $j++){
