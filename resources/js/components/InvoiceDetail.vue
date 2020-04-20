@@ -91,12 +91,28 @@
         </div>
         <div class="form-group">
             <label for="total_amount">Gesamtbetrag der Abrechnung [€]</label>
-            <input type="text" name="total_amount" class="form-control" disabled :value="numWithSeperators(totalAmountComputed)">
+            <input
+                type="text"
+                name="total_amount"
+                class="form-control"
+                disabled
+                :value="numWithSeperators(totalAmountComputed)"
+            />
         </div>
         <hr />
         <div class="">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a
+                        class="nav-item nav-link"
+                        id="nav-overview-tab"
+                        data-toggle="tab"
+                        href="#nav-overview"
+                        role="tab"
+                        aria-controls="nav-overview"
+                        aria-selected="false"
+                        >Übersicht</a
+                    >
                     <position-tab
                         v-for="pos in invoice.positions"
                         v-bind:key="pos.id"
@@ -116,6 +132,13 @@
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
+                <invoice-overview-position
+                    v-on:removeStudent="removeStudent"
+                    :students="students"
+                    :groups="groups"
+                    :groupLength="groupLength"
+                    ref="overview"
+                ></invoice-overview-position>
                 <invoice-detail-position
                     v-for="pos in invoice.positions"
                     v-bind:key="pos.id"
@@ -185,7 +208,7 @@ export default {
             let totalAmt = 0;
 
             this.invoice.positions.forEach(function(position) {
-                position.user_has_invoice_position.forEach(function(student){
+                position.user_has_invoice_position.forEach(function(student) {
                     totalAmt += Number(student.amount);
                 });
             });
@@ -230,19 +253,18 @@ export default {
             }
         },
         getInvoice: function(id) {
-
             (async () => {
                 let apiRes = null;
                 try {
-                    apiRes = await axios.get(
-                        "/invoices/view/getInvoice/" + id
-                    );
+                    apiRes = await axios.get("/invoices/view/getInvoice/" + id);
                 } catch (err) {
                     apiRes = err.response;
                 } finally {
                     console.log(apiRes); // Could be success or error
                     this.invoice = apiRes.data;
-                    this.last_id = this.invoice.positions[this.invoice.positions.length - 1].position_id;
+                    this.last_id = this.invoice.positions[
+                        this.invoice.positions.length - 1
+                    ].position_id;
                 }
             })();
         },
@@ -283,7 +305,6 @@ export default {
             var totalAmountRequest = 0;
 
             this.invoice.positions.forEach(function(position) {
-
                 var studentIDs = [];
                 var studentAmounts = [];
 
@@ -305,7 +326,7 @@ export default {
                     iban: position.iban,
                     studentIDs: studentIDs,
                     studentAmounts: studentAmounts,
-                    position_id: position.position_id,
+                    position_id: position.position_id
                 });
 
                 totalAmountRequest += position.total_amount;

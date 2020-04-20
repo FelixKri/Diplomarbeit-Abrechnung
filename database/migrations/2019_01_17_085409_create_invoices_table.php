@@ -17,6 +17,7 @@ class CreateInvoicesTable extends Migration
             $table->increments('id');
             $table->integer('reason_id');
             $table->integer('author_id');
+            $table->integer('prescribing_id')->nullable();
             $table->text('annotation')->nullable();
             $table->boolean('approved')->default($value = false);
             $table->boolean('saved')->default($value = false);
