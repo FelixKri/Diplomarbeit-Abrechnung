@@ -218,7 +218,6 @@
                     v-bind:key="studentA.student.id"
                     v-for="studentA in this.position.studentAmounts"
                     :studentAmount="studentA"
-                    v-on:removeStudent="removeStudent($event)"
                 ></student-invoice>
             </tbody>
         </table>
@@ -323,7 +322,6 @@ export default {
                     });
                 }
         },
-
         splitSelected: function() {
             /**
              * Teilt den Betrag aus dem Betrag-Feld auf alle ausgewählten Schüler auf

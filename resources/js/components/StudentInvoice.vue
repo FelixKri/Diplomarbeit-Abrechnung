@@ -22,7 +22,6 @@
                 "
             />
         </td>
-        <td @click="removeStudent()"><i class="fas fa-user-minus"></i></td>
     </tr>
 </template>
 
@@ -36,12 +35,6 @@ export default {
         return {};
     },
     methods: {
-        removeStudent: function() {
-            console.log(
-                "deleting student with id " + this.studentAmount.student.id
-            );
-            this.$emit("removeStudent", this.studentAmount.student.id);
-        },
         getGroupName: function(id) {
             for (var i = 0; i < this.$parent.groupLength; i++) {
                 if (this.$parent.groups[i]["id"] == id) {

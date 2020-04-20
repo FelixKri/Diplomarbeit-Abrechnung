@@ -3,7 +3,7 @@
         <h1>Abrechnungsansicht:</h1>
         <p>
             Ursprünglicher Author:
-            <span style="font-weight: bold">{{ invoice.author.username }}</span>
+            <span style="font-weight: bold">{{ this.invoice.author.username }}</span>
         </p>
         <div class="form-group">
             <label for="title">Abrechnungsgrund: </label>
@@ -98,6 +98,22 @@
                 disabled
                 :value="numWithSeperators(totalAmountComputed)"
             />
+            <br>
+            <button
+                        class="btn btn-primary btn-sm"
+                        data-toggle="modal"
+                        :data-target="'#addUser_1'"
+                        type="button">
+                        Person(en) hinzufügen
+                        </button>
+                        <button
+                        class="btn btn-primary btn-sm"
+                        data-toggle="modal"
+                        :data-target="'#getFromPrescribing_1'"
+                        type="button"
+                        >
+                        Personen aus Vorschreibung übernehmen
+                    </button>
         </div>
         <hr />
         <div class="">
@@ -127,8 +143,16 @@
                         aria-controls="nav-add"
                         aria-selected="false"
                         @click="addPos()"
-                        >+</a
-                    >
+                        >+</a>
+
+                    <add-person-modal
+                    v-on:addstudents="addStudents"
+                    :id="1"
+                        ></add-person-modal>
+                        <add-from-prescribing-modal
+                    v-on:addstudents="addStudents"
+                    :id="1">
+                    </add-from-prescribing-modal>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
@@ -144,6 +168,8 @@
                     v-bind:key="pos.id"
                     :position="pos"
                     :errors="errors"
+                    :groups="groups"
+                    :groupLength="groupLength"
                 ></invoice-detail-position>
 
                 <input
@@ -191,16 +217,20 @@
 <script>
 export default {
     props: ["id", "reason_list"],
-    mounted() {
+    created() {
         this.getInvoice(this.id);
 
         //get Last ID
     },
     data() {
         return {
+            groups: [],
+            groupLength: 0,
             invoice: null,
             errors: {},
-            last_id: null
+            last_id: null,
+            //Needed because overview needs to hook to an object that is already here when loading
+            students: []
         };
     },
     computed: {
@@ -208,7 +238,7 @@ export default {
             let totalAmt = 0;
 
             this.invoice.positions.forEach(function(position) {
-                position.user_has_invoice_position.forEach(function(student) {
+                position.studentAmounts.forEach(function(student) {
                     totalAmt += Number(student.amount);
                 });
             });
@@ -217,6 +247,55 @@ export default {
         }
     },
     methods: {
+        removeStudent: function(id) {
+            this.students = this.students.filter(el => el.id !== id);
+            this.invoice.students = this.invoice.students.filter(el => el.id !== id);
+            //Call removeStudent on the Poses
+            for (var i = 0; i < this.invoice.positions.length; i++) {
+                this.invoice.positions[i].studentAmounts = this.invoice.positions[
+                    i
+                ].studentAmounts.filter(el => el.student.id !== id);
+            }
+        },
+        getStudents: function() {
+            return this.invoice.students;
+        },
+        addStudents: function(studentsDom) {
+            console.log("Adding Students: ");
+            console.log(studentsDom);
+
+            if (this.invoice.students == null) {
+
+                this.invoice.students = studentsDom;
+                this.students = studentsDom;
+
+                var posStudentAmount = [];
+                studentsDom.forEach(function(student) {
+                    posStudentAmount.push({ amount: 0, student: student });
+                });
+                   
+                for (var i = 0; i < this.invoice.positions.length; i++) {
+                    this.invoice.positions[i].studentAmounts = posStudentAmount;
+                }
+                
+            } else {
+                this.invoice.students = this.invoice.students.concat(studentsDom);
+                this.students = this.students.concat(studentsDom);
+
+                var posStudentAmount = [];
+                studentsDom.forEach(function(student) {
+                    posStudentAmount.push({ amount: 0, student: student });
+                });
+
+                for (var i = 0; i < this.invoice.positions.length; i++) {
+                    this.invoice.positions[
+                        i
+                    ].studentAmounts = this.invoice.positions[
+                        i
+                    ].studentAmounts.concat(posStudentAmount);
+                }
+            }
+        },
         numWithSeperators: function(num) {
             var num_parts = num.toString().split(".");
             num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -234,11 +313,17 @@ export default {
                         "Bitte den Namen der Rechnungsposition nicht leer lassen oder einen bereits verwendeten Namen eingeben."
                     );
                 }
+
                 this.last_id = this.last_id + 1;
                 var id = this.id;
 
+                var posStudentAmount = [];
+                this.students.forEach(function(student) {
+                    posStudentAmount.push({ amount: 0, student: student });
+                });
+
                 var position = {
-                    id: id,
+                    id: this.last_id,
                     position_id: this.last_id,
                     name: name,
                     document_number: "",
@@ -246,7 +331,7 @@ export default {
                     amount: 0,
                     paidByTeacher: false,
                     iban: null,
-                    user_has_invoice_position: []
+                    studentAmounts: posStudentAmount
                 };
 
                 this.invoice.positions.push(position);
@@ -265,6 +350,7 @@ export default {
                     this.last_id = this.invoice.positions[
                         this.invoice.positions.length - 1
                     ].position_id;
+                    this.students = this.students.concat(invoice.students);
                 }
             })();
         },
@@ -308,7 +394,7 @@ export default {
                 var studentIDs = [];
                 var studentAmounts = [];
 
-                position.user_has_invoice_position.forEach(function(student) {
+                position.studentAmounts.forEach(function(student) {
                     studentIDs.push(student.user_id);
                     studentAmounts.push(student.amount);
                 });
