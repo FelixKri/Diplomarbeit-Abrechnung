@@ -192,7 +192,7 @@
                 type="button"
                 value="Freigeben"
                 class="btn btn-success"
-                @click="release"
+                @click="release()"
                 :disabled="this.saved == false"
             />
         </form>
@@ -344,18 +344,20 @@ export default {
                     .catch(error => console.log(error));
 
                     //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
-                }
-            },
+            }
 
             //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
         },
         store: function() {
+
             this.errors = null;
             this.errors = {};
 
             var that = this;
             var invoicePositionsStripped = [];
             var totalAmountRequest = 0;
+
+            console.log(this.invoicePositions.length);
 
             this.invoicePositions.forEach(function(position) {
                 invoicePositionsStripped.push({
@@ -367,24 +369,15 @@ export default {
                     belegNr: position.document_number,
                     paidByTeacher: position.paidByTeacher,
                     iban: position.iban,
-                    studentIDs: [],
-                    studentAmounts: [],
+                    studentAmounts: position.studentAmounts,
                 });
 
                 totalAmountRequest += position.amount;
-
-                position.students.forEach(function(student) {
-                    invoicePositionsStripped[position.id - 1].studentIDs.push(
-                        student.id
-                    );
-
-                    invoicePositionsStripped[
-                        position.id - 1
-                    ].studentAmounts.push(student.amount);
-                });
             });
 
             console.log(invoicePositionsStripped);
+
+            console.log(that.reason);
 
             $.ajax({
                 headers: {
@@ -417,6 +410,7 @@ export default {
             });
         }
     }
+}
 </script>
 
 <style></style>

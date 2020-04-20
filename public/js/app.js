@@ -3277,65 +3277,62 @@ __webpack_require__.r(__webpack_exports__);
         }).catch(function (error) {
           return console.log(error);
         }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
-      }
-    } //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+      } //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
 
-  },
-  store: function store() {
-    this.errors = null;
-    this.errors = {};
-    var that = this;
-    var invoicePositionsStripped = [];
-    var totalAmountRequest = 0;
-    this.invoicePositions.forEach(function (position) {
-      invoicePositionsStripped.push({
-        id: position.id,
-        name: position.name,
-        position_id: position.position_id,
-        amount: position.amount,
-        annotation: position.annotation,
-        belegNr: position.document_number,
-        paidByTeacher: position.paidByTeacher,
-        iban: position.iban,
-        studentIDs: [],
-        studentAmounts: []
+    },
+    store: function store() {
+      this.errors = null;
+      this.errors = {};
+      var that = this;
+      var invoicePositionsStripped = [];
+      var totalAmountRequest = 0;
+      console.log(this.invoicePositions.length);
+      this.invoicePositions.forEach(function (position) {
+        invoicePositionsStripped.push({
+          id: position.id,
+          name: position.name,
+          position_id: position.position_id,
+          amount: position.amount,
+          annotation: position.annotation,
+          belegNr: position.document_number,
+          paidByTeacher: position.paidByTeacher,
+          iban: position.iban,
+          studentAmounts: position.studentAmounts
+        });
+        totalAmountRequest += position.amount;
       });
-      totalAmountRequest += position.amount;
-      position.students.forEach(function (student) {
-        invoicePositionsStripped[position.id - 1].studentIDs.push(student.id);
-        invoicePositionsStripped[position.id - 1].studentAmounts.push(student.amount);
+      console.log(invoicePositionsStripped);
+      console.log(that.reason);
+      $.ajax({
+        headers: {
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+        },
+        type: "POST",
+        url: "/invoice/new",
+        dataType: "json",
+        data: {
+          id: that.invoice_id,
+          author: that.author,
+          date: that.date,
+          due_until: that.due_until,
+          reason: that.reason,
+          annotation: that.annotation,
+          totalAmount: totalAmountRequest,
+          invoicePositions: invoicePositionsStripped
+        },
+        success: function success(response) {
+          console.log(response);
+          that.errors = {};
+          alert("Erfolgreich gespeichert!");
+          that.invoice_id = response;
+          that.saved = true;
+        },
+        error: function error(xhr, status, _error) {
+          var respJson = JSON.parse(xhr.responseText);
+          that.errors = respJson.errors;
+        }
       });
-    });
-    console.log(invoicePositionsStripped);
-    $.ajax({
-      headers: {
-        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-      },
-      type: "POST",
-      url: "/invoice/new",
-      dataType: "json",
-      data: {
-        id: that.invoice_id,
-        author: that.author,
-        date: that.date,
-        due_until: that.due_until,
-        reason: that.reason,
-        annotation: that.annotation,
-        totalAmount: totalAmountRequest,
-        invoicePositions: invoicePositionsStripped
-      },
-      success: function success(response) {
-        console.log(response);
-        that.errors = {};
-        alert("Erfolgreich gespeichert!");
-        that.invoice_id = response;
-        that.saved = true;
-      },
-      error: function error(xhr, status, _error) {
-        var respJson = JSON.parse(xhr.responseText);
-        that.errors = respJson.errors;
-      }
-    });
+    }
   }
 });
 
@@ -42803,7 +42800,11 @@ var render = function() {
           value: "Freigeben",
           disabled: this.saved == false
         },
-        on: { click: _vm.release }
+        on: {
+          click: function($event) {
+            return _vm.release()
+          }
+        }
       })
     ])
   ])

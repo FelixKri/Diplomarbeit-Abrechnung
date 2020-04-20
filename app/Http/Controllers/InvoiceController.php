@@ -409,10 +409,10 @@ class InvoiceController extends Controller
             'invoicePositions.*.annotation' => "",
             'invoicePositions.*.belegNr' => "required",
             'invoicePositions.*.iban' => "required_if:invoicePositions.*.paidByTeacher,true",
-            'invoicePositions.*.studentIDs' => "required|array|min:1",
+            'invoicePositions.*.studentIDs' => "array|min:1",
             'invoicePositions.*.studentIDs.*' => "integer",
             'invoicePositions.*.studentAmounts' => "required|array|min:1",
-            'invoicePositions.*.studentAmounts.*' => "numeric",
+            'invoicePositions.*.studentAmounts.*.amount' => "numeric",
         ];
 
         $messages = [
@@ -464,14 +464,14 @@ class InvoiceController extends Controller
             $inv_pos->document_number = request()->invoicePositions[$i]["belegNr"];
             $inv_pos->annotation = request()->invoicePositions[$i]["annotation"];
             $inv_pos->total_amount = request()->invoicePositions[$i]["amount"];
-            $inv_pos->position_id = request()->invoicePositions[$i]["id"];
+            //$inv_pos->position_id = request()->invoicePositions[$i]["id"];
             $inv_pos->save();
             
-            for ($j=0; $j < sizeof(request()->invoicePositions[$i]["studentIDs"]); $j++){
+            for ($j=0; $j < sizeof(request()->invoicePositions[$i]["studentAmounts"]); $j++){
 
                 $usr_has_inv_pos = new UserHasInvoicePosition;
-                $usr_has_inv_pos->user_id = request()->invoicePositions[$i]["studentIDs"][$j];
-                $usr_has_inv_pos->amount = request()->invoicePositions[$i]["studentAmounts"][$j];
+                $usr_has_inv_pos->user_id = request()->invoicePositions[$i]["studentAmounts"][$j]["student"]["id"];
+                $usr_has_inv_pos->amount = request()->invoicePositions[$i]["studentAmounts"][$j]["amount"];
                 $usr_has_inv_pos->invoice_position_id = $inv_pos->id;
                 $usr_has_inv_pos->save();
             }
