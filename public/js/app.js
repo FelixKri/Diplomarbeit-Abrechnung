@@ -1822,43 +1822,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    copyStudentsToInvoicePosition: function copyStudentsToInvoicePosition(positions) {
-      var students = [];
-
-      for (var index = 0; index < positions.length; index++) {
-        axios.get("/user/getById/" + positions[index].user_id).then(function (response) {
-          return students.push(response.data);
-        }).catch(function (error) {
-          return console.log(error);
-        });
-      }
-
-      positions.forEach(function (pos) {
-        students.push(pos.user);
-      });
-      students.forEach(function (st) {
-        st.amount = 0;
-        st.checked = false;
-      });
-      /*
-      positions.forEach(pos => {
-          $.ajax({
-              headers: {
-                  "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-              },
-              type: "get",
-              url: "/user/getById/" + pos.user_id,
-              dataType: "json",
-              data: {
-              },
-                success: function(response) {
-                  students.push(response);
-              }
-          });
-      });
-      */
-
-      this.$emit("addstudents", students);
+    importPrescribing: function importPrescribing(prescribing) {
+      alert("wird emitted");
+      this.$emit("importPrescribing", prescribing);
     }
   }
 });
@@ -2353,12 +2319,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     getInvoice: function getInvoice(id) {
       var _this = this;
-
-      axios.get("/invoices/view/getInvoice/" + id).then(function (response) {
-        return _this.invoice = response.data;
-      }).catch(function (error) {
-        return console.log(error);
-      });
 
       _asyncToGenerator(
       /*#__PURE__*/
@@ -3145,10 +3105,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["reason_list"],
   created: function created() {
-    $('.nav-tabs a:first').tab('show');
+    $(".nav-tabs a:first").tab("show");
   },
   data: function data() {
     return {
@@ -3164,7 +3136,8 @@ __webpack_require__.r(__webpack_exports__);
       invoice_id: null,
       errors: {},
       saved: false,
-      students: []
+      students: [],
+      prescribing: null
     };
   },
   computed: {
@@ -3179,6 +3152,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    importPrescribing: function importPrescribing(prescribing) {
+      alert("wird importiert");
+      this.prescribing = prescribing;
+      this.$refs.overview.importPrescribing();
+    },
     removeStudent: function removeStudent(id) {
       this.students = this.students.filter(function (el) {
         return el.id !== id;
@@ -3202,8 +3180,8 @@ __webpack_require__.r(__webpack_exports__);
         var posStudentAmount = [];
         studentsDom.forEach(function (student) {
           posStudentAmount.push({
-            "amount": 0,
-            "student": student
+            amount: 0,
+            student: student
           });
         });
 
@@ -3215,8 +3193,8 @@ __webpack_require__.r(__webpack_exports__);
         var posStudentAmount = [];
         studentsDom.forEach(function (student) {
           posStudentAmount.push({
-            "amount": 0,
-            "student": student
+            amount: 0,
+            student: student
           });
         });
 
@@ -3252,8 +3230,8 @@ __webpack_require__.r(__webpack_exports__);
         var posStudentAmount = [];
         this.students.forEach(function (student) {
           posStudentAmount.push({
-            "amount": 0,
-            "student": student
+            amount: 0,
+            student: student
           });
         });
         var position = {
@@ -3463,14 +3441,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {
-      prescribing: null
-    };
+    return {};
   },
   props: ["students", "groups", "groupLength"],
   methods: {
+    importPrescribing: function importPrescribing() {
+      alert("overview importiert");
+      this.$refs.studentOverview.forEach(function (ref) {
+        ref.importPrescribing();
+      });
+    },
+    triggerSumOfPositions: function triggerSumOfPositions() {
+      this.$refs.studentOverview.forEach(function (ref) {
+        ref.sumOfPositions();
+      });
+    },
     removeStudent: function removeStudent(studentId) {
       this.$emit("removeStudent", studentId);
     }
@@ -5126,6 +5116,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log("Component mounted: Student");
@@ -5137,7 +5139,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     removeStudent: function removeStudent() {
       console.log("deleting student with id " + this.studentAmount.student.id);
-      this.$emit('removeStudent', this.studentAmount.student.id);
+      this.$emit("removeStudent", this.studentAmount.student.id);
     },
     getGroupName: function getGroupName(id) {
       for (var i = 0; i < this.$parent.groupLength; i++) {
@@ -5483,18 +5485,61 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log("Component mounted: StudentOverviewInvoice");
   },
   props: ["student"],
   data: function data() {
-    return {};
+    return {
+      prescribing_amount: 0,
+      invoice_amount: 0
+    };
+  },
+  computed: {
+    difference: function difference() {
+      return this.invoice_amount - this.prescribing_amount;
+    }
   },
   methods: {
+    importPrescribing: function importPrescribing() {
+      var _this = this;
+
+      alert("loda");
+      this.$parent.$parent.prescribing.positions.forEach(function (position) {
+        if (position.user_id === _this.student.id) {
+          alert("OIDA");
+          _this.prescribing_amount = position.amount;
+        }
+      });
+    },
+    sumOfPositions: function sumOfPositions() {
+      var _this2 = this;
+
+      var sum = 0;
+      this.$parent.$parent.invoicePositions.forEach(function (position) {
+        position.studentAmounts.forEach(function (student) {
+          if (student.student.id == _this2.student.id) {
+            sum += student.amount;
+          }
+        });
+      });
+      this.invoice_amount = sum;
+    },
     removeStudent: function removeStudent() {
       console.log("deleting student with id " + this.student.id);
-      this.$emit('removeStudent', this.student.id);
+      this.$emit("removeStudent", this.student.id);
     },
     getGroupName: function getGroupName(id) {
       for (var i = 0; i < this.$parent.groupLength; i++) {
@@ -41356,7 +41401,7 @@ var render = function() {
     "div",
     {
       staticClass: "modal fade",
-      attrs: { id: "getFromPrescribing_" + _vm.id, role: "dialog" }
+      attrs: { id: "getFromPrescribing", role: "dialog" }
     },
     [
       _c("div", { staticClass: "modal-dialog" }, [
@@ -41379,9 +41424,7 @@ var render = function() {
                         {
                           on: {
                             click: function($event) {
-                              return _vm.copyStudentsToInvoicePosition(
-                                prescribing.positions
-                              )
+                              return _vm.importPrescribing(prescribing)
                             }
                           }
                         },
@@ -42658,32 +42701,58 @@ var render = function() {
           : _vm._e()
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "total_amount" } }, [
-          _vm._v("Gesamtbetrag [€]")
-        ]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "number", name: "total_amount", disabled: "" },
-          domProps: { value: _vm.numWithSeperators(_vm.totalAmountComputed) }
-        }),
-        _vm._v(" "),
-        _c("br"),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary btn-sm",
-            attrs: {
-              "data-toggle": "modal",
-              "data-target": "#addUser_1",
-              type: "button"
-            }
-          },
-          [_vm._v("\n            Person(en) hinzufügen\n        ")]
-        )
-      ]),
+      _c(
+        "div",
+        { staticClass: "form-group" },
+        [
+          _c("label", { attrs: { for: "total_amount" } }, [
+            _vm._v("Gesamtbetrag [€]")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control",
+            attrs: { type: "number", name: "total_amount", disabled: "" },
+            domProps: { value: _vm.numWithSeperators(_vm.totalAmountComputed) }
+          }),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-sm",
+              attrs: {
+                "data-toggle": "modal",
+                "data-target": "#addUser_1",
+                type: "button"
+              }
+            },
+            [_vm._v("\n                Person(en) hinzufügen\n            ")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-sm",
+              attrs: {
+                "data-toggle": "modal",
+                "data-target": "#getFromPrescribing",
+                type: "button"
+              }
+            },
+            [
+              _vm._v(
+                "\n                Vorschreibung importieren\n            "
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("add-from-prescribing-modal", {
+            on: { importPrescribing: _vm.importPrescribing }
+          })
+        ],
+        1
+      ),
       _vm._v(" "),
       _c("div", {}, [
         _c("nav", [
@@ -42752,6 +42821,7 @@ var render = function() {
             }),
             _vm._v(" "),
             _c("invoice-overview-position", {
+              ref: "overview",
               attrs: {
                 students: _vm.students,
                 groups: _vm.groups,
@@ -42944,6 +43014,17 @@ var render = function() {
     [
       _c("h2", {}, [_vm._v("Übersicht")]),
       _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          staticStyle: { position: "absolute", right: "0px", top: "0px" },
+          attrs: { type: "button" },
+          on: { click: _vm.triggerSumOfPositions }
+        },
+        [_vm._v("Übersicht berechnen")]
+      ),
+      _vm._v(" "),
       _c("table", { staticClass: "table" }, [
         _vm._m(0),
         _vm._v(" "),
@@ -42952,6 +43033,8 @@ var render = function() {
           _vm._l(this.students, function(student) {
             return _c("student-overview-invoice", {
               key: student.id,
+              ref: "studentOverview",
+              refInFor: true,
               attrs: { student: student },
               on: {
                 removeStudent: function($event) {
@@ -42989,7 +43072,7 @@ var staticRenderFns = [
           _vm._v("Vorgeschriebener Betrag")
         ]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Betrag")])
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Differenz")])
       ])
     ])
   }
@@ -45312,10 +45395,72 @@ var render = function() {
     _vm._v(" "),
     _c("td", [
       _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.invoice_amount,
+            expression: "invoice_amount"
+          }
+        ],
         staticClass: "form-control",
         attrs: { type: "", name: "" },
-        domProps: {
-          value: Math.round((this.student.amount + Number.EPSILON) * 100) / 100
+        domProps: { value: _vm.invoice_amount },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.invoice_amount = $event.target.value
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("td", [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.prescribing_amount,
+            expression: "prescribing_amount"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: { type: "text", disabled: "" },
+        domProps: { value: _vm.prescribing_amount },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.prescribing_amount = $event.target.value
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("td", [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.difference,
+            expression: "difference"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: { type: "text", disabled: "" },
+        domProps: { value: _vm.difference },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.difference = $event.target.value
+          }
         }
       })
     ]),

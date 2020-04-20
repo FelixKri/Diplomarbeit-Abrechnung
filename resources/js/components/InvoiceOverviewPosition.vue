@@ -8,6 +8,8 @@
     >
         <h2 style="">Übersicht</h2>
         
+        <button type="button" style="position: absolute; right: 0px; top: 0px;" class="btn btn-primary" @click="triggerSumOfPositions">Übersicht berechnen</button>
+
         
         <table class="table">
             <thead>
@@ -19,7 +21,7 @@
                     <th scope="col">Klasse</th>
                     <th scope="col">Abgerechneter Betrag</th>
                     <th scope="col">Vorgeschriebener Betrag</th>
-                    <th scope="col">Betrag</th>
+                    <th scope="col">Differenz</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +30,7 @@
                     v-for="student in this.students"
                     :student="student"
                     v-on:removeStudent="removeStudent($event)"
+                    ref="studentOverview"
                 ></student-overview-invoice>
 
             </tbody>
@@ -40,11 +43,23 @@
 export default {
     data: function() {
         return {
-            prescribing: null,
+            
         };
     },
     props: ["students", "groups", "groupLength"],
     methods:{
+        importPrescribing: function(){
+          alert("overview importiert");
+
+          this.$refs.studentOverview.forEach(ref => {
+              ref.importPrescribing();
+          });
+        },
+        triggerSumOfPositions: function(){
+            this.$refs.studentOverview.forEach(ref => {
+                ref.sumOfPositions();
+            })
+        },
         removeStudent: function(studentId){
             this.$emit("removeStudent", studentId);
         }
