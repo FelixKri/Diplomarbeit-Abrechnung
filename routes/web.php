@@ -35,7 +35,6 @@ Route::get('/prescribing/download/{id}', 'PDFController@downloadPrescribingById'
 Route::post('/getUsers','AjaxController@getUsers');  //Sollte Get request sein
 Route::get('/user/getById/{id}', 'AjaxController@getUserById');
 Route::get('/getGroups','AjaxController@getGroups');
-Route::post('/getAllGroups','AjaxController@getAllGroups'); // Method: POST Name: GETAllGroups *** Das sollte eine get request sein, man gettet ja was
 Route::get('/getReasons', 'AjaxController@getReasons');
 
 //DEBUG?

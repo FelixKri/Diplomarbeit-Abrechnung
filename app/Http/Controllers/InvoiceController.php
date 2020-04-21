@@ -156,6 +156,7 @@ class InvoiceController extends Controller
     }
 
     public function update(){
+
         $rules = [
             'date' => 'date|required',
             'due_until' => 'date|after:today|required|date_format:Y-m-d',
@@ -197,9 +198,16 @@ class InvoiceController extends Controller
         $inv->save();
 
         //Get all old InvoicePositions and UserHasInvoicePositions and delete them
-        $position_ids = InvoicePosition::where('invoice_id', request()->id)->pluck('id');
+        $invPoses = InvoicePosition::where('invoice_id', request()->id)->get();
+        $position_ids = $invPoses->pluck('id');
+
         InvoicePosition::where('invoice_id', request()->id)->delete();
-        UserHasInvoicePosition::where('invoice_position_id', $position_ids)->delete();
+        
+        if(count($position_ids) > 0)
+        {
+            //Log::Debug($position_ids);
+            UserHasInvoicePosition::where('invoice_position_id', $position_ids)->delete();
+        }
 
         //Create new Invoice Positions and UserHasInvoicePositions
         foreach(request()->invoicePositions as $invoicePosition){

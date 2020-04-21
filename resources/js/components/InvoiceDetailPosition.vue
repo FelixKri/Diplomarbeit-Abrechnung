@@ -190,6 +190,9 @@ export default {
         totalAmountComputed: function() {
             let totalAmt = 0;
 
+            if(this.position.studentAmounts == null)
+                return;
+
             this.position.studentAmounts.forEach(function(studentA) {
                 totalAmt += Number(studentA.amount);
             });
@@ -199,6 +202,9 @@ export default {
     },
     methods: {
         numWithSeperators: function(num) {
+            if(num == null)
+                return 0;
+            
             var num_parts = num.toString().split(".");
             num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             return num_parts.join(",");

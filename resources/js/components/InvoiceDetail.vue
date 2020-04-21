@@ -217,7 +217,7 @@
 <script>
 export default {
     props: ["id", "reason_list"],
-    created() {
+    mounted() {
         this.getInvoice(this.id);
 
         //get Last ID
@@ -226,7 +226,7 @@ export default {
         return {
             groups: [],
             groupLength: 0,
-            invoice: null,
+            invoice: {},
             errors: {},
             last_id: null,
             //Needed because overview needs to hook to an object that is already here when loading
@@ -238,6 +238,9 @@ export default {
             let totalAmt = 0;
 
             this.invoice.positions.forEach(function(position) {
+                if(position.studentAmounts == null)
+                    return;
+
                 position.studentAmounts.forEach(function(student) {
                     totalAmt += Number(student.amount);
                 });
@@ -297,6 +300,8 @@ export default {
             }
         },
         numWithSeperators: function(num) {
+            if(num == null)
+                return 0;
             var num_parts = num.toString().split(".");
             num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             return num_parts.join(",");
@@ -350,7 +355,40 @@ export default {
                     this.last_id = this.invoice.positions[
                         this.invoice.positions.length - 1
                     ].position_id;
-                    this.students = this.students.concat(invoice.students);
+
+                    //Cast stuff  from database into usable stuff
+                    var tempStudents = [];
+
+                    this.invoice.positions.forEach(function(position){
+                        position.studentAmounts = [];
+
+                        console.log(position);
+
+                        position.user_has_invoice_position.forEach(function(uhip){
+                            var sAmount = { amount: uhip["amount"], student: uhip["user"]};
+                            position.studentAmounts.push(sAmount);
+
+                            var found = false;
+
+                                tempStudents.forEach(function(student){
+                                    if(student.id == uhip["user"].id)
+                                    {
+                                        found = true;
+                                        return;
+                                    }
+                                });
+                            
+
+                            if(!found)
+                            {
+                                console.log(uhip["user"]);
+                                tempStudents.push(uhip["user"]);
+                            }
+                        });
+                    });
+
+                    this.students = tempStudents;
+                    
                 }
             })();
         },
@@ -394,9 +432,9 @@ export default {
                 var studentIDs = [];
                 var studentAmounts = [];
 
-                position.studentAmounts.forEach(function(student) {
-                    studentIDs.push(student.user_id);
-                    studentAmounts.push(student.amount);
+                position.studentAmounts.forEach(function(studentA) {
+                    studentIDs.push(studentA.student.id);
+                    studentAmounts.push(studentA.amount);
                 });
 
                 var paidByTeacher = false;

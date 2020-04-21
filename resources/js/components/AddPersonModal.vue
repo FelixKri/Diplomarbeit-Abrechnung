@@ -107,8 +107,8 @@ export default {
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
-            type: "POST",
-            url: "/getAllGroups",
+            type: "GET",
+            url: "/getGroups",
             dataType: "json",
             data: {},
 
