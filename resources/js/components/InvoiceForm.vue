@@ -134,6 +134,7 @@
                 <add-from-prescribing-modal
                     v-on:importPrescribing="importPrescribing"
                 ></add-from-prescribing-modal>
+                <span v-if="prescribing != null"> {{prescribing.title}} <button class="link" href="" @click="removePrescribing()">Entfernen</button></span>
             </div>
 
             <div class="">
@@ -232,7 +233,7 @@ export default {
             errors: {},
             saved: false,
             students: [],
-            prescribing: null,
+            prescribing: null
         };
     },
     computed: {
@@ -249,14 +250,17 @@ export default {
         }
     },
     methods: {
-        importPrescribing: function(prescribing){
+        removePrescribing: function(){
+            this.prescribing = null,
 
+            this.$refs.overview.removePrescribing();
+        },
+        importPrescribing: function(prescribing) {
             alert("wird importiert");
 
             this.prescribing = prescribing;
 
             this.$refs.overview.importPrescribing();
-
         },
         removeStudent: function(id) {
             this.students = this.students.filter(el => el.id !== id);
@@ -358,20 +362,18 @@ export default {
                     })
                     .catch(error => console.log(error));
 
-                    //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
+                //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
             }
 
             //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
         },
         store: function() {
-
             this.errors = null;
             this.errors = {};
 
-
-        var that = this;
-        var invoicePositionsStripped = [];
-        var totalAmountRequest = 0;
+            var that = this;
+            var invoicePositionsStripped = [];
+            var totalAmountRequest = 0;
 
             console.log(this.invoicePositions.length);
 
@@ -385,13 +387,13 @@ export default {
                     belegNr: position.document_number,
                     paidByTeacher: position.paidByTeacher,
                     iban: position.iban,
-                    studentAmounts: position.studentAmounts,
+                    studentAmounts: position.studentAmounts
                 });
 
                 totalAmountRequest += position.amount;
             });
 
-        console.log(invoicePositionsStripped);
+            console.log(invoicePositionsStripped);
 
             console.log(that.reason);
 
@@ -426,8 +428,7 @@ export default {
             });
         }
     }
-}
-
+};
 </script>
 
 <style></style>

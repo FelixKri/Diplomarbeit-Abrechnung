@@ -43,6 +43,10 @@ export default {
       },
     },
     methods: {
+        removePrescribing: function(){
+            alert("removeprescribing")
+            this.prescribing_amount = 0;
+        },
         importPrescribing: function() {
             alert("loda");
             this.$parent.$parent.prescribing.positions.forEach(position => {

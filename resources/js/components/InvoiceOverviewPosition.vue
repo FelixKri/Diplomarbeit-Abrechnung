@@ -19,9 +19,9 @@
                     <th scope="col">Nachname</th>
                     <th scope="col">Vorname</th>
                     <th scope="col">Klasse</th>
-                    <th scope="col">Abgerechneter Betrag</th>
-                    <th scope="col">Vorgeschriebener Betrag</th>
-                    <th scope="col">Differenz</th>
+                    <th scope="col">Abgerechneter Betrag [€]</th>
+                    <th scope="col">Vorgeschriebener Betrag [€]</th>
+                    <th scope="col">Differenz [€]</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,6 +48,14 @@ export default {
     },
     props: ["students", "groups", "groupLength"],
     methods:{
+        removePrescribing: function(){
+
+            alert("overviewposition");
+            this.$refs.studentOverview.forEach(ref => {
+                ref.removePrescribing();
+            });
+
+        },
         importPrescribing: function(){
           alert("overview importiert");
 
