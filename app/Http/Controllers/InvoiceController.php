@@ -9,6 +9,8 @@ use App\Prescribing;
 use App\Invoice;
 use App\InvoicePosition;
 use App\UserHasInvoicePosition;
+use App\PrescribingSuggestion;
+use App\UserHasPrescribingSuggestion;
 use App\FosUser;
 use App\Reason;
 use Log;
@@ -132,30 +134,87 @@ class InvoiceController extends Controller
         $invPoses = InvoicePosition::where("invoice_id", $in->id)->get();
         $now = date("Y-m-d H:i:s");
 
+        $userIds = [];
+        $userAmounts = [];
+
         for ($j = 0; $j < sizeof($invPoses); $j++) {
 
             $uhip = UserHasInvoicePosition::Where("invoice_position_id", $invPoses[$j]->id)->get();
 
-            //Make real prescribings
+
+            //Count together
             for ($i = 0; $i < sizeof($uhip); $i++) {
 
-                $p = new Prescribing();
-                $p->title = $invPoses[$j]->name;
-                $p->value = $uhip[$i]->amount;
-                $p->user_id = $uhip[$i]->user_id;
-                $p->due_until = $in->due_until;
-                $p->reason_id = $in->reason_id;
-                $p->finished = false;
-                //Nötig weil der prescribings table keine timestamps hat sondern nur den created_at
-                $p->created_at = $now;
-                $p->save();
+                $found = false;
+                for($k = 0;$k < sizeof($userIds);$k++)
+                {
+                    if($userIds[$k] == $uhip[$i]->user_id)
+                    {
+                        $found = true;
+                        $userAmounts[$k] += $uhip[$i]->amount;
+                        break;
+                    }
+                }
+
+                if(!$found)
+                {
+                    array_push($userIds, $uhip[$i]->user_id);
+                    array_push($userAmounts, $uhip[$i]->amount);
+                }
+
+            }
+
+        }
+
+        //Check if based on prescribing
+        if($in->prescribing_id != null)
+        {
+            //If it exists, subtract studentAmounts by it
+            $prescribingSug = PrescribingSuggestion::where("id", $in->prescribing_id)->first();
+
+            $uhps = UserHasPrescribingSuggestion::where("prescribing_suggestion_id", $prescribingSug->id);
+
+            for ($i = 0; $i < sizeof($uhps); $i++) {
+
+                for($k = 0;$k < sizeof($userIds);$k++)
+                {
+                    if($userIds[$k] == $uhps[$i]->user_id)
+                    {
+                        $userAmounts[$k] -= $uhps[$i]->amount;
+                        break;
+                    }
+                }
+
             }
         }
+
+        //TODO
+        //Set annotation depending on + or - amount
+        for($k = 0;$k < sizeof($userIds);$k++)
+            {
+                if($userAmounts[$k] != 0)
+                {
+                    $p = new Prescribing();
+                    $p->title = Reason::where("id", $in->reason_id)->first()->title;
+                    $p->value = $userAmounts[$k];
+                    $p->user_id = $userIds[$k];
+                    $p->due_until = $in->due_until;
+                    $p->reason_id = $in->reason_id;
+                    $p->finished = false;
+                    //Nötig weil der prescribings table keine timestamps hat sondern nur den created_at
+                    $p->created_at = $now;
+
+                    $p->save();
+                }
+            }
+
 
         return response()->json("Success", 200);
     }
 
     public function update(){
+
+        //Log::debug(request());
 
         $rules = [
             'date' => 'date|required',
