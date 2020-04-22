@@ -2457,7 +2457,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     release: function release() {
-      if (id != null) {
+      if (this.invoice.saved == true && this.invoice.approved == false) {
         axios.post("/invoice/release/" + this.id).then(function (response) {
           return alert(response["data"]);
         }).catch(function (error) {
@@ -45383,11 +45383,24 @@ var render = function() {
     _vm._v(" "),
     _c("td", [
       _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.studentAmount.amount,
+            expression: "studentAmount.amount"
+          }
+        ],
         staticClass: "form-control",
         attrs: { type: "", name: "" },
-        domProps: {
-          value:
-            Math.round((_vm.studentAmount.amount + Number.EPSILON) * 100) / 100
+        domProps: { value: _vm.studentAmount.amount },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.studentAmount, "amount", $event.target.value)
+          }
         }
       })
     ])

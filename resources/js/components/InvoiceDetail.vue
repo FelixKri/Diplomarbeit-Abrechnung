@@ -393,7 +393,7 @@ export default {
             })();
         },
         release: function() {
-            if (id != null) {
+            if (this.invoice.saved == true && this.invoice.approved == false) {
                 axios
                     .post("/invoice/release/" + this.id)
                     .then(response => alert(response["data"]))
@@ -425,6 +425,7 @@ export default {
         },
 
         store: function() {
+
             var invoicePositionsStripped = [];
             var totalAmountRequest = 0;
 
