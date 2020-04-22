@@ -1,7 +1,7 @@
 <template>
     <div
         style="position: relative;"
-        class="tab-pane fade show"
+        class="tab-pane fade show active"
         :id="'nav-overview'"
         role="tabpanel"
         :aria-labelledby="'nav-overview-tab'"

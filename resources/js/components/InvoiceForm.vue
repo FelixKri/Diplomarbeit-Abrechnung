@@ -140,11 +140,6 @@
             <div class="">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <position-tab
-                            v-for="pos in invoicePositions"
-                            v-bind:key="pos.id"
-                            :position="pos"
-                        ></position-tab>
                         <a
                             class="nav-item nav-link"
                             id="nav-overview-tab"
@@ -155,6 +150,11 @@
                             aria-selected="false"
                             >Übersicht</a
                         >
+                        <position-tab
+                            v-for="pos in invoicePositions"
+                            v-bind:key="pos.id"
+                            :position="pos"
+                        ></position-tab>
                         <a
                             class="nav-item nav-link"
                             id="nav-add-tab"
