@@ -2462,6 +2462,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       console.log(studentsDom);
 
       if (this.invoice.students == null) {
+        console.log("students null");
         this.invoice.students = studentsDom;
         this.students = studentsDom;
         var posStudentAmount = [];
@@ -2476,8 +2477,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           this.invoice.positions[i].studentAmounts = posStudentAmount;
         }
       } else {
-        this.invoice.students = this.invoice.students.concat(studentsDom);
-        this.students = this.students.concat(studentsDom);
+        this.invoice.students.push(studentsDom);
+        this.students.push(studentsDom);
         var posStudentAmount = [];
         studentsDom.forEach(function (student) {
           posStudentAmount.push({
@@ -2487,7 +2488,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
 
         for (var i = 0; i < this.invoice.positions.length; i++) {
-          this.invoice.positions[i].studentAmounts = this.invoice.positions[i].studentAmounts.concat(posStudentAmount);
+          this.invoice.positions[i].studentAmounts.push(posStudentAmount);
         }
       }
     },
@@ -2536,7 +2537,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var apiRes, tempStudents;
+        var apiRes, newInvoice, tempStudents;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -2560,17 +2561,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.prev = 10;
                 console.log(apiRes); // Could be success or error
 
-                _this.invoice = apiRes.data;
-                _this.last_id = _this.invoice.positions[_this.invoice.positions.length - 1].position_id; //Cast stuff  from database into usable stuff
+                newInvoice = apiRes.data;
+                _this.last_id = newInvoice.positions[newInvoice.positions.length - 1].position_id; //Cast stuff  from database into usable stuff
 
                 tempStudents = [];
-
-                _this.invoice.positions.forEach(function (position) {
+                newInvoice.positions.forEach(function (position) {
                   position.studentAmounts = [];
                   console.log(position);
                   position.user_has_invoice_position.forEach(function (uhip) {
                     var sAmount = {
-                      amount: uhip["amount"],
+                      amount: parseFloat(uhip["amount"]),
                       student: uhip["user"]
                     };
                     position.studentAmounts.push(sAmount);
@@ -2587,9 +2587,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       tempStudents.push(uhip["user"]);
                     }
                   });
+                  delete position.user_has_invoice_position;
                 });
-
                 _this.students = tempStudents;
+                _this.invoice = newInvoice;
 
                 if (_this.invoice.prescribing_id != null) {
                   alert("presc wird geholt");
@@ -2599,12 +2600,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 return _context.finish(10);
 
-              case 19:
+              case 20:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[1, 7, 10, 19]]);
+        }, _callee, null, [[1, 7, 10, 20]]);
       }))();
     },
     getPrescribing: function getPrescribing(id) {
@@ -3078,15 +3079,15 @@ __webpack_require__.r(__webpack_exports__);
     },
     assignEveryone: function assignEveryone() {
       alert("Folgender Betrag wird allen Schülern zugewiesen: " + this.amount_st);
-      var value = parseFloat(this.amount_st);
+      var value = this.amount_st;
 
       if (this.type == "overwrite") {
         this.position.studentAmounts.forEach(function (studentA) {
-          studentA.amount = value;
+          studentA.amount = parseFloat(value);
         });
       } else {
         this.position.studentAmounts.forEach(function (studentA) {
-          studentA.amount += value;
+          studentA.amount = parseFloat(studentA.amount) + parseFloat(value);
         });
       }
     },
@@ -3100,13 +3101,13 @@ __webpack_require__.r(__webpack_exports__);
       if (this.type == "overwrite") {
         this.position.studentAmounts.forEach(function (studentA) {
           if (studentA.student.checked) {
-            studentA.amount = value;
+            studentA.amount = parseFloat(value);
           }
         });
       } else {
         this.position.studentAmounts.forEach(function (studentA) {
           if (studentA.student.checked) {
-            studentA.amount += value;
+            studentA.amount = parseFloat(studentA.amount) + parseFloat(value);
           }
         });
       }
@@ -4092,16 +4093,16 @@ __webpack_require__.r(__webpack_exports__);
     },
     assignEveryone: function assignEveryone() {
       alert("Folgender Betrag wird allen Schülern zugewiesen: " + this.amount_st);
-      var value = parseFloat(this.amount_st);
+      var value = this.amount_st;
 
       if (this.type == "overwrite") {
         this.position.studentAmounts.forEach(function (studentA) {
           //this.$set(student, "amount", value);
-          studentA.amount = value;
+          studentA.amount = parseFloat(value);
         });
       } else {
         this.position.studentAmounts.forEach(function (studentA) {
-          studentA.amount += value;
+          studentA.amount = parseFloat(studentA.amount) + parseFloat(value);
         });
       }
     },
@@ -4115,13 +4116,13 @@ __webpack_require__.r(__webpack_exports__);
       if (this.type == "overwrite") {
         this.position.studentAmounts.forEach(function (studentA) {
           if (studentA.student.checked) {
-            studentA.amount = Number(value);
+            studentA.amount = parseFloat(value);
           }
         });
       } else {
         this.position.studentAmounts.forEach(function (studentA) {
           if (studentA.student.checked) {
-            studentA.amount += Number(value);
+            studentA.amount = parseFloat(studentA.amount) + parseFloat(value);
           }
         });
       }
@@ -5363,10 +5364,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log("Component mounted: Student");
@@ -5400,6 +5397,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -45514,11 +45512,24 @@ var render = function() {
     _vm._v(" "),
     _c("td", [
       _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.studentAmount.amount,
+            expression: "studentAmount.amount"
+          }
+        ],
         staticClass: "form-control",
-        attrs: { type: "", name: "" },
-        domProps: {
-          value:
-            Math.round((this.studentAmount.amount + Number.EPSILON) * 100) / 100
+        attrs: { type: "number", name: "" },
+        domProps: { value: _vm.studentAmount.amount },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.studentAmount, "amount", $event.target.value)
+          }
         }
       })
     ])
@@ -45617,7 +45628,7 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
-        attrs: { type: "", name: "" },
+        attrs: { type: "number", name: "" },
         domProps: { value: _vm.studentAmount.amount },
         on: {
           input: function($event) {

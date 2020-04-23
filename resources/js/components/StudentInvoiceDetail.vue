@@ -8,7 +8,8 @@
     <td>{{studentAmount.student.first_name}}</td>
     <td>{{getGroupName(studentAmount.student.group_id)}}</td>
     <td>
-      <input type="" name="" class="form-control" v-model="studentAmount.amount" />
+      <input type="number" name="" class="form-control" 
+      v-model="studentAmount.amount" />
     </td>
   </tr>
 </template>

@@ -290,6 +290,7 @@ export default {
             console.log(studentsDom);
 
             if (this.invoice.students == null) {
+                console.log("students null");
                 this.invoice.students = studentsDom;
                 this.students = studentsDom;
 
@@ -302,10 +303,8 @@ export default {
                     this.invoice.positions[i].studentAmounts = posStudentAmount;
                 }
             } else {
-                this.invoice.students = this.invoice.students.concat(
-                    studentsDom
-                );
-                this.students = this.students.concat(studentsDom);
+                this.invoice.students.push(studentsDom);
+                this.students.push(studentsDom);
 
                 var posStudentAmount = [];
                 studentsDom.forEach(function(student) {
@@ -313,11 +312,7 @@ export default {
                 });
 
                 for (var i = 0; i < this.invoice.positions.length; i++) {
-                    this.invoice.positions[
-                        i
-                    ].studentAmounts = this.invoice.positions[
-                        i
-                    ].studentAmounts.concat(posStudentAmount);
+                    this.invoice.positions[i].studentAmounts.push(posStudentAmount);
                 }
             }
         },
@@ -372,24 +367,22 @@ export default {
                     apiRes = err.response;
                 } finally {
                     console.log(apiRes); // Could be success or error
-                    this.invoice = apiRes.data;
-                    this.last_id = this.invoice.positions[
-                        this.invoice.positions.length - 1
+                    var newInvoice = apiRes.data;
+                    this.last_id = newInvoice.positions[
+                        newInvoice.positions.length - 1
                     ].position_id;
 
                     //Cast stuff  from database into usable stuff
                     var tempStudents = [];
 
-                    this.invoice.positions.forEach(function(position) {
+                    newInvoice.positions.forEach(function(position) {
                         position.studentAmounts = [];
 
                         console.log(position);
 
-                        position.user_has_invoice_position.forEach(function(
-                            uhip
-                        ) {
+                        position.user_has_invoice_position.forEach(function(uhip) {
                             var sAmount = {
-                                amount: uhip["amount"],
+                                amount: parseFloat(uhip["amount"]),
                                 student: uhip["user"]
                             };
                             position.studentAmounts.push(sAmount);
@@ -408,9 +401,13 @@ export default {
                                 tempStudents.push(uhip["user"]);
                             }
                         });
+
+                        delete position.user_has_invoice_position;
                     });
 
                     this.students = tempStudents;
+
+                    this.invoice = newInvoice;
 
                     if (this.invoice.prescribing_id != null) {
 

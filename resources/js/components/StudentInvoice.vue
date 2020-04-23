@@ -12,14 +12,10 @@
         <td>{{ getGroupName(this.studentAmount.student.group_id) }}</td>
         <td>
             <input
-                type=""
+                type="number"
                 name=""
                 class="form-control"
-                :value="
-                    Math.round(
-                        (this.studentAmount.amount + Number.EPSILON) * 100
-                    ) / 100
-                "
+                v-model="studentAmount.amount"
             />
         </td>
     </tr>

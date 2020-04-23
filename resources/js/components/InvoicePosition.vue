@@ -406,16 +406,16 @@ export default {
                     this.amount_st
             );
 
-            let value = parseFloat(this.amount_st);
+            let value = this.amount_st;
 
             if (this.type == "overwrite") {
                 this.position.studentAmounts.forEach(function(studentA) {
                     //this.$set(student, "amount", value);
-                    studentA.amount = value;
+                    studentA.amount = parseFloat(value);
                 });
             } else {
                 this.position.studentAmounts.forEach(function(studentA) {
-                    studentA.amount += value;
+                    studentA.amount = parseFloat(studentA.amount) + parseFloat(value);
                 });
             }
         },
@@ -433,13 +433,13 @@ export default {
             if (this.type == "overwrite") {
                 this.position.studentAmounts.forEach(function(studentA) {
                     if (studentA.student.checked) {
-                        studentA.amount = Number(value);
+                        studentA.amount = parseFloat(value);
                     }
                 });
             } else {
                 this.position.studentAmounts.forEach(function(studentA) {
                     if (studentA.student.checked) {
-                        studentA.amount += Number(value);
+                        studentA.amount = parseFloat(studentA.amount) + parseFloat(value);
                     }
                 });
             }
