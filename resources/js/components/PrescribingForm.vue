@@ -307,6 +307,8 @@ export default {
             });
         },
         release: function() {
+
+            this.store();
             axios
                 .post("/prescribing/setFinished/" + this.id)
                 .then(response => {

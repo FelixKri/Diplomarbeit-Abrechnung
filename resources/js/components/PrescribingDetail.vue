@@ -494,6 +494,7 @@ export default {
             //Todo: Sende Request an PDF Generator Funktion im BackEnd
         },
         release: function() {
+            this.store();
             axios
                 .post("/prescribing/release/" + this.id)
                 .then(response => {
@@ -503,6 +504,7 @@ export default {
                 .catch(error => console.log(error));
         },
         reject: function() {
+            this.store();
             axios
                 .post("/prescribing/reject/" + this.id)
                 .then(response => {

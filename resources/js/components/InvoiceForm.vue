@@ -397,6 +397,13 @@ export default {
 
             console.log(that.reason);
 
+            var prescribingId = null;
+
+            if(this.prescribing != null)
+            {
+                prescribingId = this.prescribing.id;
+            }
+
             $.ajax({
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -406,7 +413,7 @@ export default {
                 dataType: "json",
                 data: {
                     id: that.invoice_id,
-                    prescribing_id: that.prescribing.id,
+                    prescribing_id: prescribingId,
                     author: that.author,
                     date: that.date,
                     due_until: that.due_until,

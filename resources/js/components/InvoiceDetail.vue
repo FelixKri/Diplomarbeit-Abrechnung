@@ -437,6 +437,7 @@ export default {
             })();
         },
         release: function() {
+            this.store();
             if (this.invoice.saved == true && this.invoice.approved == false) {
                 axios
                     .post("/invoice/release/" + this.id)
@@ -451,12 +452,14 @@ export default {
             //Todo: Sende Request an PDF Generator Funktion im BackEnd
         },
         reject: function() {
+            this.store();
             axios
                 .post("/invoice/reject/" + this.id)
                 .then(response => alert(response["data"]))
                 .catch(error => console.log(error));
         },
         setFinished: function() {
+            this.store();
             axios
                 .post("/invoice/setFinished/" + this.id)
                 .then(response => {
