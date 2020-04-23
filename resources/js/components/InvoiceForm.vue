@@ -406,6 +406,7 @@ export default {
                 dataType: "json",
                 data: {
                     id: that.invoice_id,
+                    prescribing_id: that.prescribing.id,
                     author: that.author,
                     date: that.date,
                     due_until: that.due_until,

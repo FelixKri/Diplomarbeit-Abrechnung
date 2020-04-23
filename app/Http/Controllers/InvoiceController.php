@@ -248,6 +248,11 @@ class InvoiceController extends Controller
         }
 
         $inv = Invoice::find(request()->id);
+
+        if(request()->prescribing_id != null){
+            $inv->prescribing_id = request()->prescribing_id;
+        }
+        
         $inv->date = request()->date;
         $inv->due_until = request()->due_until;
         $inv->author_id = FosUser::where('username', request()->author)->first()->id;

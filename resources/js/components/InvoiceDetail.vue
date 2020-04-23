@@ -3,7 +3,9 @@
         <h1>Abrechnungsansicht:</h1>
         <p>
             Ursprünglicher Author:
-            <span style="font-weight: bold">{{ this.invoice.author.username }}</span>
+            <span style="font-weight: bold">{{
+                this.invoice.author.username
+            }}</span>
         </p>
         <div class="form-group">
             <label for="title">Abrechnungsgrund: </label>
@@ -98,22 +100,29 @@
                 disabled
                 :value="numWithSeperators(totalAmountComputed)"
             />
-            <br>
+            <br />
             <button
-                        class="btn btn-primary btn-sm"
-                        data-toggle="modal"
-                        :data-target="'#addUser_1'"
-                        type="button">
-                        Person(en) hinzufügen
-                        </button>
-                        <button
-                        class="btn btn-primary btn-sm"
-                        data-toggle="modal"
-                        :data-target="'#getFromPrescribing_1'"
-                        type="button"
-                        >
-                        Personen aus Vorschreibung übernehmen
-                    </button>
+                class="btn btn-primary btn-sm"
+                data-toggle="modal"
+                :data-target="'#addUser_1'"
+                type="button"
+            >
+                Person(en) hinzufügen
+            </button>
+            <button
+                class="btn btn-primary btn-sm"
+                data-toggle="modal"
+                :data-target="'#getFromPrescribing'"
+                type="button"
+            >
+                Personen aus Vorschreibung übernehmen
+            </button>
+            <span v-if="prescribing != null">
+                {{ prescribing.title }}
+                <button class="link" href="" @click="removePrescribing()">
+                    Entfernen
+                </button></span
+            >
         </div>
         <hr />
         <div class="">
@@ -143,26 +152,27 @@
                         aria-controls="nav-add"
                         aria-selected="false"
                         @click="addPos()"
-                        >+</a>
+                        >+</a
+                    >
 
                     <add-person-modal
-                    v-on:addstudents="addStudents"
-                    :id="1"
-                        ></add-person-modal>
-                        <add-from-prescribing-modal
-                    v-on:addstudents="addStudents"
-                    :id="1">
+                        v-on:addstudents="addStudents"
+                        :id="1"
+                    ></add-person-modal>
+                    <add-from-prescribing-modal
+                        v-on:importPrescribing="importPrescribing"
+                    >
                     </add-from-prescribing-modal>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
-                <invoice-overview-position
+                <invoice-detail-overview-position
                     v-on:removeStudent="removeStudent"
                     :students="students"
                     :groups="groups"
                     :groupLength="groupLength"
                     ref="overview"
-                ></invoice-overview-position>
+                ></invoice-detail-overview-position>
                 <invoice-detail-position
                     v-for="pos in invoice.positions"
                     v-bind:key="pos.id"
@@ -219,8 +229,6 @@ export default {
     props: ["id", "reason_list"],
     mounted() {
         this.getInvoice(this.id);
-
-        //get Last ID
     },
     data() {
         return {
@@ -230,7 +238,8 @@ export default {
             errors: {},
             last_id: null,
             //Needed because overview needs to hook to an object that is already here when loading
-            students: []
+            students: [],
+            prescribing: null
         };
     },
     computed: {
@@ -238,8 +247,7 @@ export default {
             let totalAmt = 0;
 
             this.invoice.positions.forEach(function(position) {
-                if(position.studentAmounts == null)
-                    return;
+                if (position.studentAmounts == null) return;
 
                 position.studentAmounts.forEach(function(student) {
                     totalAmt += Number(student.amount);
@@ -250,12 +258,26 @@ export default {
         }
     },
     methods: {
+        removePrescribing: function() {
+            (this.prescribing = null), this.$refs.overview.removePrescribing();
+        },
+        importPrescribing: function(prescribing) {
+            alert("wird importiert");
+
+            this.prescribing = prescribing;
+
+            this.$refs.overview.importPrescribing();
+        },
         removeStudent: function(id) {
             this.students = this.students.filter(el => el.id !== id);
-            this.invoice.students = this.invoice.students.filter(el => el.id !== id);
+            this.invoice.students = this.invoice.students.filter(
+                el => el.id !== id
+            );
             //Call removeStudent on the Poses
             for (var i = 0; i < this.invoice.positions.length; i++) {
-                this.invoice.positions[i].studentAmounts = this.invoice.positions[
+                this.invoice.positions[
+                    i
+                ].studentAmounts = this.invoice.positions[
                     i
                 ].studentAmounts.filter(el => el.student.id !== id);
             }
@@ -268,7 +290,6 @@ export default {
             console.log(studentsDom);
 
             if (this.invoice.students == null) {
-
                 this.invoice.students = studentsDom;
                 this.students = studentsDom;
 
@@ -276,13 +297,14 @@ export default {
                 studentsDom.forEach(function(student) {
                     posStudentAmount.push({ amount: 0, student: student });
                 });
-                   
+
                 for (var i = 0; i < this.invoice.positions.length; i++) {
                     this.invoice.positions[i].studentAmounts = posStudentAmount;
                 }
-                
             } else {
-                this.invoice.students = this.invoice.students.concat(studentsDom);
+                this.invoice.students = this.invoice.students.concat(
+                    studentsDom
+                );
                 this.students = this.students.concat(studentsDom);
 
                 var posStudentAmount = [];
@@ -300,8 +322,7 @@ export default {
             }
         },
         numWithSeperators: function(num) {
-            if(num == null)
-                return 0;
+            if (num == null) return 0;
             var num_parts = num.toString().split(".");
             num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             return num_parts.join(",");
@@ -359,28 +380,30 @@ export default {
                     //Cast stuff  from database into usable stuff
                     var tempStudents = [];
 
-                    this.invoice.positions.forEach(function(position){
+                    this.invoice.positions.forEach(function(position) {
                         position.studentAmounts = [];
 
                         console.log(position);
 
-                        position.user_has_invoice_position.forEach(function(uhip){
-                            var sAmount = { amount: uhip["amount"], student: uhip["user"]};
+                        position.user_has_invoice_position.forEach(function(
+                            uhip
+                        ) {
+                            var sAmount = {
+                                amount: uhip["amount"],
+                                student: uhip["user"]
+                            };
                             position.studentAmounts.push(sAmount);
 
                             var found = false;
 
-                                tempStudents.forEach(function(student){
-                                    if(student.id == uhip["user"].id)
-                                    {
-                                        found = true;
-                                        return;
-                                    }
-                                });
-                            
+                            tempStudents.forEach(function(student) {
+                                if (student.id == uhip["user"].id) {
+                                    found = true;
+                                    return;
+                                }
+                            });
 
-                            if(!found)
-                            {
+                            if (!found) {
                                 console.log(uhip["user"]);
                                 tempStudents.push(uhip["user"]);
                             }
@@ -388,7 +411,28 @@ export default {
                     });
 
                     this.students = tempStudents;
-                    
+
+                    if (this.invoice.prescribing_id != null) {
+
+                        alert("presc wird geholt");
+
+                        this.getPrescribing(this.invoice.prescribing_id);
+                    }
+                }
+            })();
+        },
+        getPrescribing: function(id){
+            (async () => {
+                let apiRes = null;
+                try {
+                    apiRes = await axios.get("/prescribing/view/getPrescribing/" + id);
+                } catch (err) {
+                    apiRes = err.response;
+                } finally {
+                    console.log(apiRes);
+                    this.prescribing = apiRes.data;
+
+                    this.$refs.overview.importPrescribing();
                 }
             })();
         },
@@ -425,7 +469,6 @@ export default {
         },
 
         store: function() {
-
             var invoicePositionsStripped = [];
             var totalAmountRequest = 0;
 

@@ -62,7 +62,7 @@ export default {
         sumOfPositions: function() {
             var sum = 0;
 
-            this.$parent.$parent.invoicePositions.forEach(position => {
+            this.$parent.$parent.invoice.positions.forEach(position => {
                 position.studentAmounts.forEach(student => {
                     if (student.student.id == this.student.id) {
                         sum += student.amount;

@@ -253,6 +253,6 @@ class PrescribingController extends Controller
 
     public function getPrescribings()
     {
-        return PrescribingSuggestion::with('positions.user')->where('approved', true)->get();
+        return PrescribingSuggestion::with('positions.user')->get();
     }
 }

@@ -25,13 +25,13 @@
                 </tr>
             </thead>
             <tbody>
-                <student-overview-invoice
+                <student-overview-detail
                     v-bind:key="student.id"
                     v-for="student in this.students"
                     :student="student"
                     v-on:removeStudent="removeStudent($event)"
                     ref="studentOverview"
-                ></student-overview-invoice>
+                ></student-overview-detail>
 
             </tbody>
         </table>
