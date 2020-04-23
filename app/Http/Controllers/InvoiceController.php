@@ -249,8 +249,10 @@ class InvoiceController extends Controller
 
         $inv = Invoice::find(request()->id);
 
-        if(request()->prescribing_id != null){
-            $inv->prescribing_id = request()->prescribing_id;
+        if(request()->prescribing != null){
+            $inv->prescribing->id = request()->prescribing_id;
+        }else{
+            $inv->prescribing_id = null;
         }
         
         $inv->date = request()->date;

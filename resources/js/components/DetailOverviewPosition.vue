@@ -50,14 +50,12 @@ export default {
     methods:{
         removePrescribing: function(){
 
-            alert("overviewposition");
             this.$refs.studentOverview.forEach(ref => {
                 ref.removePrescribing();
             });
 
         },
         importPrescribing: function(){
-          alert("overview importiert");
 
           this.$refs.studentOverview.forEach(ref => {
               ref.importPrescribing();

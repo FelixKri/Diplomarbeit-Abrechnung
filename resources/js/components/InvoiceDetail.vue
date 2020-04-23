@@ -411,8 +411,6 @@ export default {
 
                     if (this.invoice.prescribing_id != null) {
 
-                        alert("presc wird geholt");
-
                         this.getPrescribing(this.invoice.prescribing_id);
                     }
                 }
@@ -513,6 +511,7 @@ export default {
                 dataType: "json",
                 data: {
                     id: that.invoice.id,
+                    prescribing_id: that.prescribing,
                     author: "admin",
                     date: that.invoice.date,
                     due_until: that.invoice.due_until,
@@ -522,7 +521,6 @@ export default {
                     invoicePositions: invoicePositionsStripped
                 },
                 success: function(response) {
-                    //alert("loda")
                     console.log(response);
                     alert("Erfolgreich gespeichert!");
                 },

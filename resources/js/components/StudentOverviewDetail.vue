@@ -47,14 +47,11 @@ export default {
     },
     methods: {
         removePrescribing: function(){
-            alert("removeprescribing")
             this.prescribing_amount = 0;
         },
         importPrescribing: function() {
-            alert("loda");
             this.$parent.$parent.prescribing.positions.forEach(position => {
                 if (position.user_id === this.student.id) {
-                    alert("OIDA");
                     this.prescribing_amount = position.amount;
                 }
             });
