@@ -9,7 +9,7 @@
                 type=""
                 name=""
                 class="form-control"
-                v-model="invoice_amount"
+                v-model="invoiceAmountRounded"
                 disabled
             />
         </td>
@@ -44,6 +44,9 @@ export default {
       difference: function(){
         return this.invoice_amount - this.prescribing_amount;
       },
+      invoiceAmountRounded: function(){
+          return Math.round (this.invoice_amount * 100) / 100
+      }
     },
     methods: {
         removePrescribing: function(){
@@ -62,7 +65,7 @@ export default {
             this.$parent.$parent.invoicePositions.forEach(position => {
                 position.studentAmounts.forEach(student => {
                     if (student.student.id == this.student.id) {
-                        sum += student.amount;
+                        sum += Number(student.amount);
                     }
                 });
             });

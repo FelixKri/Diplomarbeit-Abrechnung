@@ -17,7 +17,7 @@
                         type="number"
                         class="form-control"
                         placeholder="Betrag"
-                        :value="numWithSeperators(totalAmountComputed)"
+                        :value="Math.round (totalAmountComputed * 100) / 100"
                         disabled
                     />
                 </div>

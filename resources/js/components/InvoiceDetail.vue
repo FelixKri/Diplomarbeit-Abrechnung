@@ -1,6 +1,13 @@
 <template>
     <div class="container">
         <h1>Abrechnungsansicht:</h1>
+        <input
+            type="button"
+            value="Bearbeitung aktivieren"
+            class="btn btn-danger"
+            @click="edit = true;"
+            :disabled="edit == true"
+        />
         <p>
             Ursprünglicher Author:
             <span style="font-weight: bold">{{
@@ -14,6 +21,7 @@
                 id=""
                 class="form-control"
                 v-model="invoice.reason.title"
+                :disabled="edit == false"
             >
                 <option
                     v-for="reason in reason_list"
@@ -40,6 +48,7 @@
                 id=""
                 v-model="invoice.date"
                 class="form-control"
+                :disabled="edit == false"
             />
             <ul
                 v-if="errors.date"
@@ -59,6 +68,7 @@
                 id=""
                 v-model="invoice.due_until"
                 class="form-control"
+                :disabled="edit == false"
             />
             <ul
                 v-if="errors.date"
@@ -80,6 +90,7 @@
                 class="form-control"
                 v-model="invoice.annotation"
                 rows="5"
+                :disabled="edit == false"
             />
             <ul
                 v-if="errors.description"
@@ -106,6 +117,7 @@
                 data-toggle="modal"
                 :data-target="'#addUser_1'"
                 type="button"
+                :disabled="edit == false"
             >
                 Person(en) hinzufügen
             </button>
@@ -114,12 +126,13 @@
                 data-toggle="modal"
                 :data-target="'#getFromPrescribing'"
                 type="button"
+                :disabled="edit == false"
             >
                 Personen aus Vorschreibung übernehmen
             </button>
             <span v-if="prescribing != null">
                 {{ prescribing.title }}
-                <button class="link" href="" @click="removePrescribing()">
+                <button class="link" href="" @click="removePrescribing()" :disabled="edit == false">
                     Entfernen
                 </button></span
             >
@@ -152,6 +165,7 @@
                         aria-controls="nav-add"
                         aria-selected="false"
                         @click="addPos()"
+                        :disabled="edit == false"
                         >+</a
                     >
 
@@ -187,6 +201,7 @@
                     value="Änderungen speichern"
                     class="btn btn-success"
                     @click="store()"
+                    :disabled="edit == false"
                 />
                 <input
                     type="button"
@@ -194,7 +209,7 @@
                     class="btn btn-success"
                     @click="release()"
                     :disabled="
-                        invoice.saved == false || invoice.approved == true
+                        invoice.saved == false || invoice.approved == true || edit == false
                     "
                 />
                 <input
@@ -202,7 +217,7 @@
                     value="Freigeben (Lehrer)"
                     class="btn btn-success"
                     @click="setFinished"
-                    :disabled="invoice.saved == true"
+                    :disabled="invoice.saved == true || edit == false"
                 />
                 <input
                     type="button"
@@ -210,12 +225,12 @@
                     class="btn btn-danger"
                     @click="reject"
                     :disabled="
-                        invoice.saved == false || invoice.approved == true
+                        invoice.saved == false || invoice.approved == true || edit == false
                     "
                 />
                 <input
                     type="button"
-                    value="Speichern und Drucken"
+                    value="Drucken"
                     class="btn btn-primary"
                     @click="print"
                 />
@@ -232,6 +247,7 @@ export default {
     },
     data() {
         return {
+            edit: false,
             groups: [],
             groupLength: 0,
             invoice: {},
@@ -312,7 +328,9 @@ export default {
                 });
 
                 for (var i = 0; i < this.invoice.positions.length; i++) {
-                    this.invoice.positions[i].studentAmounts.push(posStudentAmount);
+                    this.invoice.positions[i].studentAmounts.push(
+                        posStudentAmount
+                    );
                 }
             }
         },
@@ -368,9 +386,10 @@ export default {
                 } finally {
                     console.log(apiRes); // Could be success or error
                     var newInvoice = apiRes.data;
-                    this.last_id = newInvoice.positions[
-                        newInvoice.positions.length - 1
-                    ].position_id;
+                    this.last_id =
+                        newInvoice.positions[
+                            newInvoice.positions.length - 1
+                        ].position_id;
 
                     //Cast stuff  from database into usable stuff
                     var tempStudents = [];
@@ -380,7 +399,9 @@ export default {
 
                         console.log(position);
 
-                        position.user_has_invoice_position.forEach(function(uhip) {
+                        position.user_has_invoice_position.forEach(function(
+                            uhip
+                        ) {
                             var sAmount = {
                                 amount: parseFloat(uhip["amount"]),
                                 student: uhip["user"]
@@ -410,17 +431,18 @@ export default {
                     this.invoice = newInvoice;
 
                     if (this.invoice.prescribing_id != null) {
-
                         this.getPrescribing(this.invoice.prescribing_id);
                     }
                 }
             })();
         },
-        getPrescribing: function(id){
+        getPrescribing: function(id) {
             (async () => {
                 let apiRes = null;
                 try {
-                    apiRes = await axios.get("/prescribing/view/getPrescribing/" + id);
+                    apiRes = await axios.get(
+                        "/prescribing/view/getPrescribing/" + id
+                    );
                 } catch (err) {
                     apiRes = err.response;
                 } finally {

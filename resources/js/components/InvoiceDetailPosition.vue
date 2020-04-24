@@ -19,7 +19,7 @@
                         :value="numWithSeperators(totalAmountComputed)"
                     />
                 </div>
-                <input type="checkbox" v-model="position.paidByTeacher"><span>Von Lehrpersonal bezhalt</span>
+                <input type="checkbox" v-model="position.paidByTeacher" :disabled="$parent.edit == false"><span>Von Lehrpersonal bezhalt</span>
 
                 <div class="form-group" v-if="position.paidByTeacher">
                     <label for="iban">IBAN</label>
@@ -30,6 +30,7 @@
                         placeholder="IBAN"
                         name="iban"
                         v-model="position.iban"
+                        :disabled="$parent.edit == false"
                     />
                     <ul
                         v-if="
@@ -68,6 +69,7 @@
                         class="form-control"
                         placeholder="Belegnummer"
                         v-model="position.document_number"
+                        :disabled="$parent.edit == false"
                     />
                 </div>
             </div>
@@ -79,6 +81,7 @@
                         id="annotation"
                         rows="5"
                         v-model="position.annotation"
+                        :disabled="$parent.edit == false"
                     ></textarea>
                 </div>
             </div>
@@ -92,6 +95,7 @@
                         placeholder="Betrag"
                         class="form-control"
                         v-model="amount_st"
+                        :disabled="$parent.edit == false"
                     />
                 </td>
                 <td>

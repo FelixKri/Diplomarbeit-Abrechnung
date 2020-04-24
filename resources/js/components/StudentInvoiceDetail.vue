@@ -1,14 +1,14 @@
 <template>
   <tr>
     <td>
-      <input type="checkbox" v-model="studentAmount.student.checked" />
+      <input type="checkbox" v-model="studentAmount.student.checked" :disabled="$parent.$parent.edit == false"/>
     </td>
     <th scope="row">{{studentAmount.student.id}}</th>
     <td>{{studentAmount.student.last_name}}</td>
     <td>{{studentAmount.student.first_name}}</td>
     <td>{{getGroupName(studentAmount.student.group_id)}}</td>
     <td>
-      <input type="number" name="" class="form-control" 
+      <input type="number" name="" class="form-control" :disabled="$parent.$parent.edit == false"
       v-model="studentAmount.amount" />
     </td>
   </tr>

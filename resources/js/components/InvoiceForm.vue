@@ -109,7 +109,7 @@
                 <input
                     type="number"
                     name="total_amount"
-                    :value="numWithSeperators(totalAmountComputed)"
+                    :value="totalAmountComputed"
                     disabled
                     class="form-control"
                 />
@@ -238,15 +238,13 @@ export default {
     },
     computed: {
         totalAmountComputed: function() {
-            let totalAmt = 0;
+            let totalAmt = 0.0;
 
             this.invoicePositions.forEach(function(position) {
-                position.studentAmounts.forEach(function(studentAmount) {
-                    totalAmt += studentAmount.amount;
-                });
+                totalAmt += position.amount;
             });
 
-            return totalAmt;
+            return Math.round (totalAmt * 100) / 100;
         }
     },
     methods: {
@@ -311,7 +309,6 @@ export default {
             return num_parts.join(",");
         },
         removeInvoicePosition: function(event) {
-            alert("loda");
             console.log(event);
 
             this.invoicePositions = this.invoicePositions.filter(function(obj) {

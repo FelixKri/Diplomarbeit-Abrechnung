@@ -2356,6 +2356,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id", "reason_list"],
   mounted: function mounted() {
@@ -2363,6 +2378,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
+      edit: false,
       groups: [],
       groupLength: 0,
       invoice: {},
@@ -2706,6 +2722,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
 //
 //
 //
@@ -3317,13 +3337,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     totalAmountComputed: function totalAmountComputed() {
-      var totalAmt = 0;
+      var totalAmt = 0.0;
       this.invoicePositions.forEach(function (position) {
-        position.studentAmounts.forEach(function (studentAmount) {
-          totalAmt += studentAmount.amount;
-        });
+        totalAmt += position.amount;
       });
-      return totalAmt;
+      return Math.round(totalAmt * 100) / 100;
     }
   },
   methods: {
@@ -3387,7 +3405,6 @@ __webpack_require__.r(__webpack_exports__);
       return num_parts.join(",");
     },
     removeInvoicePosition: function removeInvoicePosition(event) {
-      alert("loda");
       console.log(event);
       this.invoicePositions = this.invoicePositions.filter(function (obj) {
         return obj.id !== event;
@@ -5791,6 +5808,9 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     difference: function difference() {
       return this.invoice_amount - this.prescribing_amount;
+    },
+    invoiceAmountRounded: function invoiceAmountRounded() {
+      return Math.round(this.invoice_amount * 100) / 100;
     }
   },
   methods: {
@@ -5813,7 +5833,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$parent.$parent.invoicePositions.forEach(function (position) {
         position.studentAmounts.forEach(function (student) {
           if (student.student.id == _this2.student.id) {
-            sum += student.amount;
+            sum += Number(student.amount);
           }
         });
       });
@@ -42275,6 +42295,20 @@ var render = function() {
   return _c("div", { staticClass: "container" }, [
     _c("h1", [_vm._v("Abrechnungsansicht:")]),
     _vm._v(" "),
+    _c("input", {
+      staticClass: "btn btn-danger",
+      attrs: {
+        type: "button",
+        value: "Bearbeitung aktivieren",
+        disabled: _vm.edit == true
+      },
+      on: {
+        click: function($event) {
+          _vm.edit = true
+        }
+      }
+    }),
+    _vm._v(" "),
     _c("p", [
       _vm._v("\n        Ursprünglicher Author:\n        "),
       _c("span", { staticStyle: { "font-weight": "bold" } }, [
@@ -42297,7 +42331,7 @@ var render = function() {
             }
           ],
           staticClass: "form-control",
-          attrs: { name: "reason", id: "" },
+          attrs: { name: "reason", id: "", disabled: _vm.edit == false },
           on: {
             change: function($event) {
               var $$selectedVal = Array.prototype.filter
@@ -42359,7 +42393,12 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
-        attrs: { type: "text", name: "date", id: "" },
+        attrs: {
+          type: "text",
+          name: "date",
+          id: "",
+          disabled: _vm.edit == false
+        },
         domProps: { value: _vm.invoice.date },
         on: {
           input: function($event) {
@@ -42403,7 +42442,12 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
-        attrs: { type: "text", name: "date", id: "" },
+        attrs: {
+          type: "text",
+          name: "date",
+          id: "",
+          disabled: _vm.edit == false
+        },
         domProps: { value: _vm.invoice.due_until },
         on: {
           input: function($event) {
@@ -42445,7 +42489,13 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
-        attrs: { type: "text", name: "description", id: "", rows: "5" },
+        attrs: {
+          type: "text",
+          name: "description",
+          id: "",
+          rows: "5",
+          disabled: _vm.edit == false
+        },
         domProps: { value: _vm.invoice.annotation },
         on: {
           input: function($event) {
@@ -42494,7 +42544,8 @@ var render = function() {
           attrs: {
             "data-toggle": "modal",
             "data-target": "#addUser_1",
-            type: "button"
+            type: "button",
+            disabled: _vm.edit == false
           }
         },
         [_vm._v("\n            Person(en) hinzufügen\n        ")]
@@ -42507,7 +42558,8 @@ var render = function() {
           attrs: {
             "data-toggle": "modal",
             "data-target": "#getFromPrescribing",
-            type: "button"
+            type: "button",
+            disabled: _vm.edit == false
           }
         },
         [
@@ -42528,7 +42580,7 @@ var render = function() {
               "button",
               {
                 staticClass: "link",
-                attrs: { href: "" },
+                attrs: { href: "", disabled: _vm.edit == false },
                 on: {
                   click: function($event) {
                     return _vm.removePrescribing()
@@ -42585,7 +42637,8 @@ var render = function() {
                   href: "#nav-add",
                   role: "tab",
                   "aria-controls": "nav-add",
-                  "aria-selected": "false"
+                  "aria-selected": "false",
+                  disabled: _vm.edit == false
                 },
                 on: {
                   click: function($event) {
@@ -42637,7 +42690,11 @@ var render = function() {
           _vm._v(" "),
           _c("input", {
             staticClass: "btn btn-success",
-            attrs: { type: "button", value: "Änderungen speichern" },
+            attrs: {
+              type: "button",
+              value: "Änderungen speichern",
+              disabled: _vm.edit == false
+            },
             on: {
               click: function($event) {
                 return _vm.store()
@@ -42651,7 +42708,9 @@ var render = function() {
               type: "button",
               value: "Freigeben (Sekretariat)",
               disabled:
-                _vm.invoice.saved == false || _vm.invoice.approved == true
+                _vm.invoice.saved == false ||
+                _vm.invoice.approved == true ||
+                _vm.edit == false
             },
             on: {
               click: function($event) {
@@ -42665,7 +42724,7 @@ var render = function() {
             attrs: {
               type: "button",
               value: "Freigeben (Lehrer)",
-              disabled: _vm.invoice.saved == true
+              disabled: _vm.invoice.saved == true || _vm.edit == false
             },
             on: { click: _vm.setFinished }
           }),
@@ -42676,14 +42735,16 @@ var render = function() {
               type: "button",
               value: "Zurückweisen",
               disabled:
-                _vm.invoice.saved == false || _vm.invoice.approved == true
+                _vm.invoice.saved == false ||
+                _vm.invoice.approved == true ||
+                _vm.edit == false
             },
             on: { click: _vm.reject }
           }),
           _vm._v(" "),
           _c("input", {
             staticClass: "btn btn-primary",
-            attrs: { type: "button", value: "Speichern und Drucken" },
+            attrs: { type: "button", value: "Drucken" },
             on: { click: _vm.print }
           })
         ],
@@ -42752,7 +42813,7 @@ var render = function() {
                 expression: "position.paidByTeacher"
               }
             ],
-            attrs: { type: "checkbox" },
+            attrs: { type: "checkbox", disabled: _vm.$parent.edit == false },
             domProps: {
               checked: Array.isArray(_vm.position.paidByTeacher)
                 ? _vm._i(_vm.position.paidByTeacher, null) > -1
@@ -42803,7 +42864,8 @@ var render = function() {
                     type: "text",
                     id: "iban",
                     placeholder: "IBAN",
-                    name: "iban"
+                    name: "iban",
+                    disabled: _vm.$parent.edit == false
                   },
                   domProps: { value: _vm.position.iban },
                   on: {
@@ -42872,7 +42934,11 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
-              attrs: { type: "number", placeholder: "Belegnummer" },
+              attrs: {
+                type: "number",
+                placeholder: "Belegnummer",
+                disabled: _vm.$parent.edit == false
+              },
               domProps: { value: _vm.position.document_number },
               on: {
                 input: function($event) {
@@ -42902,7 +42968,11 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
-              attrs: { id: "annotation", rows: "5" },
+              attrs: {
+                id: "annotation",
+                rows: "5",
+                disabled: _vm.$parent.edit == false
+              },
               domProps: { value: _vm.position.annotation },
               on: {
                 input: function($event) {
@@ -42930,7 +43000,12 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
-              attrs: { type: "number", id: "number", placeholder: "Betrag" },
+              attrs: {
+                type: "number",
+                id: "number",
+                placeholder: "Betrag",
+                disabled: _vm.$parent.edit == false
+              },
               domProps: { value: _vm.amount_st },
               on: {
                 input: function($event) {
@@ -43354,7 +43429,7 @@ var render = function() {
           _c("input", {
             staticClass: "form-control",
             attrs: { type: "number", name: "total_amount", disabled: "" },
-            domProps: { value: _vm.numWithSeperators(_vm.totalAmountComputed) }
+            domProps: { value: _vm.totalAmountComputed }
           }),
           _vm._v(" "),
           _c("br"),
@@ -43795,7 +43870,7 @@ var render = function() {
               staticClass: "form-control",
               attrs: { type: "number", placeholder: "Betrag", disabled: "" },
               domProps: {
-                value: _vm.numWithSeperators(_vm.totalAmountComputed)
+                value: Math.round(_vm.totalAmountComputed * 100) / 100
               }
             })
           ]),
@@ -45719,7 +45794,10 @@ var render = function() {
             expression: "studentAmount.student.checked"
           }
         ],
-        attrs: { type: "checkbox" },
+        attrs: {
+          type: "checkbox",
+          disabled: _vm.$parent.$parent.edit == false
+        },
         domProps: {
           checked: Array.isArray(_vm.studentAmount.student.checked)
             ? _vm._i(_vm.studentAmount.student.checked, null) > -1
@@ -45779,7 +45857,11 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
-        attrs: { type: "number", name: "" },
+        attrs: {
+          type: "number",
+          name: "",
+          disabled: _vm.$parent.$parent.edit == false
+        },
         domProps: { value: _vm.studentAmount.amount },
         on: {
           input: function($event) {
@@ -46161,19 +46243,19 @@ var render = function() {
           {
             name: "model",
             rawName: "v-model",
-            value: _vm.invoice_amount,
-            expression: "invoice_amount"
+            value: _vm.invoiceAmountRounded,
+            expression: "invoiceAmountRounded"
           }
         ],
         staticClass: "form-control",
         attrs: { type: "", name: "", disabled: "" },
-        domProps: { value: _vm.invoice_amount },
+        domProps: { value: _vm.invoiceAmountRounded },
         on: {
           input: function($event) {
             if ($event.target.composing) {
               return
             }
-            _vm.invoice_amount = $event.target.value
+            _vm.invoiceAmountRounded = $event.target.value
           }
         }
       })
