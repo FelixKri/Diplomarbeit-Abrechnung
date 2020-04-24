@@ -80,20 +80,20 @@
                     this.data.students.forEach(function(student) {
                         var studentMoney = Math.round(value * 100) / 100;
                         student.amount = studentMoney;
-                        splitMoney += studentMoney;
+                        splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                     });
                 }else{
                     
                     this.data.students.forEach(function(student) {
                         var studentMoney = Math.round(value * 100) / 100;
                         student.amount += studentMoney;
-                        splitMoney += studentMoney;
+                        splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                     });
                 }
 
                 //CENTAUSGLEICH
                 //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
-                var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+                var centdiff = Math.round((this.amount_st - splitMoney) * 100) / 100;
                 console.log("centdiff: " + centdiff);
                 console.log("splitted money: " + splitMoney);
                 console.log("all money: " + this.amount_st);
@@ -109,7 +109,7 @@
 
                         //Same here, 33.33 + .01 = 33,339999999999996
                         student.amount = Math.round((student.amount + 0.01) * 100) / 100;
-                        centdiff -= 0.01;
+                        centdiff = Math.round((centdiff - 0.01) * 100) / 100;
                     });
                 }
                 else if(centdiff < 0)
@@ -124,7 +124,7 @@
 
                         //Same here
                         student.amount = Math.round((student.amount - 0.01) * 100) / 100;
-                        centdiff += 0.01;
+                        centdiff = Math.round((centdiff + 0.01) * 100) / 100;
                     });
                 }
 
@@ -152,7 +152,7 @@
                         if(student.checked){
                             var studentMoney = Math.round(value * 100) / 100;
                             student.amount = studentMoney;
-                            splitMoney += studentMoney;
+                            splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                         }
                     });
                 }else{
@@ -160,14 +160,14 @@
                         if(student.checked){
                             var studentMoney = Math.round(value * 100) / 100;
                             student.amount += studentMoney;
-                            splitMoney += studentMoney;
+                            splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                         }
                     });
                 }
 
                 //CENTAUSGLEICH auf ausgewählte
                 //Round centdiff because 100 - 99.99 is apparently 0.0100000000000000000005116
-                var centdiff = Math.round((this.amount_st - splitMoney) * 10000) / 10000;
+                var centdiff = Math.round((this.amount_st - splitMoney) * 100) / 100;
                 console.log("centdiff: " + centdiff);
                 console.log("splitted money: " + splitMoney);
                 console.log("all money: " + this.amount_st);
@@ -185,7 +185,7 @@
 
                         //Same here, 33.33 + .01 = 33,339999999999996
                         student.amount = Math.round((student.amount + 0.01) * 100) / 100;
-                        centdiff -= 0.01;
+                        centdiff = Math.round((centdiff - 0.01) * 100) / 100;
                     });
                 }
                 else if(centdiff < 0)
@@ -202,7 +202,7 @@
 
                         //Same here
                         student.amount = Math.round((student.amount - 0.01) * 100) / 100;
-                        centdiff += 0.01;
+                        centdiff = Math.round((centdiff + 0.01) * 100) / 100;
                     });
                 }
 

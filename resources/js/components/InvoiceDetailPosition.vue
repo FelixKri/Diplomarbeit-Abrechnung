@@ -226,13 +226,13 @@ export default {
                 this.position.studentAmounts.forEach(function(studentAmount) {
                     var studentMoney = Math.round(value * 100) / 100;
                     studentAmount.amount = studentMoney;
-                    splitMoney += studentMoney;
+                    splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                 });
             } else {
                 this.position.studentAmounts.forEach(function(studentAmount) {
                     var studentMoney = Math.round(value * 100) / 100;
                     studentAmount.amount += studentMoney;
-                    splitMoney += studentMoney;
+                    splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                 });
             }
 
@@ -254,7 +254,7 @@ export default {
 
                         //Same here, 33.33 + .01 = 33,339999999999996
                         studentA.amount = Math.round((studentA.amount + 0.01) * 100) / 100;
-                        centdiff -= 0.01;
+                        centdiff = Math.round((centdiff - 0.01) * 100) / 100;
                     });
                 }
                 else if(centdiff < 0)
@@ -269,7 +269,7 @@ export default {
 
                         //Same here
                         studentA.amount = Math.round((studentA.amount - 0.01) * 100) / 100;
-                        centdiff += 0.01;
+                        centdiff = Math.round((centdiff + 0.01) * 100) / 100;
                     });
                 }
         },
@@ -298,7 +298,7 @@ export default {
                     if (student.checked) {
                         var studentMoney = Math.round(value * 100) / 100;
                         studentA.amount = studentMoney;
-                        splitMoney += studentMoney;
+                        splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                     }
                 });
             } else {
@@ -306,7 +306,7 @@ export default {
                     if (student.checked) {
                         var studentMoney = Math.round(value * 100) / 100;
                         studentA.amount += studentMoney;
-                        splitMoney += studentMoney;
+                        splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                     }
                 });
             }
@@ -331,7 +331,7 @@ export default {
 
                         //Same here, 33.33 + .01 = 33,339999999999996
                         studentA.amount = Math.round((studentA.amount + 0.01) * 100) / 100;
-                        centdiff -= 0.01;
+                        centdiff = Math.round((centdiff - 0.01) * 100) / 100;
                     });
                 }
                 else if(centdiff < 0)
@@ -348,7 +348,7 @@ export default {
 
                         //Same here
                         studentA.amount = Math.round((studentA.amount - 0.01) * 100) / 100;
-                        centdiff += 0.01;
+                        centdiff = Math.round((centdiff + 0.01) * 100) / 100;
                     });
                 }
         },
