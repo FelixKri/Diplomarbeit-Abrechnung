@@ -92,6 +92,26 @@
                 rows="5"
                 :disabled="edit == false"
             />
+            <label for="description">Anmerkung Nachzahlungen </label>
+            <textarea
+                type="text"
+                name="description"
+                id=""
+                class="form-control"
+                v-model="annotationAdditional"
+                rows="2"
+                :disabled="edit == false"
+            />
+            <label for="description">Anmerkung Gutschriften </label>
+            <textarea
+                type="text"
+                name="description"
+                id=""
+                class="form-control"
+                v-model="annotationCredit"
+                rows="2"
+                :disabled="edit == false"
+            />
             <ul
                 v-if="errors.description"
                 class="alert alert-danger"
@@ -247,6 +267,8 @@ export default {
     },
     data() {
         return {
+            annotationAdditional: "",
+            annotationCredit: "",
             edit: false,
             groups: [],
             groupLength: 0,
@@ -455,12 +477,36 @@ export default {
         },
         release: function() {
             this.store();
+            /*
             if (this.invoice.saved == true && this.invoice.approved == false) {
                 axios
                     .post("/invoice/release/" + this.id)
                     .then(response => alert(response["data"]))
                     .catch(error => console.log(error));
-            }
+            }*/
+            var that = this;
+            $.ajax({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                },
+                type: "POST",
+                url: "/invoice/release/" + that.id,
+                dataType: "json",
+                data: {
+                    annotationAdditional: that.annotationAdditional,
+                    annotationCredit: that.annotationAdditional
+                },
+                success: function(response) {
+                    console.log(response);
+                    alert(response);
+                },
+                error: function(xhr, status, error) {
+                    var respJson = JSON.parse(xhr.responseText);
+                    that.errors = respJson.errors;
+                    //console.log(that.errors);
+                    //alert(that.errors);
+                }
+            });
         },
         print: function() {
             this.store();
