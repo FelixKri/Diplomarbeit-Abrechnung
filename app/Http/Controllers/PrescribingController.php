@@ -255,4 +255,10 @@ class PrescribingController extends Controller
     {
         return PrescribingSuggestion::with('positions.user')->get();
     }
+
+    public function getByReasonId($id){
+        $prescribings = Reason::find($id)->prescribings()->with('author', 'positions', 'reason', 'positions.user', 'positions.user.group')->get();
+
+        return response()->json($prescribings, 200);
+    }
 }

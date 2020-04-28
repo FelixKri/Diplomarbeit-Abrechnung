@@ -14,6 +14,8 @@ Route::get('/prescribing/view/{id}', 'PrescribingController@showDetail');
 Route::get('/prescribing/view/getPrescribing/{id}', 'PrescribingController@getPrescribingById');
 Route::post('/prescribing/update', 'PrescribingController@update');
 
+Route::get('/prescribing/getByReasonId/{id}', 'PrescribingController@getByReasonId');
+
 Route::post('/prescribing/release/{id}', 'PrescribingController@release');
 Route::post('/prescribing/setFinished/{id}', 'PrescribingController@setFinished');
 Route::post('/prescribing/reject/{id}', 'PrescribingController@reject');

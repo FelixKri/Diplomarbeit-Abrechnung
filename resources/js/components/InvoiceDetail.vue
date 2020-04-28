@@ -5,7 +5,7 @@
             type="button"
             value="Bearbeitung aktivieren"
             class="btn btn-danger"
-            @click="edit = true;"
+            @click="edit = true"
             :disabled="edit == true"
         />
         <p>
@@ -22,6 +22,7 @@
                 class="form-control"
                 v-model="invoice.reason.title"
                 :disabled="edit == false"
+                @change="getPrescribings($event.target.value)"
             >
                 <option
                     v-for="reason in reason_list"
@@ -121,21 +122,6 @@
             >
                 Person(en) hinzufügen
             </button>
-            <button
-                class="btn btn-primary btn-sm"
-                data-toggle="modal"
-                :data-target="'#getFromPrescribing'"
-                type="button"
-                :disabled="edit == false"
-            >
-                Personen aus Vorschreibung übernehmen
-            </button>
-            <span v-if="prescribing != null">
-                {{ prescribing.title }}
-                <button class="link" href="" @click="removePrescribing()" :disabled="edit == false">
-                    Entfernen
-                </button></span
-            >
         </div>
         <hr />
         <div class="">
@@ -173,10 +159,6 @@
                         v-on:addstudents="addStudents"
                         :id="1"
                     ></add-person-modal>
-                    <add-from-prescribing-modal
-                        v-on:importPrescribing="importPrescribing"
-                    >
-                    </add-from-prescribing-modal>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
@@ -209,7 +191,9 @@
                     class="btn btn-success"
                     @click="release()"
                     :disabled="
-                        invoice.saved == false || invoice.approved == true || edit == false
+                        invoice.saved == false ||
+                            invoice.approved == true ||
+                            edit == false
                     "
                 />
                 <input
@@ -225,7 +209,9 @@
                     class="btn btn-danger"
                     @click="reject"
                     :disabled="
-                        invoice.saved == false || invoice.approved == true || edit == false
+                        invoice.saved == false ||
+                            invoice.approved == true ||
+                            edit == false
                     "
                 />
                 <input
@@ -280,9 +266,81 @@ export default {
         importPrescribing: function(prescribing) {
             alert("wird importiert");
 
-            this.prescribing = prescribing;
+            if (typeof prescribing != undefined) {
+                this.prescribing = prescribing;
 
-            this.$refs.overview.importPrescribing();
+                this.$refs.overview.importPrescribing();
+            } else {
+                alert("Für diesen Grund existiert keine Vorschreibung");
+            }
+        },
+        getPrescribings: function(event) {
+            this.prescribing = {
+                positions: [],
+            }
+
+            console.log(event);
+
+            let reasonId = null;
+
+            this.reason_list.forEach(function(reason) {
+                if (event === reason.title) {
+                    reasonId = reason.id;
+                }
+            });
+
+            axios
+                .get("/prescribing/getByReasonId/" + reasonId)
+                .then(response => {
+                    console.log(response);
+
+                    let compoundPrescribingRaw = {
+                        positions: []
+                    };
+
+                    response.data.forEach(function(prescribing) {
+                        prescribing.positions.forEach(function(position) {
+                            compoundPrescribingRaw.positions.push({
+                                amount: 0,
+                                user_id: position.user_id
+                            });
+                        });
+                    });
+
+                    let compoundPrescribing = {
+                        positions: []
+                    };
+
+                    let seen = [];
+
+                    compoundPrescribingRaw.positions.forEach(function(position){
+                        if(!seen.includes(position.user_id)){
+                            compoundPrescribing.positions.push({
+                                user_id: position.user_id,
+                                amount: 0,
+                            });
+
+                            seen.push(position.user_id);
+                        }
+                    });
+
+                    console.log(compoundPrescribing);
+
+                    response.data.forEach(function(prescribing){
+                        prescribing.positions.forEach(function(position){
+                            
+                            compoundPrescribing.positions.forEach(function(p){
+                                if(p.user_id === position.user_id){
+                                    p.amount += Number(position.amount)
+                                }
+                            });
+
+                        });
+                    })
+
+                    this.importPrescribing(compoundPrescribing);
+                })
+                .catch(error => console.log(error));
         },
         removeStudent: function(id) {
             this.students = this.students.filter(el => el.id !== id);
@@ -341,39 +399,41 @@ export default {
             return num_parts.join(",");
         },
         addPos: function() {
-            var name = prompt("Namen der Rechnungspos eingeben", "");
-            if (name != null) {
-                while (
-                    name === "" ||
-                    this.invoice.positions.filter(e => e.name === name).length >
-                        0
-                ) {
-                    name = prompt(
-                        "Bitte den Namen der Rechnungsposition nicht leer lassen oder einen bereits verwendeten Namen eingeben."
-                    );
+            if (this.edit == true) {
+                var name = prompt("Namen der Rechnungspos eingeben", "");
+                if (name != null) {
+                    while (
+                        name === "" ||
+                        this.invoice.positions.filter(e => e.name === name)
+                            .length > 0
+                    ) {
+                        name = prompt(
+                            "Bitte den Namen der Rechnungsposition nicht leer lassen oder einen bereits verwendeten Namen eingeben."
+                        );
+                    }
+
+                    this.last_id = this.last_id + 1;
+                    var id = this.id;
+
+                    var posStudentAmount = [];
+                    this.students.forEach(function(student) {
+                        posStudentAmount.push({ amount: 0, student: student });
+                    });
+
+                    var position = {
+                        id: this.last_id,
+                        position_id: this.last_id,
+                        name: name,
+                        document_number: "",
+                        annotation: "",
+                        amount: 0,
+                        paidByTeacher: false,
+                        iban: null,
+                        studentAmounts: posStudentAmount
+                    };
+
+                    this.invoice.positions.push(position);
                 }
-
-                this.last_id = this.last_id + 1;
-                var id = this.id;
-
-                var posStudentAmount = [];
-                this.students.forEach(function(student) {
-                    posStudentAmount.push({ amount: 0, student: student });
-                });
-
-                var position = {
-                    id: this.last_id,
-                    position_id: this.last_id,
-                    name: name,
-                    document_number: "",
-                    annotation: "",
-                    amount: 0,
-                    paidByTeacher: false,
-                    iban: null,
-                    studentAmounts: posStudentAmount
-                };
-
-                this.invoice.positions.push(position);
             }
         },
         getInvoice: function(id) {
@@ -430,26 +490,7 @@ export default {
 
                     this.invoice = newInvoice;
 
-                    if (this.invoice.prescribing_id != null) {
-                        this.getPrescribing(this.invoice.prescribing_id);
-                    }
-                }
-            })();
-        },
-        getPrescribing: function(id) {
-            (async () => {
-                let apiRes = null;
-                try {
-                    apiRes = await axios.get(
-                        "/prescribing/view/getPrescribing/" + id
-                    );
-                } catch (err) {
-                    apiRes = err.response;
-                } finally {
-                    console.log(apiRes);
-                    this.prescribing = apiRes.data;
-
-                    this.$refs.overview.importPrescribing();
+                    this.getPrescribings(this.invoice.reason.title);
                 }
             })();
         },

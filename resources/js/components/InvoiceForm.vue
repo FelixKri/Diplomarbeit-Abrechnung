@@ -10,6 +10,7 @@
                         id=""
                         class="form-control"
                         v-model="reason"
+                        @change="getPrescribings($event)"
                     >
                         <option
                             v-for="reason in reason_list"
@@ -122,19 +123,6 @@
                 >
                     Person(en) hinzufügen
                 </button>
-
-                <button
-                    class="btn btn-primary btn-sm"
-                    data-toggle="modal"
-                    data-target="#getFromPrescribing"
-                    type="button"
-                >
-                    Vorschreibung importieren
-                </button>
-                <add-from-prescribing-modal
-                    v-on:importPrescribing="importPrescribing"
-                ></add-from-prescribing-modal>
-                <span v-if="prescribing != null"> {{prescribing.title}} <button class="link" href="" @click="removePrescribing()">Entfernen</button></span>
             </div>
 
             <div class="">
@@ -244,14 +232,12 @@ export default {
                 totalAmt += position.amount;
             });
 
-            return Math.round (totalAmt * 100) / 100;
+            return Math.round(totalAmt * 100) / 100;
         }
     },
     methods: {
-        removePrescribing: function(){
-            this.prescribing = null,
-
-            this.$refs.overview.removePrescribing();
+        removePrescribing: function() {
+            (this.prescribing = null), this.$refs.overview.removePrescribing();
         },
         importPrescribing: function(prescribing) {
             alert("wird importiert");
@@ -259,6 +245,73 @@ export default {
             this.prescribing = prescribing;
 
             this.$refs.overview.importPrescribing();
+        },
+        getPrescribings: function(event) {
+            console.log(event.target.value);
+
+            let reasonId = null;
+
+            this.reason_list.forEach(function(reason) {
+                if (event.target.value === reason.title) {
+                    reasonId = reason.id;
+                }
+            });
+
+            alert(reasonId);
+
+            axios
+                .get("/prescribing/getByReasonId/" + reasonId)
+                .then(response => {
+                    console.log(response);
+
+                    //TODO: Eine Prescribing aus mehreren prescribings bauen.
+                    let compoundPrescribingRaw = {
+                        positions: []
+                    };
+
+                    response.data.forEach(function(prescribing) {
+                        prescribing.positions.forEach(function(position) {
+                            compoundPrescribingRaw.positions.push({
+                                amount: 0,
+                                user_id: position.user_id
+                            });
+                        });
+                    });
+
+                    let compoundPrescribing = {
+                        positions: []
+                    };
+
+                    let seen = [];
+
+                    compoundPrescribingRaw.positions.forEach(function(position){
+                        if(!seen.includes(position.user_id)){
+                            compoundPrescribing.positions.push({
+                                user_id: position.user_id,
+                                amount: 0,
+                            });
+
+                            seen.push(position.user_id);
+                        }
+                    });
+
+                    console.log(compoundPrescribing);
+
+                    response.data.forEach(function(prescribing){
+                        prescribing.positions.forEach(function(position){
+                            
+                            compoundPrescribing.positions.forEach(function(p){
+                                if(p.user_id === position.user_id){
+                                    p.amount += Number(position.amount)
+                                }
+                            });
+
+                        });
+                    })
+
+                    this.importPrescribing(compoundPrescribing);
+                })
+                .catch(error => console.log(error));
         },
         removeStudent: function(id) {
             this.students = this.students.filter(el => el.id !== id);
@@ -396,8 +449,7 @@ export default {
 
             var prescribingId = null;
 
-            if(this.prescribing != null)
-            {
+            if (this.prescribing != null) {
                 prescribingId = this.prescribing.id;
             }
 

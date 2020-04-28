@@ -1,6 +1,13 @@
 <template>
     <div class="container">
         <h1>Vorschreibungs Ansicht:</h1>
+        <input
+            type="button"
+            value="Bearbeitung aktivieren"
+            class="btn btn-danger"
+            @click="edit = true"
+            :disabled="edit == true"
+        />
         <p>
             Ursprünglicher Autor:
             <span style="font-weight: bold">{{ prescribing.author }}</span>
@@ -12,6 +19,7 @@
                 name="title"
                 class="form-control"
                 v-model="prescribing.title"
+                :disabled="edit == false"
             />
             <ul
                 v-if="errors.title"
@@ -30,6 +38,7 @@
                 name="date"
                 v-model="prescribing.date"
                 class="form-control"
+                :disabled="edit == false"
             />
             <ul
                 v-if="errors.date"
@@ -50,6 +59,7 @@
                 name="due_until"
                 class="form-control"
                 v-model="prescribing.due_until"
+                :disabled="edit == false"
             />
             <ul
                 v-if="errors.due_until"
@@ -68,6 +78,7 @@
                 name="reason_suggestion"
                 class="form-control"
                 v-model="prescribing.reason_suggestion"
+                :disabled="edit == false"
             />
             <ul
                 v-if="errors.reason_suggestion"
@@ -88,6 +99,7 @@
                 name="reason"
                 class="form-control"
                 v-model="prescribing.reason"
+                :disabled="edit == false"
             >
                 <option value=""> </option>
                 <option
@@ -115,6 +127,7 @@
                 id=""
                 class="form-control"
                 v-model="prescribing.description"
+                :disabled="edit == false"
             />
             <ul
                 v-if="errors.description"
@@ -141,6 +154,7 @@
             data-toggle="modal"
             :data-target="'#addUser_1'"
             type="button"
+            :disabled="edit == false"
         >
             Person(n) hinzufügen
         </button>
@@ -158,6 +172,7 @@
                         placeholder="Betrag"
                         class="form-control"
                         v-model="amount_st"
+                        :disabled="edit == false"
                     />
                 </td>
                 <td>
@@ -166,6 +181,7 @@
                         @click="splitEveryone()"
                         type="button"
                         value="Auf alle Aufteilen"
+                        :disabled="edit == false"
                     />
                 </td>
                 <td>
@@ -174,6 +190,7 @@
                         @click="splitSelected()"
                         type="button"
                         value="Auf ausgewählte Aufteilen"
+                        :disabled="edit == false"
                     />
                 </td>
                 <td>
@@ -182,6 +199,7 @@
                         @click="assignEveryone()"
                         type="button"
                         value="Betrag allen zuweisen"
+                        :disabled="edit == false"
                     />
                 </td>
                 <td>
@@ -190,6 +208,7 @@
                         @click="assignSelected()"
                         type="button"
                         value="Betrag ausgewählten zuweisen "
+                        :disabled="edit == false"
                     />
                 </td>
             </tr>
@@ -202,6 +221,7 @@
                         value="overwrite"
                         checked
                         v-model="type"
+                        :disabled="edit == false"
                     />
                     <label for="type">Überschreiben</label>
                 </td>
@@ -212,6 +232,7 @@
                         name="type"
                         value="add"
                         v-model="type"
+                        :disabled="edit == false"
                     />
                     <label for="type">Hinzuaddieren</label>
                 </td>
@@ -247,6 +268,7 @@
                             name=""
                             class="form-control"
                             v-model="position.amount"
+                            :disabled="edit == false"
                         />
                     </td>
                     <td>
@@ -255,6 +277,7 @@
                             v-model="position.annotation"
                             class="form-control"
                             placeholder="Optionale Anmerkung"
+                            :disabled="edit == false"
                         />
                     </td>
                     <td
@@ -321,6 +344,7 @@ export default {
     },
     data() {
         return {
+            edit: false,
             prescribingRequested: null,
             prescribing: {
                 id: null,

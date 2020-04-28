@@ -12,4 +12,8 @@ class Reason extends Model
     protected $fillable = [
         'title', 'account_bookkeeping', 'active', 'geschlossen', 'saptext', 'sapzuordnung'
     ];
+
+    public function prescribings(){
+        return $this->hasMany(PrescribingSuggestion::class, 'reason_id');
+    }
 }
