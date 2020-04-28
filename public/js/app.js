@@ -2531,6 +2531,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           this.invoice.positions[i].studentAmounts.push(posStudentAmount);
         }
       }
+
+      var that = this;
+      setTimeout(function () {
+        that.importPrescribing(that.prescribing);
+      }, 100);
     },
     numWithSeperators: function numWithSeperators(num) {
       if (num == null) return 0;
@@ -3489,6 +3494,11 @@ __webpack_require__.r(__webpack_exports__);
           this.invoicePositions[i].studentAmounts = this.invoicePositions[i].studentAmounts.concat(posStudentAmount);
         }
       }
+
+      var that = this;
+      setTimeout(function () {
+        that.importPrescribing(that.prescribing);
+      }, 100);
     },
     numWithSeperators: function numWithSeperators(num) {
       var num_parts = num.toString().split(".");
@@ -3737,6 +3747,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {};
@@ -3749,9 +3763,11 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     importPrescribing: function importPrescribing() {
-      this.$refs.studentOverview.forEach(function (ref) {
-        ref.importPrescribing();
-      });
+      if (this.students.length > 0) {
+        this.$refs.studentOverview.forEach(function (ref) {
+          ref.importPrescribing();
+        });
+      }
     },
     triggerSumOfPositions: function triggerSumOfPositions() {
       this.$refs.studentOverview.forEach(function (ref) {
@@ -43858,7 +43874,7 @@ var render = function() {
           attrs: { type: "button" },
           on: { click: _vm.triggerSumOfPositions }
         },
-        [_vm._v("Übersicht berechnen")]
+        [_vm._v("\n        Übersicht berechnen\n    ")]
       ),
       _vm._v(" "),
       _c("table", { staticClass: "table" }, [
@@ -59095,15 +59111,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*************************************************!*\
   !*** ./resources/js/components/InvoiceForm.vue ***!
   \*************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _InvoiceForm_vue_vue_type_template_id_429c2ff6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./InvoiceForm.vue?vue&type=template&id=429c2ff6& */ "./resources/js/components/InvoiceForm.vue?vue&type=template&id=429c2ff6&");
 /* harmony import */ var _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InvoiceForm.vue?vue&type=script&lang=js& */ "./resources/js/components/InvoiceForm.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -59133,7 +59148,7 @@ component.options.__file = "resources/js/components/InvoiceForm.vue"
 /*!**************************************************************************!*\
   !*** ./resources/js/components/InvoiceForm.vue?vue&type=script&lang=js& ***!
   \**************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

@@ -355,6 +355,13 @@ export default {
                     ].studentAmounts.concat(posStudentAmount);
                 }
             }
+
+            let that = this;
+
+            setTimeout(function() {
+                that.importPrescribing(that.prescribing);
+            }, 100);
+            
         },
         numWithSeperators: function(num) {
             var num_parts = num.toString().split(".");

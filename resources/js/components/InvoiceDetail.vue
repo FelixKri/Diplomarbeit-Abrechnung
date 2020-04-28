@@ -413,6 +413,12 @@ export default {
                     );
                 }
             }
+
+            let that = this;
+
+            setTimeout(function() {
+                that.importPrescribing(that.prescribing);
+            }, 100);
         },
         numWithSeperators: function(num) {
             if (num == null) return 0;

@@ -7,10 +7,16 @@
         :aria-labelledby="'nav-overview-tab'"
     >
         <h2 style="">Übersicht</h2>
-        
-        <button type="button" style="position: absolute; right: 0px; top: 0px;" class="btn btn-primary" @click="triggerSumOfPositions">Übersicht berechnen</button>
 
-        
+        <button
+            type="button"
+            style="position: absolute; right: 0px; top: 0px;"
+            class="btn btn-primary"
+            @click="triggerSumOfPositions"
+        >
+            Übersicht berechnen
+        </button>
+
         <table class="table">
             <thead>
                 <tr>
@@ -32,44 +38,39 @@
                     v-on:removeStudent="removeStudent($event)"
                     ref="studentOverview"
                 ></student-overview-invoice>
-
             </tbody>
         </table>
-
     </div>
 </template>
 
 <script>
 export default {
     data: function() {
-        return {
-            
-        };
+        return {};
     },
     props: ["students", "groups", "groupLength"],
-    methods:{
-        removePrescribing: function(){
-
+    methods: {
+        removePrescribing: function() {
             this.$refs.studentOverview.forEach(ref => {
                 ref.removePrescribing();
             });
-
         },
-        importPrescribing: function(){
-
-          this.$refs.studentOverview.forEach(ref => {
-              ref.importPrescribing();
-          });
+        importPrescribing: function() {
+            if(this.students.length > 0){
+                this.$refs.studentOverview.forEach(ref => {
+                    ref.importPrescribing();
+                });
+            }
         },
-        triggerSumOfPositions: function(){
+        triggerSumOfPositions: function() {
             this.$refs.studentOverview.forEach(ref => {
                 ref.sumOfPositions();
-            })
+            });
         },
-        removeStudent: function(studentId){
+        removeStudent: function(studentId) {
             this.$emit("removeStudent", studentId);
         }
-    },
+    }
 };
 </script>
 
