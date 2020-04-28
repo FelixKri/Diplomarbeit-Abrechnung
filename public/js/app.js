@@ -2359,6 +2359,26 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id", "reason_list"],
   mounted: function mounted() {
@@ -2366,6 +2386,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
   },
   data: function data() {
     return {
+      annotationAdditional: "",
+      annotationCredit: "",
       edit: false,
       groups: [],
       groupLength: 0,
@@ -2626,14 +2648,36 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     },
     release: function release() {
       this.store();
-
+      /*
       if (this.invoice.saved == true && this.invoice.approved == false) {
-        axios.post("/invoice/release/" + this.id).then(function (response) {
-          return alert(response["data"]);
-        }).catch(function (error) {
-          return console.log(error);
-        });
-      }
+          axios
+              .post("/invoice/release/" + this.id)
+              .then(response => alert(response["data"]))
+              .catch(error => console.log(error));
+      }*/
+
+      var that = this;
+      $.ajax({
+        headers: {
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+        },
+        type: "POST",
+        url: "/invoice/release/" + that.id,
+        dataType: "json",
+        data: {
+          annotationAdditional: that.annotationAdditional,
+          annotationCredit: that.annotationAdditional
+        },
+        success: function success(response) {
+          console.log(response);
+          alert(response);
+        },
+        error: function error(xhr, status, _error) {
+          var respJson = JSON.parse(xhr.responseText);
+          that.errors = respJson.errors; //console.log(that.errors);
+          //alert(that.errors);
+        }
+      });
     },
     print: function print() {
       this.store();
@@ -2706,7 +2750,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           console.log(response);
           alert("Erfolgreich gespeichert!");
         },
-        error: function error(xhr, status, _error) {
+        error: function error(xhr, status, _error2) {
           var respJson = JSON.parse(xhr.responseText);
           that.errors = respJson.errors; //console.log(that.errors);
           //alert(that.errors);
@@ -42580,6 +42624,70 @@ var render = function() {
               return
             }
             _vm.$set(_vm.invoice, "annotation", $event.target.value)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("label", { attrs: { for: "description" } }, [
+        _vm._v("Anmerkung Nachzahlungen ")
+      ]),
+      _vm._v(" "),
+      _c("textarea", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.annotationAdditional,
+            expression: "annotationAdditional"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          name: "description",
+          id: "",
+          rows: "2",
+          disabled: _vm.edit == false
+        },
+        domProps: { value: _vm.annotationAdditional },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.annotationAdditional = $event.target.value
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("label", { attrs: { for: "description" } }, [
+        _vm._v("Anmerkung Gutschriften ")
+      ]),
+      _vm._v(" "),
+      _c("textarea", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.annotationCredit,
+            expression: "annotationCredit"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          name: "description",
+          id: "",
+          rows: "2",
+          disabled: _vm.edit == false
+        },
+        domProps: { value: _vm.annotationCredit },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.annotationCredit = $event.target.value
           }
         }
       }),

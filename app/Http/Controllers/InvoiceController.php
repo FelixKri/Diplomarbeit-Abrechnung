@@ -195,7 +195,7 @@ class InvoiceController extends Controller
                 if($userAmounts[$k] != 0)
                 {
                     $p = new Prescribing();
-                    $p->title = Reason::where("id", $in->reason_id)->first()->title;
+                    //$p->title = Reason::where("id", $in->reason_id)->first()->title;
                     $p->value = $userAmounts[$k];
                     $p->user_id = $userIds[$k];
                     $p->due_until = $in->due_until;
@@ -203,6 +203,15 @@ class InvoiceController extends Controller
                     $p->finished = false;
                     //Nötig weil der prescribings table keine timestamps hat sondern nur den created_at
                     $p->created_at = $now;
+
+                    if($p->value > 0)
+                    {
+                        $p->title = request()["annotationAdditional"];
+                    }
+                    else if($p->value < 0)
+                    {
+                        $p->title = request()["annotationCredit"];
+                    }
 
                     $p->save();
                 }
