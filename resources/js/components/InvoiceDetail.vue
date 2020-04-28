@@ -366,9 +366,8 @@ export default {
         },
         removeStudent: function(id) {
             this.students = this.students.filter(el => el.id !== id);
-            this.invoice.students = this.invoice.students.filter(
-                el => el.id !== id
-            );
+            //this.invoice.students = this.invoice.students.filter(el => el.id !== id);
+
             //Call removeStudent on the Poses
             for (var i = 0; i < this.invoice.positions.length; i++) {
                 this.invoice.positions[
@@ -379,15 +378,14 @@ export default {
             }
         },
         getStudents: function() {
-            return this.invoice.students;
+            return this.students;
         },
         addStudents: function(studentsDom) {
             console.log("Adding Students: ");
             console.log(studentsDom);
 
-            if (this.invoice.students == null) {
+            if (this.students == null) {
                 console.log("students null");
-                this.invoice.students = studentsDom;
                 this.students = studentsDom;
 
                 var posStudentAmount = [];
@@ -399,18 +397,28 @@ export default {
                     this.invoice.positions[i].studentAmounts = posStudentAmount;
                 }
             } else {
-                this.invoice.students.push(studentsDom);
-                this.students.push(studentsDom);
+
+                var that1 = this;
 
                 var posStudentAmount = [];
                 studentsDom.forEach(function(student) {
+                    that1.students.push(student);
                     posStudentAmount.push({ amount: 0, student: student });
                 });
 
+                console.log("Adding studentAmounts:");
+                console.log(posStudentAmount);
+
                 for (var i = 0; i < this.invoice.positions.length; i++) {
-                    this.invoice.positions[i].studentAmounts.push(
-                        posStudentAmount
-                    );
+                    
+                    posStudentAmount.forEach(function(studentA){
+                        that1.invoice.positions[i].studentAmounts.push(
+                        studentA);
+                    });
+                    
+
+                    console.log("New Position studentAmounts:");
+                    console.log(this.invoice.positions[i].studentAmounts);
                 }
             }
 
