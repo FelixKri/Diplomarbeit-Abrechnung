@@ -8,7 +8,7 @@
     <td>{{studentAmount.student.first_name}}</td>
     <td>{{getGroupName(studentAmount.student.group_id)}}</td>
     <td>
-      <input type="number" name="" class="form-control" :disabled="$parent.$parent.edit == false"
+      <input type="number" name="" class="form-control text-right" :disabled="$parent.$parent.edit == false"
       v-model="studentAmount.amount" />
     </td>
   </tr>

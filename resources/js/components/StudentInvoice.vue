@@ -14,7 +14,7 @@
             <input
                 type="number"
                 name=""
-                class="form-control"
+                class="form-control text-right"
                 v-model="studentAmount.amount"
             />
         </td>

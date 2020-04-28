@@ -2452,7 +2452,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           totalAmt += Number(student.amount);
         });
       });
-      return totalAmt;
+      return Math.round(totalAmt * 100) / 100;
     }
   },
   methods: {
@@ -44873,7 +44873,7 @@ var render = function() {
                       expression: "position.amount"
                     }
                   ],
-                  staticClass: "form-control",
+                  staticClass: "form-control text-right",
                   attrs: { type: "", name: "", disabled: _vm.edit == false },
                   domProps: { value: position.amount },
                   on: {
@@ -45615,7 +45615,7 @@ var render = function() {
             expression: "student.amount"
           }
         ],
-        staticClass: "form-control",
+        staticClass: "form-control text-right",
         attrs: { type: "number", name: "amount[]", id: "" },
         domProps: { value: _vm.student.amount },
         on: {
@@ -45758,7 +45758,7 @@ var render = function() {
             expression: "studentAmount.amount"
           }
         ],
-        staticClass: "form-control",
+        staticClass: "form-control text-right",
         attrs: { type: "number", name: "" },
         domProps: { value: _vm.studentAmount.amount },
         on: {
@@ -45868,7 +45868,7 @@ var render = function() {
             expression: "studentAmount.amount"
           }
         ],
-        staticClass: "form-control",
+        staticClass: "form-control text-right",
         attrs: {
           type: "number",
           name: "",
@@ -46123,7 +46123,7 @@ var render = function() {
             expression: "invoice_amount"
           }
         ],
-        staticClass: "form-control",
+        staticClass: "form-control text-right",
         attrs: { type: "", name: "", disabled: "" },
         domProps: { value: _vm.invoice_amount },
         on: {
@@ -46147,7 +46147,7 @@ var render = function() {
             expression: "prescribing_amount"
           }
         ],
-        staticClass: "form-control",
+        staticClass: "form-control text-right",
         attrs: { type: "text", disabled: "" },
         domProps: { value: _vm.prescribing_amount },
         on: {
@@ -46171,7 +46171,7 @@ var render = function() {
             expression: "difference"
           }
         ],
-        staticClass: "form-control",
+        staticClass: "form-control text-right",
         attrs: { type: "text", disabled: "" },
         domProps: { value: _vm.difference },
         on: {
@@ -46259,7 +46259,7 @@ var render = function() {
             expression: "invoiceAmountRounded"
           }
         ],
-        staticClass: "form-control",
+        staticClass: "form-control text-right",
         attrs: { type: "", name: "", disabled: "" },
         domProps: { value: _vm.invoiceAmountRounded },
         on: {

@@ -266,7 +266,7 @@
                         <input
                             type=""
                             name=""
-                            class="form-control"
+                            class="form-control text-right"
                             v-model="position.amount"
                             :disabled="edit == false"
                         />

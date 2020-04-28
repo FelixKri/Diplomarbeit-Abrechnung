@@ -278,7 +278,7 @@ export default {
                 });
             });
 
-            return totalAmt;
+            return Math.round(totalAmt * 100) / 100;
         }
     },
     methods: {
