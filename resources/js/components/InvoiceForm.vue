@@ -412,7 +412,7 @@ export default {
         release: function() {
             if (this.saved) {
                 axios
-                    .post("/invoice/setFinished/" + this.id)
+                    .post("/invoice/setFinished/" + this.invoice_id)
                     .then(response => {
                         console.log(response);
                         alert("Erfolgreich freigegeben");

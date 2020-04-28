@@ -3592,7 +3592,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     release: function release() {
       if (this.saved) {
-        axios.post("/invoice/setFinished/" + this.id).then(function (response) {
+        axios.post("/invoice/setFinished/" + this.invoice_id).then(function (response) {
           console.log(response);
           alert("Erfolgreich freigegeben");
         }).catch(function (error) {
@@ -46283,7 +46283,7 @@ var render = function() {
             expression: "prescribing_amount"
           }
         ],
-        staticClass: "form-control",
+        staticClass: "form-control text-right",
         attrs: { type: "text", disabled: "" },
         domProps: { value: _vm.prescribing_amount },
         on: {
@@ -46307,7 +46307,7 @@ var render = function() {
             expression: "difference"
           }
         ],
-        staticClass: "form-control",
+        staticClass: "form-control text-right",
         attrs: { type: "text", disabled: "" },
         domProps: { value: _vm.difference },
         on: {

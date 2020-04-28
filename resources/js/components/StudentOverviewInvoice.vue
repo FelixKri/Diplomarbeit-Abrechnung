@@ -14,10 +14,10 @@
             />
         </td>
         <td>
-            <input type="text" disabled v-model="prescribing_amount" class="form-control"/>
+            <input type="text" disabled v-model="prescribing_amount" class="form-control text-right"/>
         </td>
         <td>
-            <input type="text" disabled v-model="difference" class="form-control">
+            <input type="text" disabled v-model="difference" class="form-control text-right">
         </td>
         <td>
             <span style="font-weight: bold; color: red;" v-if="$parent.$parent.prescribing != null && difference < 0">Gutschrift</span>
