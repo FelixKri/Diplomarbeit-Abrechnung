@@ -286,7 +286,6 @@ export default {
             (this.prescribing = null), this.$refs.overview.removePrescribing();
         },
         importPrescribing: function(prescribing) {
-            alert("wird importiert");
 
             if (typeof prescribing != undefined) {
                 this.prescribing = prescribing;

@@ -45,8 +45,6 @@ export default {
     methods: {
         importPrescribing: function(prescribing){
             
-            alert("wird emitted");
-            
             this.$emit("importPrescribing", prescribing);
 
         }

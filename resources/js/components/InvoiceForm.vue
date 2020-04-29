@@ -240,7 +240,6 @@ export default {
             (this.prescribing = null), this.$refs.overview.removePrescribing();
         },
         importPrescribing: function(prescribing) {
-            alert("wird importiert");
 
             this.prescribing = prescribing;
 
@@ -256,8 +255,6 @@ export default {
                     reasonId = reason.id;
                 }
             });
-
-            alert(reasonId);
 
             axios
                 .get("/prescribing/getByReasonId/" + reasonId)

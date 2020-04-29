@@ -53,6 +53,9 @@ export default {
             this.prescribing_amount = 0;
         },
         importPrescribing: function() {
+
+            this.prescribing_amount = 0;
+
             this.$parent.$parent.prescribing.positions.forEach(position => {
                 if (position.user_id === this.student.id) {
                     this.prescribing_amount = position.amount;
