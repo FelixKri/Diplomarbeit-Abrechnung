@@ -3,9 +3,6 @@
         <td>
             <input type="checkbox" v-model="student.checked">
         </td>
-        <th scope="row">
-            <input type="number" name="students[]" id="" readonly v-bind:value="student.id">
-        </th>
         <td>{{ getGroupName(student.group_id) }}</td>
         <td>{{ student.last_name }}</td>
         <td>{{ student.first_name }}</td>
