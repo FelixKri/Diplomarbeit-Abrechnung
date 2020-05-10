@@ -1,6 +1,5 @@
 <template>
     <tr>
-        <th scope="row">{{ this.student.id }}</th>
         <td>{{ this.student.last_name }}</td>
         <td>{{ this.student.first_name }}</td>
         <td>{{ getGroupName(this.student.group_id) }}</td>

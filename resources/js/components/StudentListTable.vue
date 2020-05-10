@@ -34,7 +34,6 @@
         <thead>
             <tr>
                 <th scope="col">X</th>
-                <th scope="col">Nr.</th>
                 <th scope="col">Klasse</th>
                 <th scope="col">Nachname</th>
                 <th scope="col">Vorname</th>

@@ -274,13 +274,13 @@ export default {
             if (this.type == "overwrite") {
                 this.position.studentAmounts.forEach(function(studentA) {
                     var studentMoney = Math.round(value * 100) / 100;
-                    studentA.amount = studentMoney;
+                    studentA.amount = Number(studentMoney);
                     splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                 });
             } else {
                 this.position.studentAmounts.forEach(function(studentA) {
                     var studentMoney = Math.round(value * 100) / 100;
-                    studentA.amount += studentMoney;
+                    studentA.amount = Number(studentA.amount) + Number(studentMoney);
                     splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                 });
             }

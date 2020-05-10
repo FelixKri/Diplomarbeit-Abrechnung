@@ -155,7 +155,7 @@
                     name="totalAmount"
                     id=""
                     class="form-control"
-                    :value="numWithSeperators(totalAmountComputed)"
+                    :value="numWithSeperators(Math.round((totalAmountComputed) * 100) / 100)"
                     disabled
                 />
             </div>

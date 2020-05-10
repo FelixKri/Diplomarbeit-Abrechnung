@@ -2126,7 +2126,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {};
@@ -3794,7 +3793,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {};
@@ -4102,13 +4100,13 @@ __webpack_require__.r(__webpack_exports__);
       if (this.type == "overwrite") {
         this.position.studentAmounts.forEach(function (studentA) {
           var studentMoney = Math.round(value * 100) / 100;
-          studentA.amount = studentMoney;
+          studentA.amount = Number(studentMoney);
           splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
         });
       } else {
         this.position.studentAmounts.forEach(function (studentA) {
           var studentMoney = Math.round(value * 100) / 100;
-          studentA.amount += studentMoney;
+          studentA.amount = Number(studentA.amount) + Number(studentMoney);
           splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
         });
       } //CENTAUSGLEICH
@@ -5440,9 +5438,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted: Student');
@@ -5486,7 +5481,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
 //
 //
 //
@@ -5591,7 +5585,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
 //
 //
 //
@@ -5871,7 +5864,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log("Component mounted: StudentOverviewInvoice");
@@ -5943,7 +5935,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
 //
 //
 //
@@ -42221,8 +42212,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("ID")]),
-        _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nachname")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Vorname")]),
@@ -43749,8 +43738,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("ID")]),
-        _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nachname")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Vorname")]),
@@ -45387,7 +45374,11 @@ var render = function() {
           _c("input", {
             staticClass: "form-control",
             attrs: { type: "text", name: "totalAmount", id: "", disabled: "" },
-            domProps: { value: _vm.numWithSeperators(_vm.totalAmountComputed) }
+            domProps: {
+              value: _vm.numWithSeperators(
+                Math.round(_vm.totalAmountComputed * 100) / 100
+              )
+            }
           })
         ]),
         _vm._v(" "),
@@ -45597,13 +45588,6 @@ var render = function() {
       })
     ]),
     _vm._v(" "),
-    _c("th", { attrs: { scope: "row" } }, [
-      _c("input", {
-        attrs: { type: "number", name: "students[]", id: "", readonly: "" },
-        domProps: { value: _vm.student.id }
-      })
-    ]),
-    _vm._v(" "),
     _c("td", [_vm._v(_vm._s(_vm.getGroupName(_vm.student.group_id)))]),
     _vm._v(" "),
     _c("td", [_vm._v(_vm._s(_vm.student.last_name))]),
@@ -45739,10 +45723,6 @@ var render = function() {
           }
         }
       })
-    ]),
-    _vm._v(" "),
-    _c("th", { attrs: { scope: "row" } }, [
-      _vm._v(_vm._s(this.studentAmount.student.id))
     ]),
     _vm._v(" "),
     _c("td", [_vm._v(_vm._s(this.studentAmount.student.last_name))]),
@@ -46073,8 +46053,6 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("X")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nr.")]),
-        _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Klasse")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nachname")]),
@@ -46110,8 +46088,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("tr", [
-    _c("th", { attrs: { scope: "row" } }, [_vm._v(_vm._s(this.student.id))]),
-    _vm._v(" "),
     _c("td", [_vm._v(_vm._s(this.student.last_name))]),
     _vm._v(" "),
     _c("td", [_vm._v(_vm._s(this.student.first_name))]),
@@ -46246,8 +46222,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("tr", [
-    _c("th", { attrs: { scope: "row" } }, [_vm._v(_vm._s(this.student.id))]),
-    _vm._v(" "),
     _c("td", [_vm._v(_vm._s(this.student.last_name))]),
     _vm._v(" "),
     _c("td", [_vm._v(_vm._s(this.student.first_name))]),

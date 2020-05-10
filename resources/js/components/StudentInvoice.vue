@@ -6,7 +6,6 @@
                 v-model="this.studentAmount.student.checked"
             />
         </td>
-        <th scope="row">{{ this.studentAmount.student.id }}</th>
         <td>{{ this.studentAmount.student.last_name }}</td>
         <td>{{ this.studentAmount.student.first_name }}</td>
         <td>{{ getGroupName(this.studentAmount.student.group_id) }}</td>
