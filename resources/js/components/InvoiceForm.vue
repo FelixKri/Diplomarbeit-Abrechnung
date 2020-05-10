@@ -413,6 +413,7 @@ export default {
                     .then(response => {
                         console.log(response);
                         alert("Erfolgreich freigegeben");
+                        location.reload();
                     })
                     .catch(error => console.log(error));
 
@@ -481,6 +482,7 @@ export default {
                     alert("Erfolgreich gespeichert!");
                     that.invoice_id = response;
                     that.saved = true;
+                    location.reload();
                 },
                 error: function(xhr, status, error) {
                     var respJson = JSON.parse(xhr.responseText);

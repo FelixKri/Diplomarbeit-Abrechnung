@@ -294,6 +294,7 @@
             value="Änderungen Speichern"
             class="btn btn-primary"
             @click="store"
+            :disabled="edit == false"
         />
         <input
             type="button"
@@ -324,9 +325,10 @@
         />
         <input
             type="button"
-            value="Speichern und Drucken"
+            value="Drucken"
             class="btn btn-primary"
             @click="print"
+            :disabled="edit == true"
         />
     </div>
 </template>
@@ -497,12 +499,7 @@ export default {
                 },
                 success: function(response) {
                     alert("Erfolgreich gespeichert");
-                    this.errors.author = null;
-                    this.errors.description = null;
-                    this.errors.date = null;
-                    this.errors.due_until = null;
-                    this.errors.reason = null;
-                    this.errors.reason_suggestion = null;
+                    location.reload();
                 },
                 error: function(xhr, status, error) {
                     var respJson = JSON.parse(xhr.responseText);
@@ -511,7 +508,10 @@ export default {
             });
         },
         print: function() {
-            this.store();
+            if(this.edit == true)
+            {
+                return;
+            }
 
             window.location.href =
                 "/prescribing/download/" + this.prescribing.id;
@@ -524,6 +524,7 @@ export default {
                 .then(response => {
                     console.log(response);
                     alert("Erfolgreich genehmigt");
+                    location.reload();
                 })
                 .catch(error => console.log(error));
         },
@@ -534,6 +535,7 @@ export default {
                 .then(response => {
                     console.log(response);
                     alert("Erfolgreich zurückgewiesen");
+                    location.reload();
                 })
                 .catch(error => console.log(error));
         },
@@ -543,6 +545,7 @@ export default {
                 .then(response => {
                     console.log(response);
                     alert("Erfolgreich freigegeben");
+                    location.reload();
                 })
                 .catch(error => console.log(error));
 

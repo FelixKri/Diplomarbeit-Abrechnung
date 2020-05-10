@@ -179,9 +179,9 @@ export default {
                             for (var i = 0; i < studentsCount; i++) {
                                 var student = parentStudents[i];
 
-                                if (student["id"] == thing["id"]) {
+                                if (student["user"]["id"] == thing["id"]) {
                                     //Add to array
-                                    studentsAlreadyIn.push(student["id"]);
+                                    studentsAlreadyIn.push(student["user"]["id"]);
                                 }
                             }
                         }

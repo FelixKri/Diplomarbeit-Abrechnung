@@ -155,27 +155,15 @@ class PrescribingController extends Controller
         $presc->author_id = FosUser::where('username', request()->author)->first()->id;
         $presc->save();
 
+        $user_has_presc = UserHasPrescribingSuggestion::where("prescribing_suggestion_id", request()->id)->delete();
+
         for ($i = 0; $i < sizeof(request()->students); $i++) {
-            
-            if(request()->positionIds[$i] == -1)
-            {
-                //New one
                 $user_has_presc = new UserHasPrescribingSuggestion();
                 $user_has_presc->user_id = request()->students[$i];
                 $user_has_presc->amount = (float) request()->amount[$i];
                 $user_has_presc->annotation = request()->annotation[$i];
                 $user_has_presc->prescribing_suggestion_id = $presc->id;
                 $user_has_presc->save();
-            }
-            else
-            {
-                $user_has_presc = UserHasPrescribingSuggestion::find(request()->positionIds[$i]);
-                $user_has_presc->user_id = request()->students[$i];
-                $user_has_presc->amount = (float) request()->amount[$i];
-                $user_has_presc->annotation = request()->annotation[$i];
-                $user_has_presc->prescribing_suggestion_id = $presc->id;
-                $user_has_presc->save();
-            }
         }
 
         return response()->json($presc->id, 200);
