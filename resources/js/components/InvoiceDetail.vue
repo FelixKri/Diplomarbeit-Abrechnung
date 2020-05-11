@@ -11,7 +11,7 @@
         <p>
             Ursprünglicher Author:
             <span style="font-weight: bold">{{
-                this.invoice.author.username
+                    this.invoice.author.username
             }}</span>
         </p>
         <div class="form-group">
@@ -22,7 +22,7 @@
                 class="form-control"
                 v-model="invoice.reason.title"
                 :disabled="edit == false"
-                @change="getPrescribings($event.target.value)"
+                @change="reasonChanged($event.target.value)"
             >
                 <option
                     v-for="reason in reason_list"
@@ -213,7 +213,7 @@
                     :disabled="
                         invoice.saved == false ||
                             invoice.approved == true ||
-                            edit == false
+                            edit == true
                     "
                 />
                 <input
@@ -221,7 +221,8 @@
                     value="Freigeben (Lehrer)"
                     class="btn btn-success"
                     @click="setFinished"
-                    :disabled="invoice.saved == true || edit == false"
+                    :disabled="invoice.saved == true ||
+                            edit == true"
                 />
                 <input
                     type="button"
@@ -231,7 +232,7 @@
                     :disabled="
                         invoice.saved == false ||
                             invoice.approved == true ||
-                            edit == false
+                            edit == true
                     "
                 />
                 <input
@@ -239,6 +240,7 @@
                     value="Drucken"
                     class="btn btn-primary"
                     @click="print"
+                    :disabled="edit == true"
                 />
             </div>
         </div>
@@ -263,7 +265,7 @@ export default {
             last_id: null,
             //Needed because overview needs to hook to an object that is already here when loading
             students: [],
-            prescribing: null
+            prescribings: []
         };
     },
     computed: {
@@ -283,19 +285,58 @@ export default {
     },
     methods: {
         removePrescribing: function() {
-            (this.prescribing = null), this.$refs.overview.removePrescribing();
+            (this.prescribings = []), this.$refs.overview.removePrescribing();
         },
-        importPrescribing: function(prescribing) {
+        importPrescribings: function(prescribings) {
 
-            if (typeof prescribing != undefined) {
-                this.prescribing = prescribing;
+            this.$refs.overview.importPrescribing(prescribings);
+        
+        },
+        reasonChanged: function(event){
+            if(!window.confirm("Aus Vorschreibung übernehmen?"))
+                return;
 
-                this.$refs.overview.importPrescribing();
-            } else {
-                alert("Für diesen Grund existiert keine Vorschreibung");
-            }
+            this.getPrescribings(event);
         },
         getPrescribings: function(event) {
+
+            let reasonId = null;
+
+            this.reason_list.forEach(function(reason) {
+                if (event === reason.title) {
+                    reasonId = reason.id;
+                }
+            });
+
+            var that = this;
+
+            axios
+                .get("/prescribing/getByReasonId/" + reasonId)
+                .then(response => {
+
+                    console.log("Prescribings:");
+                    console.log(response.data[0].positions);
+                    
+                    if(response.data.length == 0)
+                        return;
+
+                    //Add the students from the prescribings
+                    response.data[0].positions.forEach(function(prescribing){
+                        //No need to add students in detail
+
+                        //that.addStudent(prescribing["user"]);
+
+                    });
+
+                    that.prescribings = response.data[0].positions;
+
+                    that.$nextTick(() => {
+                    that.importPrescribings(that.prescribings);
+                    });
+                })
+                .catch(error => console.log(error));
+
+            /*
             this.prescribing = {
                 positions: [],
             }
@@ -362,6 +403,7 @@ export default {
                     this.importPrescribing(compoundPrescribing);
                 })
                 .catch(error => console.log(error));
+                */
         },
         removeStudent: function(id) {
             this.students = this.students.filter(el => el.id !== id);
@@ -375,6 +417,22 @@ export default {
                     i
                 ].studentAmounts.filter(el => el.student.id !== id);
             }
+        },
+        addStudent: function(student){
+            if(this.students.filter(e => e["id"] === student["id"]).length > 0)
+                {
+                    //Duplicate, should not happen
+                    return;
+                }
+
+            //Add a single student
+            this.students.push(student);
+
+            for (var i = 0; i < this.invoicePositions.length; i++) {
+                    this.invoicePositions[
+                        i
+                    ].studentAmounts.push({amount:0, student: student});
+                }
         },
         getStudents: function() {
             return this.students;
@@ -479,7 +537,8 @@ export default {
                 } catch (err) {
                     apiRes = err.response;
                 } finally {
-                    console.log(apiRes); // Could be success or error
+                    console.log("Invoice:");
+                    console.log(apiRes.data); // Could be success or error
                     var newInvoice = apiRes.data;
                     this.last_id =
                         newInvoice.positions[
@@ -492,6 +551,7 @@ export default {
                     newInvoice.positions.forEach(function(position) {
                         position.studentAmounts = [];
 
+                        console.log("Position");
                         console.log(position);
 
                         position.user_has_invoice_position.forEach(function(
@@ -513,7 +573,6 @@ export default {
                             });
 
                             if (!found) {
-                                console.log(uhip["user"]);
                                 tempStudents.push(uhip["user"]);
                             }
                         });
@@ -525,12 +584,14 @@ export default {
 
                     this.invoice = newInvoice;
 
-                    this.getPrescribings(this.invoice.reason.title);
+                    if(this.invoice.imported_prescribing == 1)
+                    {
+                        this.getPrescribings(this.invoice.reason.title);
+                    }
                 }
             })();
         },
         release: function() {
-            this.store();
             /*
             if (this.invoice.saved == true && this.invoice.approved == false) {
                 axios
@@ -553,6 +614,7 @@ export default {
                 success: function(response) {
                     console.log(response);
                     alert(response);
+                    location.reload();
                 },
                 error: function(xhr, status, error) {
                     var respJson = JSON.parse(xhr.responseText);
@@ -563,25 +625,32 @@ export default {
             });
         },
         print: function() {
-            this.store();
+            if(this.edit == true)
+            {
+                return;
+            }
+            //this.store();
 
             window.location.href = "/invoice/download/" + this.id;
             //Todo: Sende Request an PDF Generator Funktion im BackEnd
         },
         reject: function() {
-            this.store();
             axios
                 .post("/invoice/reject/" + this.id)
-                .then(response => alert(response["data"]))
+                .then(response => {
+                    alert(response["data"]);
+                    location.reload();
+                })
                 .catch(error => console.log(error));
         },
         setFinished: function() {
-            this.store();
+
             axios
                 .post("/invoice/setFinished/" + this.id)
                 .then(response => {
                     console.log(response);
                     alert("Erfolgreich freigegeben");
+                    location.reload();
                 })
                 .catch(error => console.log(error));
 
@@ -624,6 +693,11 @@ export default {
             //console.log("InvoicePositionsStripped:");
             //console.log(invoicePositionsStripped);
 
+            if(this.prescribings.length > 0)
+                var imported = 1;
+            else
+                var imported = 0;
+
             $.ajax({
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -633,7 +707,7 @@ export default {
                 dataType: "json",
                 data: {
                     id: that.invoice.id,
-                    prescribing_id: that.prescribing,
+                    imported_prescribing: imported,
                     author: "admin",
                     date: that.invoice.date,
                     due_until: that.invoice.due_until,
@@ -645,6 +719,7 @@ export default {
                 success: function(response) {
                     console.log(response);
                     alert("Erfolgreich gespeichert!");
+                    location.reload();
                 },
                 error: function(xhr, status, error) {
                     var respJson = JSON.parse(xhr.responseText);

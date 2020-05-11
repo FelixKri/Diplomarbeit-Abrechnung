@@ -48,15 +48,17 @@ export default {
         removePrescribing: function(){
             this.prescribing_amount = 0;
         },
-        importPrescribing: function() {
+        importPrescribing: function(prescribing) {
 
-            this.prescribing_amount = 0;
+            this.prescribing_amount = prescribing.amount;
             
+            /*
             this.$parent.$parent.prescribing.positions.forEach(position => {
                 if (position.user_id === this.student.id) {
                     this.prescribing_amount = position.amount;
                 }
             });
+            */
         },
         sumOfPositions: function() {
             var sum = 0;

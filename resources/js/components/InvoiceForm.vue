@@ -221,7 +221,7 @@ export default {
             errors: {},
             saved: false,
             students: [],
-            prescribing: null
+            prescribings: []
         };
     },
     computed: {
@@ -237,16 +237,20 @@ export default {
     },
     methods: {
         removePrescribing: function() {
-            (this.prescribing = null), this.$refs.overview.removePrescribing();
+            (this.prescribings = []), this.$refs.overview.removePrescribing();
         },
-        importPrescribing: function(prescribing) {
+        importPrescribings: function(prescribings) {
 
-            this.prescribing = prescribing;
+            //this.prescribings = prescribings;
 
-            this.$refs.overview.importPrescribing();
+            this.$refs.overview.importPrescribing(prescribings);
         },
         getPrescribings: function(event) {
-            console.log(event.target.value);
+
+            if(!window.confirm("Aus Vorschreibung übernehmen?"))
+                return;
+            
+            //console.log(event.target.value);
 
             let reasonId = null;
 
@@ -256,12 +260,19 @@ export default {
                 }
             });
 
+            var that = this;
+
             axios
                 .get("/prescribing/getByReasonId/" + reasonId)
                 .then(response => {
-                    console.log(response);
+                    
+                    if(response.data.length == 0)
+                        return;
 
-                    //TODO: Eine Prescribing aus mehreren prescribings bauen.
+                    //console.log("Prescribings:");
+                    //console.log(response.data[0].positions);
+                    
+                    /*
                     let compoundPrescribingRaw = {
                         positions: []
                     };
@@ -304,11 +315,22 @@ export default {
                             });
 
                         });
-                    })
+                    })*/
 
-                    this.importPrescribing(compoundPrescribing);
+                    //Add the students from the prescribings
+                    response.data[0].positions.forEach(function(prescribing){
+                        that.addStudent(prescribing["user"]);
+                    });
+
+                    that.prescribings = response.data[0].positions;
+
+                    that.$nextTick(() => {
+                    that.importPrescribings(that.prescribings);
+                    });
                 })
                 .catch(error => console.log(error));
+
+                
         },
         removeStudent: function(id) {
             this.students = this.students.filter(el => el.id !== id);
@@ -321,6 +343,22 @@ export default {
         },
         getStudents: function() {
             return this.students;
+        },
+        addStudent: function(student){
+            if(this.students.filter(e => e["id"] === student["id"]).length > 0)
+                {
+                    //Duplicate, should not happen
+                    return;
+                }
+
+            //Add a single student
+            this.students.push(student);
+
+            for (var i = 0; i < this.invoicePositions.length; i++) {
+                    this.invoicePositions[
+                        i
+                    ].studentAmounts.push({amount:0, student: student});
+                }
         },
         addStudents: function(studentsDom) {
             console.log("Adding Students: ");
@@ -355,10 +393,11 @@ export default {
 
             let that = this;
 
+/*
             setTimeout(function() {
                 that.importPrescribing(that.prescribing);
             }, 100);
-            
+            */
         },
         numWithSeperators: function(num) {
             var num_parts = num.toString().split(".");
@@ -452,11 +491,10 @@ export default {
 
             console.log(that.reason);
 
-            var prescribingId = null;
-
-            if (this.prescribing != null) {
-                prescribingId = this.prescribing.id;
-            }
+            if(this.prescribings.length > 0)
+                var imported = 1;
+            else
+                var imported = 0;
 
             $.ajax({
                 headers: {
@@ -467,7 +505,7 @@ export default {
                 dataType: "json",
                 data: {
                     id: that.invoice_id,
-                    prescribing_id: prescribingId,
+                    imported_prescribing: imported,
                     author: that.author,
                     date: that.date,
                     due_until: that.due_until,
@@ -482,7 +520,7 @@ export default {
                     alert("Erfolgreich gespeichert!");
                     that.invoice_id = response;
                     that.saved = true;
-                    location.reload();
+                    //location.reload();
                 },
                 error: function(xhr, status, error) {
                     var respJson = JSON.parse(xhr.responseText);

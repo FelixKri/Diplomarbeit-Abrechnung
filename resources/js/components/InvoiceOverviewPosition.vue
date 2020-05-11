@@ -54,10 +54,20 @@ export default {
                 ref.removePrescribing();
             });
         },
-        importPrescribing: function() {
+        importPrescribing: function(prescribings) {
+            //console.log(prescribings);
+            //console.log(this.$refs.studentOverview);
+
             if(this.students.length > 0){
                 this.$refs.studentOverview.forEach(ref => {
-                    ref.importPrescribing();
+                    //Give only right prescribing
+                    prescribings.forEach(function(prescribing){
+                        if(prescribing["user_id"] == ref.student["id"])
+                        {
+                            ref.importPrescribing(prescribing);
+                        }
+                    });
+                    
                 });
             }
         },

@@ -54,11 +54,20 @@ export default {
             });
 
         },
-        importPrescribing: function(){
+        importPrescribing: function(prescribings){
 
-          this.$refs.studentOverview.forEach(ref => {
-              ref.importPrescribing();
-          });
+          if(this.students.length > 0){
+                this.$refs.studentOverview.forEach(ref => {
+                    //Give only right prescribing
+                    prescribings.forEach(function(prescribing){
+                        if(prescribing["user_id"] == ref.student["id"])
+                        {
+                            ref.importPrescribing(prescribing);
+                        }
+                    });
+                    
+                });
+            }
         },
         triggerSumOfPositions: function(){
             this.$refs.studentOverview.forEach(ref => {

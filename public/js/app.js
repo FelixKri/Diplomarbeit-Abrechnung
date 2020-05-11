@@ -2137,10 +2137,17 @@ __webpack_require__.r(__webpack_exports__);
         ref.removePrescribing();
       });
     },
-    importPrescribing: function importPrescribing() {
-      this.$refs.studentOverview.forEach(function (ref) {
-        ref.importPrescribing();
-      });
+    importPrescribing: function importPrescribing(prescribings) {
+      if (this.students.length > 0) {
+        this.$refs.studentOverview.forEach(function (ref) {
+          //Give only right prescribing
+          prescribings.forEach(function (prescribing) {
+            if (prescribing["user_id"] == ref.student["id"]) {
+              ref.importPrescribing(prescribing);
+            }
+          });
+        });
+      }
     },
     triggerSumOfPositions: function triggerSumOfPositions() {
       this.$refs.studentOverview.forEach(function (ref) {
@@ -2172,8 +2179,8 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
+//
+//
 //
 //
 //
@@ -2438,7 +2445,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       last_id: null,
       //Needed because overview needs to hook to an object that is already here when loading
       students: [],
-      prescribing: null
+      prescribings: []
     };
   },
   computed: {
@@ -2455,70 +2462,92 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
   },
   methods: {
     removePrescribing: function removePrescribing() {
-      this.prescribing = null, this.$refs.overview.removePrescribing();
+      this.prescribings = [], this.$refs.overview.removePrescribing();
     },
-    importPrescribing: function importPrescribing(prescribing) {
-      if (_typeof(prescribing) != undefined) {
-        this.prescribing = prescribing;
-        this.$refs.overview.importPrescribing();
-      } else {
-        alert("Für diesen Grund existiert keine Vorschreibung");
-      }
+    importPrescribings: function importPrescribings(prescribings) {
+      this.$refs.overview.importPrescribing(prescribings);
+    },
+    reasonChanged: function reasonChanged(event) {
+      if (!window.confirm("Aus Vorschreibung übernehmen?")) return;
+      this.getPrescribings(event);
     },
     getPrescribings: function getPrescribings(event) {
-      var _this = this;
-
-      this.prescribing = {
-        positions: []
-      };
-      console.log(event);
       var reasonId = null;
       this.reason_list.forEach(function (reason) {
         if (event === reason.title) {
           reasonId = reason.id;
         }
       });
+      var that = this;
       axios.get("/prescribing/getByReasonId/" + reasonId).then(function (response) {
-        console.log(response);
-        var compoundPrescribingRaw = {
-          positions: []
-        };
-        response.data.forEach(function (prescribing) {
-          prescribing.positions.forEach(function (position) {
-            compoundPrescribingRaw.positions.push({
-              amount: 0,
-              user_id: position.user_id
-            });
-          });
-        });
-        var compoundPrescribing = {
-          positions: []
-        };
-        var seen = [];
-        compoundPrescribingRaw.positions.forEach(function (position) {
-          if (!seen.includes(position.user_id)) {
-            compoundPrescribing.positions.push({
-              user_id: position.user_id,
-              amount: 0
-            });
-            seen.push(position.user_id);
-          }
-        });
-        console.log(compoundPrescribing);
-        response.data.forEach(function (prescribing) {
-          prescribing.positions.forEach(function (position) {
-            compoundPrescribing.positions.forEach(function (p) {
-              if (p.user_id === position.user_id) {
-                p.amount += Number(position.amount);
-              }
-            });
-          });
-        });
+        console.log("Prescribings:");
+        console.log(response.data[0].positions);
+        if (response.data.length == 0) return; //Add the students from the prescribings
 
-        _this.importPrescribing(compoundPrescribing);
+        response.data[0].positions.forEach(function (prescribing) {//No need to add students in detail
+          //that.addStudent(prescribing["user"]);
+        });
+        that.prescribings = response.data[0].positions;
+        that.$nextTick(function () {
+          that.importPrescribings(that.prescribings);
+        });
       }).catch(function (error) {
         return console.log(error);
       });
+      /*
+      this.prescribing = {
+          positions: [],
+      }
+        console.log(event);
+        let reasonId = null;
+        this.reason_list.forEach(function(reason) {
+          if (event === reason.title) {
+              reasonId = reason.id;
+          }
+      });
+        axios
+          .get("/prescribing/getByReasonId/" + reasonId)
+          .then(response => {
+              console.log(response);
+                let compoundPrescribingRaw = {
+                  positions: []
+              };
+                response.data.forEach(function(prescribing) {
+                  prescribing.positions.forEach(function(position) {
+                      compoundPrescribingRaw.positions.push({
+                          amount: 0,
+                          user_id: position.user_id
+                      });
+                  });
+              });
+                let compoundPrescribing = {
+                  positions: []
+              };
+                let seen = [];
+                compoundPrescribingRaw.positions.forEach(function(position){
+                  if(!seen.includes(position.user_id)){
+                      compoundPrescribing.positions.push({
+                          user_id: position.user_id,
+                          amount: 0,
+                      });
+                        seen.push(position.user_id);
+                  }
+              });
+                console.log(compoundPrescribing);
+                response.data.forEach(function(prescribing){
+                  prescribing.positions.forEach(function(position){
+                      
+                      compoundPrescribing.positions.forEach(function(p){
+                          if(p.user_id === position.user_id){
+                              p.amount += Number(position.amount)
+                          }
+                      });
+                    });
+              })
+                this.importPrescribing(compoundPrescribing);
+          })
+          .catch(error => console.log(error));
+          */
     },
     removeStudent: function removeStudent(id) {
       this.students = this.students.filter(function (el) {
@@ -2529,6 +2558,24 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       for (var i = 0; i < this.invoice.positions.length; i++) {
         this.invoice.positions[i].studentAmounts = this.invoice.positions[i].studentAmounts.filter(function (el) {
           return el.student.id !== id;
+        });
+      }
+    },
+    addStudent: function addStudent(student) {
+      if (this.students.filter(function (e) {
+        return e["id"] === student["id"];
+      }).length > 0) {
+        //Duplicate, should not happen
+        return;
+      } //Add a single student
+
+
+      this.students.push(student);
+
+      for (var i = 0; i < this.invoicePositions.length; i++) {
+        this.invoicePositions[i].studentAmounts.push({
+          amount: 0,
+          student: student
         });
       }
     },
@@ -2622,7 +2669,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
     },
     getInvoice: function getInvoice(id) {
-      var _this2 = this;
+      var _this = this;
 
       _asyncToGenerator(
       /*#__PURE__*/
@@ -2649,14 +2696,16 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
               case 10:
                 _context.prev = 10;
-                console.log(apiRes); // Could be success or error
+                console.log("Invoice:");
+                console.log(apiRes.data); // Could be success or error
 
                 newInvoice = apiRes.data;
-                _this2.last_id = newInvoice.positions[newInvoice.positions.length - 1].position_id; //Cast stuff  from database into usable stuff
+                _this.last_id = newInvoice.positions[newInvoice.positions.length - 1].position_id; //Cast stuff  from database into usable stuff
 
                 tempStudents = [];
                 newInvoice.positions.forEach(function (position) {
                   position.studentAmounts = [];
+                  console.log("Position");
                   console.log(position);
                   position.user_has_invoice_position.forEach(function (uhip) {
                     var sAmount = {
@@ -2673,29 +2722,29 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
                     });
 
                     if (!found) {
-                      console.log(uhip["user"]);
                       tempStudents.push(uhip["user"]);
                     }
                   });
                   delete position.user_has_invoice_position;
                 });
-                _this2.students = tempStudents;
-                _this2.invoice = newInvoice;
+                _this.students = tempStudents;
+                _this.invoice = newInvoice;
 
-                _this2.getPrescribings(_this2.invoice.reason.title);
+                if (_this.invoice.imported_prescribing == 1) {
+                  _this.getPrescribings(_this.invoice.reason.title);
+                }
 
                 return _context.finish(10);
 
-              case 20:
+              case 21:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[1, 7, 10, 20]]);
+        }, _callee, null, [[1, 7, 10, 21]]);
       }))();
     },
     release: function release() {
-      this.store();
       /*
       if (this.invoice.saved == true && this.invoice.approved == false) {
           axios
@@ -2703,7 +2752,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
               .then(response => alert(response["data"]))
               .catch(error => console.log(error));
       }*/
-
       var that = this;
       $.ajax({
         headers: {
@@ -2719,6 +2767,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         success: function success(response) {
           console.log(response);
           alert(response);
+          location.reload();
         },
         error: function error(xhr, status, _error) {
           var respJson = JSON.parse(xhr.responseText);
@@ -2728,22 +2777,26 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       });
     },
     print: function print() {
-      this.store();
+      if (this.edit == true) {
+        return;
+      } //this.store();
+
+
       window.location.href = "/invoice/download/" + this.id; //Todo: Sende Request an PDF Generator Funktion im BackEnd
     },
     reject: function reject() {
-      this.store();
       axios.post("/invoice/reject/" + this.id).then(function (response) {
-        return alert(response["data"]);
+        alert(response["data"]);
+        location.reload();
       }).catch(function (error) {
         return console.log(error);
       });
     },
     setFinished: function setFinished() {
-      this.store();
       axios.post("/invoice/setFinished/" + this.id).then(function (response) {
         console.log(response);
         alert("Erfolgreich freigegeben");
+        location.reload();
       }).catch(function (error) {
         return console.log(error);
       }); //TODO: Speicher Button disablen, da freigegebene Prescribings nicht mehr editiert werden können
@@ -2776,6 +2829,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var that = this; //console.log("InvoicePositionsStripped:");
       //console.log(invoicePositionsStripped);
 
+      if (this.prescribings.length > 0) var imported = 1;else var imported = 0;
       $.ajax({
         headers: {
           "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -2785,7 +2839,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         dataType: "json",
         data: {
           id: that.invoice.id,
-          prescribing_id: that.prescribing,
+          imported_prescribing: imported,
           author: "admin",
           date: that.invoice.date,
           due_until: that.invoice.due_until,
@@ -2797,6 +2851,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         success: function success(response) {
           console.log(response);
           alert("Erfolgreich gespeichert!");
+          location.reload();
         },
         error: function error(xhr, status, _error2) {
           var respJson = JSON.parse(xhr.responseText);
@@ -3417,7 +3472,7 @@ __webpack_require__.r(__webpack_exports__);
       errors: {},
       saved: false,
       students: [],
-      prescribing: null
+      prescribings: []
     };
   },
   computed: {
@@ -3431,61 +3486,71 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     removePrescribing: function removePrescribing() {
-      this.prescribing = null, this.$refs.overview.removePrescribing();
+      this.prescribings = [], this.$refs.overview.removePrescribing();
     },
-    importPrescribing: function importPrescribing(prescribing) {
-      this.prescribing = prescribing;
-      this.$refs.overview.importPrescribing();
+    importPrescribings: function importPrescribings(prescribings) {
+      //this.prescribings = prescribings;
+      this.$refs.overview.importPrescribing(prescribings);
     },
     getPrescribings: function getPrescribings(event) {
-      var _this = this;
+      if (!window.confirm("Aus Vorschreibung übernehmen?")) return; //console.log(event.target.value);
 
-      console.log(event.target.value);
       var reasonId = null;
       this.reason_list.forEach(function (reason) {
         if (event.target.value === reason.title) {
           reasonId = reason.id;
         }
       });
+      var that = this;
       axios.get("/prescribing/getByReasonId/" + reasonId).then(function (response) {
-        console.log(response); //TODO: Eine Prescribing aus mehreren prescribings bauen.
+        if (response.data.length == 0) return; //console.log("Prescribings:");
+        //console.log(response.data[0].positions);
 
-        var compoundPrescribingRaw = {
-          positions: []
+        /*
+        let compoundPrescribingRaw = {
+            positions: []
         };
-        response.data.forEach(function (prescribing) {
-          prescribing.positions.forEach(function (position) {
-            compoundPrescribingRaw.positions.push({
-              amount: 0,
-              user_id: position.user_id
+          response.data.forEach(function(prescribing) {
+            prescribing.positions.forEach(function(position) {
+                compoundPrescribingRaw.positions.push({
+                    amount: 0,
+                    user_id: position.user_id
+                });
             });
-          });
         });
-        var compoundPrescribing = {
-          positions: []
+          let compoundPrescribing = {
+            positions: []
         };
-        var seen = [];
-        compoundPrescribingRaw.positions.forEach(function (position) {
-          if (!seen.includes(position.user_id)) {
-            compoundPrescribing.positions.push({
-              user_id: position.user_id,
-              amount: 0
-            });
-            seen.push(position.user_id);
-          }
+          let seen = [];
+          compoundPrescribingRaw.positions.forEach(function(position){
+            if(!seen.includes(position.user_id)){
+                compoundPrescribing.positions.push({
+                    user_id: position.user_id,
+                    amount: 0,
+                });
+                  seen.push(position.user_id);
+            }
         });
-        console.log(compoundPrescribing);
-        response.data.forEach(function (prescribing) {
-          prescribing.positions.forEach(function (position) {
-            compoundPrescribing.positions.forEach(function (p) {
-              if (p.user_id === position.user_id) {
-                p.amount += Number(position.amount);
-              }
-            });
-          });
-        });
+          console.log(compoundPrescribing);
+          response.data.forEach(function(prescribing){
+            prescribing.positions.forEach(function(position){
+                
+                compoundPrescribing.positions.forEach(function(p){
+                    if(p.user_id === position.user_id){
+                        p.amount += Number(position.amount)
+                    }
+                });
+              });
+        })*/
+        //Add the students from the prescribings
 
-        _this.importPrescribing(compoundPrescribing);
+        response.data[0].positions.forEach(function (prescribing) {
+          that.addStudent(prescribing["user"]);
+        });
+        that.prescribings = response.data[0].positions;
+        that.$nextTick(function () {
+          that.importPrescribings(that.prescribings);
+        });
       }).catch(function (error) {
         return console.log(error);
       });
@@ -3503,6 +3568,24 @@ __webpack_require__.r(__webpack_exports__);
     },
     getStudents: function getStudents() {
       return this.students;
+    },
+    addStudent: function addStudent(student) {
+      if (this.students.filter(function (e) {
+        return e["id"] === student["id"];
+      }).length > 0) {
+        //Duplicate, should not happen
+        return;
+      } //Add a single student
+
+
+      this.students.push(student);
+
+      for (var i = 0; i < this.invoicePositions.length; i++) {
+        this.invoicePositions[i].studentAmounts.push({
+          amount: 0,
+          student: student
+        });
+      }
     },
     addStudents: function addStudents(studentsDom) {
       console.log("Adding Students: ");
@@ -3537,9 +3620,11 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       var that = this;
-      setTimeout(function () {
-        that.importPrescribing(that.prescribing);
-      }, 100);
+      /*
+                  setTimeout(function() {
+                      that.importPrescribing(that.prescribing);
+                  }, 100);
+                  */
     },
     numWithSeperators: function numWithSeperators(num) {
       var num_parts = num.toString().split(".");
@@ -3619,12 +3704,7 @@ __webpack_require__.r(__webpack_exports__);
       });
       console.log(invoicePositionsStripped);
       console.log(that.reason);
-      var prescribingId = null;
-
-      if (this.prescribing != null) {
-        prescribingId = this.prescribing.id;
-      }
-
+      if (this.prescribings.length > 0) var imported = 1;else var imported = 0;
       $.ajax({
         headers: {
           "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -3634,7 +3714,7 @@ __webpack_require__.r(__webpack_exports__);
         dataType: "json",
         data: {
           id: that.invoice_id,
-          prescribing_id: prescribingId,
+          imported_prescribing: imported,
           author: that.author,
           date: that.date,
           due_until: that.due_until,
@@ -3648,8 +3728,7 @@ __webpack_require__.r(__webpack_exports__);
           that.errors = {};
           alert("Erfolgreich gespeichert!");
           that.invoice_id = response;
-          that.saved = true;
-          location.reload();
+          that.saved = true; //location.reload();
         },
         error: function error(xhr, status, _error) {
           var respJson = JSON.parse(xhr.responseText);
@@ -3804,10 +3883,17 @@ __webpack_require__.r(__webpack_exports__);
         ref.removePrescribing();
       });
     },
-    importPrescribing: function importPrescribing() {
+    importPrescribing: function importPrescribing(prescribings) {
+      //console.log(prescribings);
+      //console.log(this.$refs.studentOverview);
       if (this.students.length > 0) {
         this.$refs.studentOverview.forEach(function (ref) {
-          ref.importPrescribing();
+          //Give only right prescribing
+          prescribings.forEach(function (prescribing) {
+            if (prescribing["user_id"] == ref.student["id"]) {
+              ref.importPrescribing(prescribing);
+            }
+          });
         });
       }
     },
@@ -5884,23 +5970,23 @@ __webpack_require__.r(__webpack_exports__);
     removePrescribing: function removePrescribing() {
       this.prescribing_amount = 0;
     },
-    importPrescribing: function importPrescribing() {
-      var _this = this;
-
-      this.prescribing_amount = 0;
-      this.$parent.$parent.prescribing.positions.forEach(function (position) {
-        if (position.user_id === _this.student.id) {
-          _this.prescribing_amount = position.amount;
-        }
+    importPrescribing: function importPrescribing(prescribing) {
+      this.prescribing_amount = prescribing.amount;
+      /*
+      this.$parent.$parent.prescribing.positions.forEach(position => {
+          if (position.user_id === this.student.id) {
+              this.prescribing_amount = position.amount;
+          }
       });
+      */
     },
     sumOfPositions: function sumOfPositions() {
-      var _this2 = this;
+      var _this = this;
 
       var sum = 0;
       this.$parent.$parent.invoice.positions.forEach(function (position) {
         position.studentAmounts.forEach(function (student) {
-          if (student.student.id == _this2.student.id) {
+          if (student.student.id == _this.student.id) {
             sum += student.amount;
           }
         });
@@ -5987,23 +6073,22 @@ __webpack_require__.r(__webpack_exports__);
     removePrescribing: function removePrescribing() {
       this.prescribing_amount = 0;
     },
-    importPrescribing: function importPrescribing() {
-      var _this = this;
-
-      this.prescribing_amount = 0;
-      this.$parent.$parent.prescribing.positions.forEach(function (position) {
-        if (position.user_id === _this.student.id) {
-          _this.prescribing_amount = position.amount;
-        }
-      });
+    importPrescribing: function importPrescribing(prescribing) {
+      this.prescribing_amount = prescribing.amount;
+      /*
+                  this.$parent.$parent.prescribing.positions.forEach(position => {
+                      if (position.user_id === this.student.id) {
+                          this.prescribing_amount = position.amount;
+                      }
+                  });*/
     },
     sumOfPositions: function sumOfPositions() {
-      var _this2 = this;
+      var _this = this;
 
       var sum = 0;
       this.$parent.$parent.invoicePositions.forEach(function (position) {
         position.studentAmounts.forEach(function (student) {
-          if (student.student.id == _this2.student.id) {
+          if (student.student.id == _this.student.id) {
             sum += Number(student.amount);
           }
         });
@@ -42312,7 +42397,7 @@ var render = function() {
                 )
               },
               function($event) {
-                return _vm.getPrescribings($event.target.value)
+                return _vm.reasonChanged($event.target.value)
               }
             ]
           }
@@ -42696,7 +42781,7 @@ var render = function() {
               disabled:
                 _vm.invoice.saved == false ||
                 _vm.invoice.approved == true ||
-                _vm.edit == false
+                _vm.edit == true
             },
             on: {
               click: function($event) {
@@ -42710,7 +42795,7 @@ var render = function() {
             attrs: {
               type: "button",
               value: "Freigeben (Lehrer)",
-              disabled: _vm.invoice.saved == true || _vm.edit == false
+              disabled: _vm.invoice.saved == true || _vm.edit == true
             },
             on: { click: _vm.setFinished }
           }),
@@ -42723,14 +42808,18 @@ var render = function() {
               disabled:
                 _vm.invoice.saved == false ||
                 _vm.invoice.approved == true ||
-                _vm.edit == false
+                _vm.edit == true
             },
             on: { click: _vm.reject }
           }),
           _vm._v(" "),
           _c("input", {
             staticClass: "btn btn-primary",
-            attrs: { type: "button", value: "Drucken" },
+            attrs: {
+              type: "button",
+              value: "Drucken",
+              disabled: _vm.edit == true
+            },
             on: { click: _vm.print }
           })
         ],

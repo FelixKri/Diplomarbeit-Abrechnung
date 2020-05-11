@@ -258,11 +258,6 @@ class InvoiceController extends Controller
 
         $inv = Invoice::find(request()->id);
 
-        if(request()->prescribing != null){
-            $inv->prescribing->id = request()->prescribing_id;
-        }else{
-            $inv->prescribing_id = null;
-        }
         
         $inv->date = request()->date;
         $inv->due_until = request()->due_until;
@@ -270,6 +265,7 @@ class InvoiceController extends Controller
         $inv->reason_id = Reason::where('title', request()->reason)->first()->id;
         $inv->total_amount = request()->totalAmount;
         $inv->annotation = request()->annotation;
+        $inv->imported_prescribing = request()->imported_prescribing;
         $inv->save();
 
         //Get all old InvoicePositions and UserHasInvoicePositions and delete them
@@ -520,9 +516,10 @@ class InvoiceController extends Controller
             $inv = Invoice::find(request()->id);
         }
 
+        /*
         if(request()->prescribing_id != null){
             $inv->prescribing_id = request()->prescribing_id;
-        }
+        }*/
 
         $inv->date = request()->date;
         $inv->due_until = request()->due_until;
@@ -530,6 +527,7 @@ class InvoiceController extends Controller
         $inv->reason_id = Reason::where('title', request()->reason)->first()->id;
         $inv->total_amount = request()->totalAmount;
         $inv->annotation = request()->annotation;
+        $inv->imported_prescribing = request()->imported_prescribing;
         $inv->save();
 
         if(request()->id != null){
