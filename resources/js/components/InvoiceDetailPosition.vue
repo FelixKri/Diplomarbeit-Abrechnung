@@ -299,17 +299,17 @@ export default {
 
             if (this.type == "overwrite") {
                 this.position.studentAmounts.forEach(function(studentA) {
-                    if (student.checked) {
+                    if (studentA.checked) {
                         var studentMoney = Math.round(value * 100) / 100;
-                        studentA.amount = studentMoney;
+                        studentA.amount = Number(studentMoney);
                         splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                     }
                 });
             } else {
                 this.position.studentAmounts.forEach(function(studentA) {
-                    if (student.checked) {
+                    if (studentA.checked) {
                         var studentMoney = Math.round(value * 100) / 100;
-                        studentA.amount += studentMoney;
+                        studentA.amount = Number(studentMoney) + Number(studentA.amount);
                         splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                     }
                 });

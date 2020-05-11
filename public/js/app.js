@@ -3107,17 +3107,17 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.type == "overwrite") {
         this.position.studentAmounts.forEach(function (studentA) {
-          if (student.checked) {
+          if (studentA.checked) {
             var studentMoney = Math.round(value * 100) / 100;
-            studentA.amount = studentMoney;
+            studentA.amount = Number(studentMoney);
             splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
           }
         });
       } else {
         this.position.studentAmounts.forEach(function (studentA) {
-          if (student.checked) {
+          if (studentA.checked) {
             var studentMoney = Math.round(value * 100) / 100;
-            studentA.amount += studentMoney;
+            studentA.amount = Number(studentMoney) + Number(studentA.amount);
             splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
           }
         });
@@ -5557,12 +5557,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log("Component mounted: Student");
+    this.studentAmount.student.checked = false;
   },
   props: ["studentAmount"],
   data: function data() {
     return {};
   },
   methods: {
+    switchChecked: function switchChecked() {
+      if (this.studentAmount.student.checked == false) {
+        this.studentAmount.student.checked = true;
+      } else {
+        this.studentAmount.student.checked = false;
+      }
+    },
     getGroupName: function getGroupName(id) {
       for (var i = 0; i < this.$parent.groupLength; i++) {
         if (this.$parent.groups[i]["id"] == id) {
@@ -5603,15 +5611,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log("Component mounted: Student");
+    this.studentAmount.student.checked = false;
   },
   props: ["studentAmount"],
   data: function data() {
     return {};
   },
   methods: {
+    switchChecked: function switchChecked() {
+      if (this.studentAmount.student.checked == false) {
+        this.studentAmount.student.checked = true;
+      } else {
+        this.studentAmount.student.checked = false;
+      }
+    },
     getGroupName: function getGroupName(id) {
       for (var i = 0; i < this.$parent.groupLength; i++) {
         if (this.$parent.groups[i]["id"] == id) {
@@ -45941,46 +45966,10 @@ var render = function() {
   return _c("tr", [
     _c("td", [
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: this.studentAmount.student.checked,
-            expression: "this.studentAmount.student.checked"
-          }
-        ],
         attrs: { type: "checkbox" },
-        domProps: {
-          checked: Array.isArray(this.studentAmount.student.checked)
-            ? _vm._i(this.studentAmount.student.checked, null) > -1
-            : this.studentAmount.student.checked
-        },
         on: {
-          change: function($event) {
-            var $$a = this.studentAmount.student.checked,
-              $$el = $event.target,
-              $$c = $$el.checked ? true : false
-            if (Array.isArray($$a)) {
-              var $$v = null,
-                $$i = _vm._i($$a, $$v)
-              if ($$el.checked) {
-                $$i < 0 &&
-                  _vm.$set(
-                    this.studentAmount.student,
-                    "checked",
-                    $$a.concat([$$v])
-                  )
-              } else {
-                $$i > -1 &&
-                  _vm.$set(
-                    this.studentAmount.student,
-                    "checked",
-                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                  )
-              }
-            } else {
-              _vm.$set(this.studentAmount.student, "checked", $$c)
-            }
+          click: function($event) {
+            return _vm.switchChecked()
           }
         }
       })
@@ -46044,49 +46033,13 @@ var render = function() {
   return _c("tr", [
     _c("td", [
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.studentAmount.student.checked,
-            expression: "studentAmount.student.checked"
-          }
-        ],
         attrs: {
           type: "checkbox",
           disabled: _vm.$parent.$parent.edit == false
         },
-        domProps: {
-          checked: Array.isArray(_vm.studentAmount.student.checked)
-            ? _vm._i(_vm.studentAmount.student.checked, null) > -1
-            : _vm.studentAmount.student.checked
-        },
         on: {
-          change: function($event) {
-            var $$a = _vm.studentAmount.student.checked,
-              $$el = $event.target,
-              $$c = $$el.checked ? true : false
-            if (Array.isArray($$a)) {
-              var $$v = null,
-                $$i = _vm._i($$a, $$v)
-              if ($$el.checked) {
-                $$i < 0 &&
-                  _vm.$set(
-                    _vm.studentAmount.student,
-                    "checked",
-                    $$a.concat([$$v])
-                  )
-              } else {
-                $$i > -1 &&
-                  _vm.$set(
-                    _vm.studentAmount.student,
-                    "checked",
-                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                  )
-              }
-            } else {
-              _vm.$set(_vm.studentAmount.student, "checked", $$c)
-            }
+          click: function($event) {
+            return _vm.switchChecked()
           }
         }
       })
