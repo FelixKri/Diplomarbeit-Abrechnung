@@ -472,6 +472,18 @@ export default {
             console.log(this.invoicePositions.length);
 
             this.invoicePositions.forEach(function(position) {
+
+                let studentAmountsStripped = [];
+
+                position.studentAmounts.forEach(function(studentAmount) {
+                    studentAmountsStripped.push({
+                        student: {
+                            "id": studentAmount.student.id
+                        },
+                        "amount": studentAmount.amount
+                    })
+                });
+
                 invoicePositionsStripped.push({
                     id: position.id,
                     name: position.name,
@@ -481,7 +493,7 @@ export default {
                     belegNr: position.document_number,
                     paidByTeacher: position.paidByTeacher,
                     iban: position.iban,
-                    studentAmounts: position.studentAmounts
+                    studentAmounts: studentAmountsStripped
                 });
 
                 totalAmountRequest += position.amount;

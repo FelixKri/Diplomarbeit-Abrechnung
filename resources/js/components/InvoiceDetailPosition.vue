@@ -299,9 +299,10 @@ export default {
 
             if (this.type == "overwrite") {
                 this.position.studentAmounts.forEach(function(studentA) {
+
                     if (studentA.student.checked) {
                         var studentMoney = Math.round(value * 100) / 100;
-                        studentA.amount = studentMoney;
+                        studentA.amount = Number(studentMoney);
                         splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                     }
                 });
@@ -310,6 +311,7 @@ export default {
                     if (studentA.student.checked) {
                         var studentMoney = Math.round(value * 100) / 100;
                         studentA.amount = Math.round((studentA.amount + studentMoney) * 100) / 100;
+
                         splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
                     }
                 });
