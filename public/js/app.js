@@ -2015,7 +2015,12 @@ __webpack_require__.r(__webpack_exports__);
               for (var i = 0; i < studentsCount; i++) {
                 var student = parentStudents[i];
 
-                if (student["user"]["id"] == thing["id"]) {
+                if (student.user == null) {
+                  if (student["id"] == thing["id"]) {
+                    //Add to array
+                    studentsAlreadyIn.push(student["id"]);
+                  }
+                } else if (student["user"]["id"] == thing["id"]) {
                   //Add to array
                   studentsAlreadyIn.push(student["user"]["id"]);
                 }
@@ -2580,6 +2585,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     getStudents: function getStudents() {
+      console.log("Students:");
+      console.log(this.students);
       return this.students;
     },
     addStudents: function addStudents(studentsDom) {
@@ -3151,7 +3158,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.type == "overwrite") {
         this.position.studentAmounts.forEach(function (studentA) {
-          if (student.checked) {
+          if (studentA.student.checked) {
             var studentMoney = Math.round(value * 100) / 100;
             studentA.amount = studentMoney;
             splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
@@ -3159,9 +3166,9 @@ __webpack_require__.r(__webpack_exports__);
         });
       } else {
         this.position.studentAmounts.forEach(function (studentA) {
-          if (student.checked) {
+          if (studentA.student.checked) {
             var studentMoney = Math.round(value * 100) / 100;
-            studentA.amount += studentMoney;
+            studentA.amount = Math.round((studentA.amount + studentMoney) * 100) / 100;
             splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
           }
         });
@@ -3183,7 +3190,7 @@ __webpack_require__.r(__webpack_exports__);
           } //Same here, 33.33 + .01 = 33,339999999999996
 
 
-          studentA.amount = Math.round((studentA.amount + 0.01) * 100) / 100;
+          studentA.amount = parseFloat(Math.round((studentA.amount + 0.01) * 100) / 100);
           centdiff = Math.round((centdiff - 0.01) * 100) / 100;
         });
       } else if (centdiff < 0) {
@@ -3196,7 +3203,7 @@ __webpack_require__.r(__webpack_exports__);
           } //Same here
 
 
-          studentA.amount = Math.round((studentA.amount - 0.01) * 100) / 100;
+          studentA.amount = parseFloat(Math.round((studentA.amount - 0.01) * 100) / 100);
           centdiff = Math.round((centdiff + 0.01) * 100) / 100;
         });
       }
@@ -4377,6 +4384,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
 //
 //
 //
@@ -42347,7 +42355,9 @@ var render = function() {
       attrs: {
         type: "button",
         value: "Bearbeitung aktivieren",
-        disabled: _vm.edit == true
+        disabled:
+          _vm.edit == true ||
+          (this.invoice.approved == true && this.invoice.saved == true)
       },
       on: {
         click: function($event) {
@@ -44371,7 +44381,10 @@ var render = function() {
         attrs: {
           type: "button",
           value: "Bearbeitung aktivieren",
-          disabled: _vm.edit == true
+          disabled:
+            _vm.edit == true ||
+            (this.prescribingRequested.finished == true &&
+              this.prescribingRequested.approved == true)
         },
         on: {
           click: function($event) {

@@ -6,7 +6,8 @@
             value="Bearbeitung aktivieren"
             class="btn btn-danger"
             @click="edit = true"
-            :disabled="edit == true"
+            :disabled="edit == true || (this.prescribingRequested.finished == true &&
+                    this.prescribingRequested.approved == true)"
         />
         <p>
             Ursprünglicher Autor:

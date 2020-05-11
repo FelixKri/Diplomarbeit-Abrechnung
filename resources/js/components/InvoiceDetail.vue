@@ -6,7 +6,7 @@
             value="Bearbeitung aktivieren"
             class="btn btn-danger"
             @click="edit = true"
-            :disabled="edit == true"
+            :disabled="edit == true || (this.invoice.approved == true && this.invoice.saved == true)"
         />
         <p>
             Ursprünglicher Author:
@@ -435,6 +435,8 @@ export default {
                 }
         },
         getStudents: function() {
+            console.log("Students:");
+            console.log(this.students);
             return this.students;
         },
         addStudents: function(studentsDom) {
