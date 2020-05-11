@@ -144,7 +144,7 @@
             <input
                 type="number"
                 name="total_amount"
-                :value="numWithSeperators(totalAmountComputed)"
+                :value="totalAmountComputed"
                 disabled
                 class="form-control"
             />
