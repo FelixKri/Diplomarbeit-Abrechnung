@@ -153,6 +153,7 @@ class PrescribingController extends Controller
         $presc->title = request()->title;
         $presc->description = request()->description;
         $presc->author_id = FosUser::where('username', request()->author)->first()->id;
+        $presc->total_amount = request()->totalAmount;
         $presc->save();
 
         $user_has_presc = UserHasPrescribingSuggestion::where("prescribing_suggestion_id", request()->id)->delete();
