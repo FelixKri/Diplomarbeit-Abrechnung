@@ -8,15 +8,15 @@
                 type=""
                 name=""
                 class="form-control text-right"
-                v-model="invoice_amount"
+                :value="Math.round(invoice_amount * 100) / 100"
                 disabled
             />
         </td>
         <td>
-            <input type="text" disabled v-model="prescribing_amount" class="form-control text-right"/>
+            <input type="text" disabled :value="Math.round(prescribing_amount * 100) / 100" class="form-control text-right"/>
         </td>
         <td>
-            <input type="text" disabled v-model="difference" class="form-control text-right">
+            <input type="text" disabled :value="Math.round(difference * 100) / 100" class="form-control text-right">
         </td>
         <td>
             <span style="font-weight: bold; color: red;" v-if="$parent.$parent.prescribing != null && difference < 0">Gutschrift</span>

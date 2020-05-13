@@ -4909,7 +4909,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           students: studentIds,
           amount: studentAmounts,
           annotation: studentAnnotations,
-          positionIds: positionIds
+          positionIds: positionIds,
+          totalAmount: that.totalAmountComputed
         },
         success: function success(response) {
           alert("Erfolgreich gespeichert");
@@ -44762,7 +44763,11 @@ var render = function() {
         _c("input", {
           staticClass: "form-control",
           attrs: { type: "number", name: "total_amount", disabled: "" },
-          domProps: { value: _vm.totalAmountComputed }
+          domProps: {
+            value: _vm.numWithSeperators(
+              Math.round(_vm.totalAmountComputed * 100) / 100
+            )
+          }
         })
       ]),
       _vm._v(" "),
@@ -46178,73 +46183,25 @@ var render = function() {
     _vm._v(" "),
     _c("td", [
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.invoice_amount,
-            expression: "invoice_amount"
-          }
-        ],
         staticClass: "form-control text-right",
         attrs: { type: "", name: "", disabled: "" },
-        domProps: { value: _vm.invoice_amount },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.invoice_amount = $event.target.value
-          }
-        }
+        domProps: { value: Math.round(_vm.invoice_amount * 100) / 100 }
       })
     ]),
     _vm._v(" "),
     _c("td", [
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.prescribing_amount,
-            expression: "prescribing_amount"
-          }
-        ],
         staticClass: "form-control text-right",
         attrs: { type: "text", disabled: "" },
-        domProps: { value: _vm.prescribing_amount },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.prescribing_amount = $event.target.value
-          }
-        }
+        domProps: { value: Math.round(_vm.prescribing_amount * 100) / 100 }
       })
     ]),
     _vm._v(" "),
     _c("td", [
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.difference,
-            expression: "difference"
-          }
-        ],
         staticClass: "form-control text-right",
         attrs: { type: "text", disabled: "" },
-        domProps: { value: _vm.difference },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.difference = $event.target.value
-          }
-        }
+        domProps: { value: Math.round(_vm.difference * 100) / 100 }
       })
     ]),
     _vm._v(" "),
@@ -46312,73 +46269,25 @@ var render = function() {
     _vm._v(" "),
     _c("td", [
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.invoiceAmountRounded,
-            expression: "invoiceAmountRounded"
-          }
-        ],
         staticClass: "form-control text-right",
         attrs: { type: "", name: "", disabled: "" },
-        domProps: { value: _vm.invoiceAmountRounded },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.invoiceAmountRounded = $event.target.value
-          }
-        }
+        domProps: { value: Math.round(_vm.invoiceAmountRounded * 100) / 100 }
       })
     ]),
     _vm._v(" "),
     _c("td", [
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.prescribing_amount,
-            expression: "prescribing_amount"
-          }
-        ],
         staticClass: "form-control text-right",
         attrs: { type: "text", disabled: "" },
-        domProps: { value: _vm.prescribing_amount },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.prescribing_amount = $event.target.value
-          }
-        }
+        domProps: { value: Math.round(_vm.prescribing_amount * 100) / 100 }
       })
     ]),
     _vm._v(" "),
     _c("td", [
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.difference,
-            expression: "difference"
-          }
-        ],
         staticClass: "form-control text-right",
         attrs: { type: "text", disabled: "" },
-        domProps: { value: _vm.difference },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.difference = $event.target.value
-          }
-        }
+        domProps: { value: Math.round(_vm.difference * 100) / 100 }
       })
     ]),
     _vm._v(" "),

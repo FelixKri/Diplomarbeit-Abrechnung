@@ -145,7 +145,7 @@
             <input
                 type="number"
                 name="total_amount"
-                :value="totalAmountComputed"
+                :value="numWithSeperators(Math.round((totalAmountComputed) * 100) / 100)"
                 disabled
                 class="form-control"
             />
@@ -499,7 +499,8 @@ export default {
                     students: studentIds,
                     amount: studentAmounts,
                     annotation: studentAnnotations,
-                    positionIds: positionIds
+                    positionIds: positionIds,
+                    totalAmount: that.totalAmountComputed,
                 },
                 success: function(response) {
                     alert("Erfolgreich gespeichert");
