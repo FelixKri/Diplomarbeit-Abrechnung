@@ -459,6 +459,9 @@ export default {
                 this.prescribing.positions = this.prescribing.positions.concat(newPoses);
         },
         removeStudent: function(id) {
+            if(this.edit == false)
+                return;
+
             this.prescribing.positions = this.prescribing.positions.filter(
                 el => el.id !== id
             );

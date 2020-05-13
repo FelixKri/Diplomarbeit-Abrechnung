@@ -406,6 +406,10 @@ export default {
                 */
         },
         removeStudent: function(id) {
+
+            if(this.edit == false)
+                return;
+
             this.students = this.students.filter(el => el.id !== id);
             //this.invoice.students = this.invoice.students.filter(el => el.id !== id);
 
