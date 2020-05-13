@@ -3114,11 +3114,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.type == "overwrite") {
         this.position.studentAmounts.forEach(function (studentA) {
-<<<<<<< HEAD
           if (studentA.student.checked) {
-=======
-          if (studentA.checked) {
->>>>>>> a032c0e8eddc917d2b3932e09c715e21578ef4f2
             var studentMoney = Math.round(value * 100) / 100;
             studentA.amount = Number(studentMoney);
             splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
@@ -3126,15 +3122,9 @@ __webpack_require__.r(__webpack_exports__);
         });
       } else {
         this.position.studentAmounts.forEach(function (studentA) {
-<<<<<<< HEAD
           if (studentA.student.checked) {
             var studentMoney = Math.round(value * 100) / 100;
             studentA.amount = Math.round((studentA.amount + studentMoney) * 100) / 100;
-=======
-          if (studentA.checked) {
-            var studentMoney = Math.round(value * 100) / 100;
-            studentA.amount = Number(studentMoney) + Number(studentA.amount);
->>>>>>> a032c0e8eddc917d2b3932e09c715e21578ef4f2
             splitMoney = Math.round((splitMoney + studentMoney) * 100) / 100;
           }
         });
@@ -5288,6 +5278,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["reasons"],
   mounted: function mounted() {
@@ -5339,6 +5336,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     getStudents: function getStudents() {
       return this.students;
+    },
+    print: function print() {
+      window.location.href = "/prescribing/download/" + this.id;
     },
     store: function store() {
       this.errors = null;
@@ -45731,6 +45731,12 @@ var render = function() {
             disabled: _vm.id == null
           },
           on: { click: _vm.release }
+        }),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "btn btn-success",
+          attrs: { type: "button", value: "Drucken", disabled: _vm.id == null },
+          on: { click: _vm.print }
         })
       ],
       1

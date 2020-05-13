@@ -191,6 +191,13 @@
                 @click="release"
                 :disabled="id == null"
             />
+            <input
+                type="button"
+                value="Drucken"
+                class="btn btn-success"
+                @click="print"
+                :disabled="id == null"
+            />
         </form>
     </div>
 </template>
@@ -253,6 +260,10 @@ export default {
         },
         getStudents: function() {
             return this.students;
+        },
+        print: function(){
+            window.location.href =
+                "/prescribing/download/" + this.id;
         },
         store: function() {
             this.errors = null;
