@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="date">Datum</label>
+                <label for="date">Datum*:</label>
                 <input
                     type="date"
                     class="form-control"
@@ -53,7 +53,7 @@
                 </ul>
             </div>
             <div class="form-group">
-                <label for="date">Spätest gewünschtes Einzahlungsdatum</label>
+                <label for="date">Spätest gewünschtes Einzahlungsdatum*:</label>
                 <input
                     type="date"
                     class="form-control"
@@ -75,7 +75,7 @@
                 </ul>
             </div>
             <div class="form-group">
-                <label for="author">Abrechner</label>
+                <label for="author">Abrechner:</label>
                 <input
                     type="text"
                     class="form-control"
@@ -86,7 +86,7 @@
                 />
             </div>
             <div class="form-group">
-                <label for="annotation">Anmerkungen</label>
+                <label for="annotation">Anmerkungen:</label>
                 <textarea
                     class="form-control"
                     id="annotation"

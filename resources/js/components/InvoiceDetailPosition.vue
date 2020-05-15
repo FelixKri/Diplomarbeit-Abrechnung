@@ -22,7 +22,7 @@
                 <input type="checkbox" v-model="position.paidByTeacher" :disabled="$parent.edit == false"><span>Von Lehrpersonal bezhalt</span>
 
                 <div class="form-group" v-if="position.paidByTeacher">
-                    <label for="iban">IBAN</label>
+                    <label for="iban">IBAN*:</label>
                     <input
                         type="text"
                         class="form-control"
@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="billnumber">BelegNr</label>
+                    <label for="billnumber">BelegNr*:</label>
                     <input
                         type="number"
                         class="form-control"

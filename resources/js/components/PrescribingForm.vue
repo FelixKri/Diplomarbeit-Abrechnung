@@ -3,7 +3,7 @@
         <form>
             <h1>Neue Vorschreibung erstellen</h1>
             <div class="form-group">
-                <label for="title">Titel: </label>
+                <label for="title">Titel: *</label>
                 <input
                     type="text"
                     name="title"
@@ -22,7 +22,7 @@
                 </ul>
             </div>
             <div class="form-group">
-                <label for="author">Vorschreiber: </label>
+                <label for="author">Vorschreiber*: </label>
                 <input
                     type="text"
                     v-model="author"
@@ -42,7 +42,7 @@
             </div>
 
             <div class="form-group">
-                <label for="date">Datum der Vorschreibung: </label>
+                <label for="date">Datum der Vorschreibung*:</label>
                 <input
                     type="date"
                     name="date"
@@ -62,7 +62,7 @@
             </div>
             <div class="form-group">
                 <label for="due_until"
-                    >Spätestens gewünschtes Einzahlungsdatum:
+                    >Spätestens gewünschtes Einzahlungsdatum*: 
                 </label>
                 <input
                     type="date"
@@ -83,7 +83,7 @@
                 </ul>
             </div>
             <div class="form-group">
-                <label for="reason_suggestion">Grundvorschlag: </label>
+                <label for="reason_suggestion">Grundvorschlag**: </label>
                 <input
                     type="text"
                     name="reason_suggestion"
@@ -103,7 +103,7 @@
                 </ul>
             </div>
             <div class="form-group">
-                <label for="reason">Grund</label>
+                <label for="reason">Grund**</label>
                 <select
                     name="reason"
                     id=""
@@ -128,7 +128,7 @@
                 </ul>
             </div>
             <div class="form-group">
-                <label for="description">Beschreibung: </label>
+                <label for="description">Beschreibung*: </label>
                 <input
                     type="text"
                     name="description"

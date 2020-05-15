@@ -25,7 +25,7 @@
                     >Von Lehrpersonal bezhalt</span
                 >
                 <div class="form-group" v-if="position.paidByTeacher">
-                    <label for="iban">IBAN</label>
+                    <label for="iban">IBAN*:</label>
                     <input
                         type="text"
                         class="form-control"
@@ -61,7 +61,7 @@
                     </ul>
                 </div>
                 <div class="form-group">
-                    <label for="billnumber">BelegNr</label>
+                    <label for="billnumber">BelegNr*:</label>
                     <input
                         type="number"
                         class="form-control"
