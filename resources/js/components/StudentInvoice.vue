@@ -1,5 +1,6 @@
 <template>
     <tr>
+        <td>{{number + 1}}</td>
         <td>
             <input
                 type="checkbox"
@@ -26,7 +27,7 @@ export default {
         console.log("Component mounted: Student");
         this.studentAmount.student.checked = false;
     },
-    props: ["studentAmount"],
+    props: ["studentAmount", "number"],
     data: function() {
         return {};
     },

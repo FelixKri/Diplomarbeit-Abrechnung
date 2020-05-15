@@ -205,6 +205,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th scope="col">Nr.</th>
                     <th scope="col">X</th>
                     <th scope="col">ID</th>
                     <th scope="col">Nachname</th>
@@ -218,6 +219,7 @@
                     v-bind:key="studentA.student.id"
                     v-for="studentA in this.position.studentAmounts"
                     :studentAmount="studentA"
+                    :number="position.studentAmounts.indexOf(studentA)"
                 ></student-invoice>
             </tbody>
         </table>

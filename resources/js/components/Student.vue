@@ -1,6 +1,9 @@
 <template>
     <tr>
         <td>
+            {{number+1}}
+        </td>
+        <td>
             <input type="checkbox" v-model="student.checked">
         </td>
         <td>{{ getGroupName(student.group_id) }}</td>
@@ -21,7 +24,7 @@
         mounted() {
             console.log('Component mounted: Student')
         },
-        props: ["student"],
+        props: ["student", "number"],
         data: function () {
             return {
                 

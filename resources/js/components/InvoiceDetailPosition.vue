@@ -160,7 +160,7 @@
             <thead>
                 <tr>
                     <th scope="col">X</th>
-                    <th scope="col">ID</th>
+                    <th scope="col">Nr.</th>
                     <th scope="col">Nachname</th>
                     <th scope="col">Vorname</th>
                     <th scope="col">Klasse</th>
@@ -172,6 +172,7 @@
                     v-bind:key="studentA.student.id"
                     v-for="studentA in position.studentAmounts"
                     :studentAmount="studentA"
+                    :number="position.studentAmounts.indexOf(studentA)"
                 ></student-invoice-detail>
             </tbody>
         </table>

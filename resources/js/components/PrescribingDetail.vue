@@ -243,6 +243,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th scope="col">Nr.</th>
                     <th scope="col">X</th>
                     <th scope="col">Nachname</th>
                     <th scope="col">Vorname</th>
@@ -257,6 +258,9 @@
                     v-for="position in prescribing.positions"
                     v-bind:key="position.id"
                 >
+                    <td>
+                        {{prescribing.positions.indexOf(position)+1}}
+                    </td>
                     <td>
                         <input type="checkbox" v-model="position.checked" />
                     </td>

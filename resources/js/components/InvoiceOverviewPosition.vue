@@ -20,6 +20,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th scope="col">Nr.</th>
                     <th scope="col">Nachname</th>
                     <th scope="col">Vorname</th>
                     <th scope="col">Klasse</th>
@@ -36,6 +37,7 @@
                     :student="student"
                     v-on:removeStudent="removeStudent($event)"
                     ref="studentOverview"
+                    :number="students.indexOf(student)"
                 ></student-overview-invoice>
             </tbody>
         </table>
