@@ -14,7 +14,7 @@ class AjaxController extends Controller
 {
 
 	public function getReasons(){
-		return Reason::All()->pluck("title");
+		return Reason::where('active', true)->pluck("title");
 	}
 
 	public function getGroups()
