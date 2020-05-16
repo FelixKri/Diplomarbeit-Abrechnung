@@ -439,53 +439,50 @@ export default {
                 }
         },
         getStudents: function() {
-            console.log("Students:");
-            console.log(this.students);
+            //console.log("Students:");
+            //console.log(this.students);
             return this.students;
         },
         addStudents: function(studentsDom) {
-            console.log("Adding Students: ");
-            console.log(studentsDom);
+            //console.log("Adding Students: ");
+            //console.log(studentsDom);
+
+            var that = this;
 
             if (this.students == null) {
-                console.log("students null");
+                //console.log("students null");
                 this.students = studentsDom;
 
-                var posStudentAmount = [];
-                studentsDom.forEach(function(student) {
-                    posStudentAmount.push({ amount: 0, student: student });
-                });
-
                 for (var i = 0; i < this.invoice.positions.length; i++) {
-                    this.invoice.positions[i].studentAmounts = posStudentAmount;
+                    this.invoice.positions[i].studentAmounts = [];
+                    studentsDom.forEach(function(student) {
+                        that.invoice.positions[i].studentAmounts.push({ amount: 0, student: student });
+                });
+                    
                 }
             } else {
 
-                var that1 = this;
-
-                var posStudentAmount = [];
                 studentsDom.forEach(function(student) {
-                    that1.students.push(student);
-                    posStudentAmount.push({ amount: 0, student: student });
+                    that.students.push(student);
+                    //posStudentAmount.push({ amount: 0, student: student });
                 });
-
-                console.log("Adding studentAmounts:");
-                console.log(posStudentAmount);
 
                 for (var i = 0; i < this.invoice.positions.length; i++) {
                     
-                    posStudentAmount.forEach(function(studentA){
+                    /*posStudentAmount.forEach(function(studentA){
                         that1.invoice.positions[i].studentAmounts.push(
                         studentA);
-                    });
+                    });*/
+                    studentsDom.forEach(function(student) {
+                        that.invoice.positions[i].studentAmounts.push({ amount: 0, student: student });
+                    //posStudentAmount.push({ amount: 0, student: student });
+                });
                     
 
-                    console.log("New Position studentAmounts:");
-                    console.log(this.invoice.positions[i].studentAmounts);
+                    //console.log("New Position studentAmounts:");
+                    //console.log(this.invoice.positions[i].studentAmounts);
                 }
             }
-
-            let that = this;
 
             setTimeout(function() {
                 that.importPrescribing(that.prescribing);
@@ -543,8 +540,8 @@ export default {
                 } catch (err) {
                     apiRes = err.response;
                 } finally {
-                    console.log("Invoice:");
-                    console.log(apiRes.data); // Could be success or error
+                    //console.log("Invoice:");
+                    //console.log(apiRes.data); // Could be success or error
                     var newInvoice = apiRes.data;
                     this.last_id =
                         newInvoice.positions[
@@ -557,8 +554,8 @@ export default {
                     newInvoice.positions.forEach(function(position) {
                         position.studentAmounts = [];
 
-                        console.log("Position");
-                        console.log(position);
+                        //console.log("Position");
+                        //console.log(position);
 
                         position.user_has_invoice_position.forEach(function(
                             uhip

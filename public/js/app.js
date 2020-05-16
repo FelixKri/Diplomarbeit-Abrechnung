@@ -2586,51 +2586,48 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     getStudents: function getStudents() {
-      console.log("Students:");
-      console.log(this.students);
+      //console.log("Students:");
+      //console.log(this.students);
       return this.students;
     },
     addStudents: function addStudents(studentsDom) {
-      console.log("Adding Students: ");
-      console.log(studentsDom);
+      //console.log("Adding Students: ");
+      //console.log(studentsDom);
+      var that = this;
 
       if (this.students == null) {
-        console.log("students null");
+        //console.log("students null");
         this.students = studentsDom;
-        var posStudentAmount = [];
-        studentsDom.forEach(function (student) {
-          posStudentAmount.push({
-            amount: 0,
-            student: student
-          });
-        });
 
         for (var i = 0; i < this.invoice.positions.length; i++) {
-          this.invoice.positions[i].studentAmounts = posStudentAmount;
+          this.invoice.positions[i].studentAmounts = [];
+          studentsDom.forEach(function (student) {
+            that.invoice.positions[i].studentAmounts.push({
+              amount: 0,
+              student: student
+            });
+          });
         }
       } else {
-        var that1 = this;
-        var posStudentAmount = [];
         studentsDom.forEach(function (student) {
-          that1.students.push(student);
-          posStudentAmount.push({
-            amount: 0,
-            student: student
-          });
+          that.students.push(student); //posStudentAmount.push({ amount: 0, student: student });
         });
-        console.log("Adding studentAmounts:");
-        console.log(posStudentAmount);
 
         for (var i = 0; i < this.invoice.positions.length; i++) {
-          posStudentAmount.forEach(function (studentA) {
-            that1.invoice.positions[i].studentAmounts.push(studentA);
-          });
-          console.log("New Position studentAmounts:");
-          console.log(this.invoice.positions[i].studentAmounts);
+          /*posStudentAmount.forEach(function(studentA){
+              that1.invoice.positions[i].studentAmounts.push(
+              studentA);
+          });*/
+          studentsDom.forEach(function (student) {
+            that.invoice.positions[i].studentAmounts.push({
+              amount: 0,
+              student: student
+            }); //posStudentAmount.push({ amount: 0, student: student });
+          }); //console.log("New Position studentAmounts:");
+          //console.log(this.invoice.positions[i].studentAmounts);
         }
       }
 
-      var that = this;
       setTimeout(function () {
         that.importPrescribing(that.prescribing);
       }, 100);
@@ -2704,17 +2701,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 10:
                 _context.prev = 10;
-                console.log("Invoice:");
-                console.log(apiRes.data); // Could be success or error
-
+                //console.log("Invoice:");
+                //console.log(apiRes.data); // Could be success or error
                 newInvoice = apiRes.data;
                 _this.last_id = newInvoice.positions[newInvoice.positions.length - 1].position_id; //Cast stuff  from database into usable stuff
 
                 tempStudents = [];
                 newInvoice.positions.forEach(function (position) {
-                  position.studentAmounts = [];
-                  console.log("Position");
-                  console.log(position);
+                  position.studentAmounts = []; //console.log("Position");
+                  //console.log(position);
+
                   position.user_has_invoice_position.forEach(function (uhip) {
                     var sAmount = {
                       amount: parseFloat(uhip["amount"]),
@@ -2744,12 +2740,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 return _context.finish(10);
 
-              case 21:
+              case 19:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[1, 7, 10, 21]]);
+        }, _callee, null, [[1, 7, 10, 19]]);
       }))();
     },
     release: function release() {
@@ -3601,38 +3597,35 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.students == null) {
         this.students = studentsDom;
-        var posStudentAmount = [];
-        studentsDom.forEach(function (student) {
-          posStudentAmount.push({
+
+        for (var i = 0; i < this.invoicePositions.length; i++) {
+          this.invoicePositions[i].studentAmounts = [];
+          var that = this;
+          studentsDom.forEach(function (student) {});
+          that.invoicePositions[i].studentAmounts.push({
             amount: 0,
             student: student
           });
-        });
-
-        for (var i = 0; i < this.invoicePositions.length; i++) {
-          this.invoicePositions[i].studentAmounts = posStudentAmount;
         }
       } else {
         this.students = this.students.concat(studentsDom);
-        var posStudentAmount = [];
-        studentsDom.forEach(function (student) {
-          posStudentAmount.push({
-            amount: 0,
-            student: student
-          });
-        });
 
         for (var i = 0; i < this.invoicePositions.length; i++) {
-          this.invoicePositions[i].studentAmounts = this.invoicePositions[i].studentAmounts.concat(posStudentAmount);
+          var that = this;
+          studentsDom.forEach(function (student) {
+            that.invoicePositions[i].studentAmounts.push({
+              amount: 0,
+              student: student
+            });
+          });
         }
       }
-
-      var that = this;
       /*
                   setTimeout(function() {
                       that.importPrescribing(that.prescribing);
                   }, 100);
                   */
+
     },
     numWithSeperators: function numWithSeperators(num) {
       var num_parts = num.toString().split(".");
@@ -6040,9 +6033,9 @@ __webpack_require__.r(__webpack_exports__);
 
       var sum = 0;
       this.$parent.$parent.invoice.positions.forEach(function (position) {
-        position.studentAmounts.forEach(function (student) {
-          if (student.student.id == _this.student.id) {
-            sum += student.amount;
+        position.studentAmounts.forEach(function (studentA) {
+          if (studentA.student.id == _this.student.id) {
+            sum += parseFloat(studentA.amount);
           }
         });
       });
@@ -6142,13 +6135,13 @@ __webpack_require__.r(__webpack_exports__);
 
       var sum = 0;
       this.$parent.$parent.invoicePositions.forEach(function (position) {
-        position.studentAmounts.forEach(function (student) {
-          if (student.student.id == _this.student.id) {
-            sum += Number(student.amount);
+        position.studentAmounts.forEach(function (studentA) {
+          if (studentA.student.id == _this.student.id) {
+            sum = parseFloat(sum) + parseFloat(studentA.amount);
           }
         });
       });
-      this.invoice_amount = sum;
+      this.invoice_amount = parseFloat(sum);
     },
     removeStudent: function removeStudent() {
       console.log("deleting student with id " + this.student.id);

@@ -64,9 +64,9 @@ export default {
             var sum = 0;
 
             this.$parent.$parent.invoice.positions.forEach(position => {
-                position.studentAmounts.forEach(student => {
-                    if (student.student.id == this.student.id) {
-                        sum += student.amount;
+                position.studentAmounts.forEach(studentA => {
+                    if (studentA.student.id == this.student.id) {
+                        sum += parseFloat(studentA.amount);
                     }
                 });
             });

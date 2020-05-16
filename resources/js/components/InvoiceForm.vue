@@ -365,33 +365,29 @@ export default {
             console.log(studentsDom);
 
             if (this.students == null) {
-                this.students = studentsDom;
+                this.students = studentsDom;    
 
-                var posStudentAmount = [];
-                studentsDom.forEach(function(student) {
-                    posStudentAmount.push({ amount: 0, student: student });
-                });
                 for (var i = 0; i < this.invoicePositions.length; i++) {
-                    this.invoicePositions[i].studentAmounts = posStudentAmount;
+                    this.invoicePositions[i].studentAmounts = [];
+
+                    var that = this;
+                    studentsDom.forEach(function(student) {
+                    });
+                        that.invoicePositions[i].studentAmounts.push({ amount: 0, student: student });
                 }
             } else {
                 this.students = this.students.concat(studentsDom);
 
-                var posStudentAmount = [];
-                studentsDom.forEach(function(student) {
-                    posStudentAmount.push({ amount: 0, student: student });
-                });
-
                 for (var i = 0; i < this.invoicePositions.length; i++) {
-                    this.invoicePositions[
-                        i
-                    ].studentAmounts = this.invoicePositions[
-                        i
-                    ].studentAmounts.concat(posStudentAmount);
+
+                    var that = this;
+
+                    studentsDom.forEach(function(student) {
+                        that.invoicePositions[i].studentAmounts.push({ amount: 0, student: student });
+                    });
                 }
             }
 
-            let that = this;
 
 /*
             setTimeout(function() {

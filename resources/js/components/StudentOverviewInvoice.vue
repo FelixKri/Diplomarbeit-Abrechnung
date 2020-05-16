@@ -65,14 +65,14 @@ export default {
             var sum = 0;
 
             this.$parent.$parent.invoicePositions.forEach(position => {
-                position.studentAmounts.forEach(student => {
-                    if (student.student.id == this.student.id) {
-                        sum += Number(student.amount);
+                position.studentAmounts.forEach(studentA => {
+                    if (studentA.student.id == this.student.id) {
+                        sum = parseFloat(sum) + parseFloat(studentA.amount);
                     }
                 });
             });
 
-            this.invoice_amount = sum;
+            this.invoice_amount = parseFloat(sum);
         },
         removeStudent: function() {
             console.log("deleting student with id " + this.student.id);
