@@ -15,7 +15,7 @@
             }}</span>
         </p>
         <div class="form-group">
-            <label for="title">Abrechnungsgrund: </label>
+            <label for="title">Abrechnungsgrund*: </label>
             <select
                 name="reason"
                 id=""
@@ -42,7 +42,7 @@
             </ul>
         </div>
         <div class="form-group">
-            <label for="date">Datum der Abrechnung: </label>
+            <label for="date">Datum der Abrechnung*: </label>
             <input
                 type="text"
                 name="date"
@@ -62,7 +62,7 @@
             </ul>
         </div>
         <div class="form-group">
-            <label for="date">Spätest gewünschtes Einzahlungsdatum: </label>
+            <label for="date">Spätest gewünschtes Einzahlungsdatum*: </label>
             <input
                 type="text"
                 name="date"
@@ -83,7 +83,7 @@
         </div>
 
         <div class="form-group">
-            <label for="description">Anmerkungen </label>
+            <label for="description">Anmerkungen: </label>
             <textarea
                 type="text"
                 name="description"
@@ -93,7 +93,7 @@
                 rows="5"
                 :disabled="edit == false"
             />
-            <label for="description">Anmerkung Nachzahlungen </label>
+            <label for="description">Anmerkung für Nachzahlungen: </label>
             <textarea
                 type="text"
                 name="description"
@@ -103,7 +103,7 @@
                 rows="2"
                 :disabled="edit == false"
             />
-            <label for="description">Anmerkung Gutschriften </label>
+            <label for="description">Anmerkung für Gutschriften: </label>
             <textarea
                 type="text"
                 name="description"

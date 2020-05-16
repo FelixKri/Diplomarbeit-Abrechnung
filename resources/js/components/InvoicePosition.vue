@@ -25,7 +25,7 @@
                     >Von Lehrpersonal bezhalt</span
                 >
                 <div class="form-group" v-if="position.paidByTeacher">
-                    <label for="iban">IBAN</label>
+                    <label for="iban">IBAN*:</label>
                     <input
                         type="text"
                         class="form-control"
@@ -61,7 +61,7 @@
                     </ul>
                 </div>
                 <div class="form-group">
-                    <label for="billnumber">BelegNr</label>
+                    <label for="billnumber">BelegNr*:</label>
                     <input
                         type="number"
                         class="form-control"
@@ -205,6 +205,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th scope="col">Nr.</th>
                     <th scope="col">X</th>
                     <th scope="col">ID</th>
                     <th scope="col">Nachname</th>
@@ -218,6 +219,7 @@
                     v-bind:key="studentA.student.id"
                     v-for="studentA in this.position.studentAmounts"
                     :studentAmount="studentA"
+                    :number="position.studentAmounts.indexOf(studentA)"
                 ></student-invoice>
             </tbody>
         </table>

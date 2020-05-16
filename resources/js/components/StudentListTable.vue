@@ -33,6 +33,7 @@
         
         <thead>
             <tr>
+                <th scope="col">Nr.</th>
                 <th scope="col">X</th>
                 <th scope="col">Klasse</th>
                 <th scope="col">Nachname</th>
@@ -42,7 +43,7 @@
             </tr>
         </thead>
         <tbody>
-            <student v-for="student in data.students" v-bind:id="student.id" v-bind:key="student.id" :student="student" v-on:removeStudent="removeStudent($event);"></student>
+            <student v-for="student in data.students" v-bind:id="student.id" v-bind:key="student.id" :student="student" v-on:removeStudent="removeStudent($event);" :number="data.students.indexOf(student)"></student>
         </tbody>
     </table>
     </div>

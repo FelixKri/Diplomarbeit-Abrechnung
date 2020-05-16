@@ -22,7 +22,7 @@
                 <input type="checkbox" v-model="position.paidByTeacher" :disabled="$parent.edit == false"><span>Von Lehrpersonal bezhalt</span>
 
                 <div class="form-group" v-if="position.paidByTeacher">
-                    <label for="iban">IBAN</label>
+                    <label for="iban">IBAN*:</label>
                     <input
                         type="text"
                         class="form-control"
@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="billnumber">BelegNr</label>
+                    <label for="billnumber">BelegNr*:</label>
                     <input
                         type="number"
                         class="form-control"
@@ -160,7 +160,7 @@
             <thead>
                 <tr>
                     <th scope="col">X</th>
-                    <th scope="col">ID</th>
+                    <th scope="col">Nr.</th>
                     <th scope="col">Nachname</th>
                     <th scope="col">Vorname</th>
                     <th scope="col">Klasse</th>
@@ -172,6 +172,7 @@
                     v-bind:key="studentA.student.id"
                     v-for="studentA in position.studentAmounts"
                     :studentAmount="studentA"
+                    :number="position.studentAmounts.indexOf(studentA)"
                 ></student-invoice-detail>
             </tbody>
         </table>

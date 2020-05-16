@@ -1,5 +1,6 @@
 <template>
     <tr>
+        <td>{{number+1}}</td>
         <td>{{ this.student.last_name }}</td>
         <td>{{ this.student.first_name }}</td>
         <td>{{ getGroupName(this.student.group_id) }}</td>
@@ -32,7 +33,7 @@ export default {
     mounted() {
         console.log("Component mounted: StudentOverviewInvoice");
     },
-    props: ["student"],
+    props: ["student", "number"],
     data: function() {
         return {
             prescribing_amount: 0,

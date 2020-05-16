@@ -7,7 +7,7 @@
                 :disabled="$parent.$parent.edit == false"
             />
         </td>
-        <th scope="row">{{ studentAmount.student.id }}</th>
+        <th scope="row">{{ number +1 }}</th>
         <td>{{ studentAmount.student.last_name }}</td>
         <td>{{ studentAmount.student.first_name }}</td>
         <td>{{ getGroupName(studentAmount.student.group_id) }}</td>
@@ -29,7 +29,7 @@ export default {
         console.log("Component mounted: Student");
         this.studentAmount.student.checked = false;
     },
-    props: ["studentAmount"],
+    props: ["studentAmount", "number"],
     data: function() {
         return {};
     },

@@ -14,6 +14,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th scope="col">Nr.</th>
                     <th scope="col">Nachname</th>
                     <th scope="col">Vorname</th>
                     <th scope="col">Klasse</th>
@@ -28,6 +29,7 @@
                     v-bind:key="student.id"
                     v-for="student in this.students"
                     :student="student"
+                    :number="students.indexOf(student)"
                     v-on:removeStudent="removeStudent($event)"
                     ref="studentOverview"
                 ></student-overview-detail>
